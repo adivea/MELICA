@@ -34,19 +34,19 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Best-README-Template</h3>
+  <h3 align="center">MELICA Shelter Data</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Shelter field-captured data (via FAIMS v2.6) processing and visualisation
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/adivea/MELICA"><strong>MELICA Website (coming) »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/FAIMS/Aarhus-shelters-faims-2.6">View Shelter Module</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/adivea/MELICA/issues">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/adivea/MELICA/issues">Request Feature</a>
   </p>
 </div>
 
@@ -85,14 +85,14 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+MELICA investigates the empirical basis of Cold-War preparedness in Aarhus by (1) reconstructing the everyday experience of individuals living in Cold-War Aarhus through spatial analysis of shelter locations and text analysis of written sources to assess whether the evidence points towards a militarization of everyday life or ‘normalization’ of war, (2) identifying gaps between how Cold-War civil defense was conceptualized at the national level and delivered at the local level in Aarhus, and (3) evaluating civil defense effectiveness by simulating a shelter drill, identifying weak points and stakeholders in civil defense planning.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
+The roadmap to accomplish our goals combines three research activities:
+* Documentation of surviving civilian shelters in the Aarhus kommune, on the basis of field survey and archival data
+* Creation of a thematic digital archive focused on the civil defense from materials present in the Aarhus City Archive
+* Smart text and spatial analysis of the two archives :smile:
 
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
+This repository serves to store scripts related to the first objective: the processing of field captured data during 2023, including the combination of data captured via the online and local servers!
 
 Use the `BLANK_README.md` to get started.
 
