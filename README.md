@@ -94,6 +94,8 @@ The roadmap to accomplish our goals combines three research activities:
 
 This repository serves to store scripts related to the first objective: the processing of field captured data during 2023, including the combination of data captured via the online and local servers!
 
+The data folder contains processed export from FAIMS2.6 as well as a csv from OpenRefine (sheltersS23.csv). See the ShelterCleaningfromR.txt for the OR cleaning script
+
 Use the `BLANK_README.md` to get started.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
