@@ -1,11 +1,11 @@
 ### The Shelter data processing from FAIMS modules
 
 ## This scripts helps import, project and combine data
-## from FAIMS2.6 modules online and local instantiations
+## from FAIMS2.6 modules online and local instantiation
 ## Upon careful merge (wrong order distorts timestamp)
 ## we export to OR, streamlined multivalued columns and bring back for visualisation
 
-# COnstraints: dataset lacks 20 points from 10 May !!!
+# Constraints: 0507 dataset lacks 20 points from 10 May !
 
 # libraries
 library(sf)
@@ -15,24 +15,26 @@ library(tidyverse)
 ### CREATE DATA FROM FAIMS SERVER
 
 # To load shp or geojson from FAIMS
-sh23_local <- read_sf("C:/Users/adela/Documents/Professional/Projects/AarhusShelters/data/AarhusShelters20230515Localserver/Shelter.shp")
+#sh23_local <- read_sf("C:/Users/adela/Documents/Professional/Projects/AarhusShelters/data/AarhusShelters20230515Localserver/Shelter.shp")
+sh23_local <- read_sf("data/Shelter-local.shp")
 
 # Data lacks projection so project to UTM32N to faciliate analysis
 st_crs(sh23_local) <- 32632
 
 # Load data from online server and process similarly 
-sh23_online <- read_sf("data/shelters0507.geojson")
+sh23_online <- read_sf("data/Shelter-online32632.shp") # shelters0507 lacks 23 features from 8 and 10 May
+#sh23_online <- read_sf("C:/Users/adela/Documents/Professional/Projects/AarhusShelters/data/AarhusShelters20230510online/Shelter32632.shp")
 
 # Check timeline and authorship
 library(lubridate)
 
-sh23_online %>% 
+sh23_online %>%  # 145 features
   #filter(createdBy == "Lise Søndergaard Jensen") %>% 
   mutate(day = as_date(createdAt0)) %>% 
   group_by(day, createdBy) %>% 
   tally()
 
-sh23_local %>% 
+sh23_local %>%   # 21 features
   #filter(createdBy == "Lise Søndergaard Jensen") %>% 
   mutate(day = as_date(createdAt0)) %>% 
   group_by(day, createdBy) %>% 
@@ -40,7 +42,7 @@ sh23_local %>%
 
 
 ##############
-# Merge the two datasets (Careful! timestamp gets messed up)
+# Merge the two datasets (Careful! timestamp gets messed up with reverse order)
 colnames(sh23_local)==colnames(sh23_online) 
 shelters23 <- rbind(sh23_online, sh23_local)
 
@@ -48,11 +50,6 @@ shelters23 %>%
   mutate(day = as_date(createdAt0)) %>% 
   group_by(day, createdBy) %>% 
   tally()
-
-shelters23$createdAt0
-
-mapview(shelters23)
-
 
 # View projected data in interactive map
 mapview(shelters23, cex = "Accuracy", name = "identifier" )
@@ -68,23 +65,24 @@ mapview(shelters23, zcol = "Accessibl0")
 # the accessibility colum needs to be cleaned up in OpenRefine
 
 # view the data
-mapview(shelter, cex = "Accuracy")
+mapview(shelters23, cex = "Accuracy")
 
-mapview(shelter, zcol = "LanduseAr0")
+mapview(shelters23, zcol = "LanduseAr0")
 
 # Export as csv
 
 shelters23 %>% 
   st_drop_geometry() %>% 
-  write_csv("data/shelters.csv")
+  write_csv("data/shelters23.csv")
 
 
 ###################################################
 
 ### Read REFINED csv back after OR processing
 
-sh23 <- read_csv("data/SheltersCleaned20231115.csv")
-head(sh23)
+# processed in OR to separate annotations from data
+sh23 <- read_csv("data/SheltersCleanedOR20231117.csv")
+sort(sh23$FeatureID)
 colnames(sh23)
 
 sh23 <- sh23 %>% 
@@ -128,10 +126,10 @@ sh23 %>%
 
 
 # Write data to a shapefile (FIRST OPENREFINE)
-saveRDS(sh23,"data/shelters23.rds")
-st_write(sh23, "data/shelters23.shp", append =F) # combined data
-st_write(sh23, "data/shelters23.geojson") # all 143 recs
+saveRDS(sh23,"output_data/shelters23.rds")
+st_write(sh23, "output_data/shelters23.shp", append =F) # combined data
+st_write(sh23, "output_data/shelters23.geojson") # all 166 recs
 
 # Reload and check
-shelter <- read_rds("data/shelters.rds")
+shelter <- read_rds("output_data/shelters23.rds")
 sort(shelter$identifier)
