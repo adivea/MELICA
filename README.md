@@ -204,7 +204,21 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Attribution-NonCommercial-ShareAlike 4.0 International
+* You are free to:
+-- Share — copy and redistribute the material in any medium or format
+-- Adapt — remix, transform, and build upon the material
+
+The licensor cannot revoke these freedoms as long as you follow the license terms.
+
+* Under the following terms:
+-- Attribution — You must give appropriate credit , provide a link to the license, and indicate if changes were made . You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
+-- NonCommercial — You may not use the material for commercial purposes .
+-- ShareAlike — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+-- No additional restrictions — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.
+
+
+See `LICENSE.md` for more information.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -213,9 +227,11 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
+Adela Sobotkova - [@your_twitter](https://twitter.com/adivea) - adela@cas.au.dk
 
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
+Rosanna Farbøl - [@your_twitter](https://twitter.com/handle) - rosanna.farboel@cas.au.dk
+
+Project Link: [https://github.com/adivea/MELICA](https://github.com/adivea/MELICA)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
