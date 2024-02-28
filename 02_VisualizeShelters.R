@@ -12,7 +12,7 @@ library(mapview)
 library(tidyverse)
 library(tmap)
 
-# Load and check there are 166
+# There should be 166 shelters from  2023
 shelter <- read_rds("output_data/shelters23.rds")
 sort(shelter$identifier)
 
@@ -37,3 +37,76 @@ mapview(shelter, zcol = "LanduseOnTop")
 mapview(shelter, zcol = "FeatureType")
 
 # Make interactive map for Rosanna
+
+# Packages
+library(leaflet)
+library(htmltools) 
+
+glimpse(shelter)  
+
+# map backgrounds
+l_dk <- leaflet() %>%   # assign the base location to an object
+  setView(10.2089, 56.141084,zoom = 12)
+
+esri <- grep("^Esri", providers, value = TRUE)
+
+for (provider in esri) {
+  l_dk <- l_dk %>% addProviderTiles(provider, group = provider)
+}
+l_dk
+
+
+dkmap <- l_dk %>%
+  addLayersControl(baseGroups = names(esri),
+                   options = layersControlOptions(collapsed = FALSE)) %>%
+  addMiniMap(tiles = esri[[1]], toggleDisplay = TRUE,
+             position = "bottomright") %>%
+  addMeasure(
+    position = "bottomleft",
+    primaryLengthUnit = "meters",
+    primaryAreaUnit = "sqmeters",
+    activeColor = "#3D535D",
+    completedColor = "#7D4479") %>% 
+  htmlwidgets::onRender("
+                        function(el, x) {
+                        var myMap = this;
+                        myMap.on('baselayerchange',
+                        function (e) {
+                        myMap.minimap.changeLayer(L.tileLayer.provider(e.name));
+                        })
+                        }") %>% 
+  addControl("", position = "topright")
+
+dkmap
+
+dkmap %>% addCircleMarkers(data = shelter,
+                           popup = paste0("ID:", shelter$FeatureID,
+                                          " ", shelter$FeatureType))
+
+
+sheltermap <- leaflet() %>%   # assign the base location to an object
+  setView(10.2089, 56.151084,zoom = 13) %>% 
+  addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
+  addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>% 
+  addProviderTiles("Esri.WorldStreetMap", group = "OSM") %>% 
+  addMeasure(
+    position = "bottomleft",
+    primaryLengthUnit = "meters",
+    primaryAreaUnit = "sqmeters",
+    activeColor = "#3D535D",
+    completedColor = "#7D4479") %>% 
+  addCircleMarkers(data = shelter, group = "Shelters 2023",
+                   radius = 5, fillOpacity = 0.75, weight=3, fillColor = "yellow",
+                   popup = paste0("ID:", shelter$FeatureID,
+                                  " <br>", shelter$FeatureType)) %>% 
+  addLayersControl(
+    baseGroups = c("Topo","ESRI Aerial", "OSM"),
+    overlayGroups = c("Shelters 2023"),
+    options = layersControlOptions(collapsed = T))
+
+sheltermap
+# Save map as a html document (optional, replacement of pushing the export button)
+# only works in root
+library(htmlwidgets) # from htmltools
+
+saveWidget(sheltermap, "shelter23map.html", selfcontained = TRUE)
