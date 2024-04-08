@@ -20,6 +20,17 @@ sh_typesclean <- shelter %>%
   filter(FeatureType != "Other") %>% 
   filter(FeatureType != "NA") 
 
+## Shelter ID 252 currently listed as Type V, is Type 4, as 
+# type 5 the swan neck distance is shorter at 40cms
+shelter %>% 
+  filter(FeatureID == 252) %>% 
+  select(FeatureID, FeatureType, `FeatureTy0 2`, DistanceSwanNeck, DistanceSwanNeckNote)
+
+
+## Tommy: Type 6 is significance as entrances will be expanded
+shelter %>% 
+  filter(FeatureType == "Shelter Type VI") %>% 
+  mapview()
 
 # Visualize features by type and landuse
 tmap_options(limits = c(facets.view = 5))  # we want to view 5 periods
@@ -29,7 +40,9 @@ tmap_mode(mode = "view")
 tm_shape(sh_typesclean)+
   tm_facets(by = "FeatureType",
             ncol = 3)+
-  tm_bubbles(col = "LanduseOnTop")
+  tm_bubbles(col = "LanduseOnTop")+
+  tm_shape(s)+
+  tm_dots()
 
 # Visualise attributes in space
 mapview(shelter, zcol = "Accessible")
@@ -58,7 +71,7 @@ l_dk
 
 dkmap <- l_dk %>%
   addLayersControl(baseGroups = names(esri),
-                   options = layersControlOptions(collapsed = FALSE)) %>%
+                   options = layersControlOptions(collapsed = T)) %>%
   addMiniMap(tiles = esri[[1]], toggleDisplay = TRUE,
              position = "bottomright") %>%
   addMeasure(
@@ -81,10 +94,13 @@ dkmap
 
 dkmap %>% addCircleMarkers(data = shelter,
                            popup = paste0("ID:", shelter$FeatureID,
-                                          " ", shelter$FeatureType))
+                                          " ", shelter$FeatureType, 
+                                        '<br>', shelter$`FeatureTy0 2`,
+                                        '<br>', shelter$LanduseOnTop,
+                                        '<br>', shelter$Accessible))
 
 
-sheltermap <- leaflet() %>%   # assign the base location to an object
+asheltermap <- leaflet() %>%   # assign the base location to an object
   setView(10.2089, 56.151084,zoom = 13) %>% 
   addProviderTiles("Esri.WorldImagery", group = "ESRI Aerial") %>% 
   addProviderTiles("Esri.WorldTopoMap", group = "Topo") %>% 

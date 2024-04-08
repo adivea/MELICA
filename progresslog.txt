@@ -1,0 +1,14 @@
+Progress log
+
+2023
+April-May: field data collection with Lise, Maria, and Angel following architects' map > data cleansing
+
+October: discovered missing data following Konstantina's review
+and pulled it from a backup to create shelters 2023
+
+2024
+4 April 24: got kml from Timmy with all ~200 shelters he knows on the basis of archives, 50 of which he verified in GoogleEarth, and 150 which we can verify with shelters23 and in the field.
+
+To DOES:
+- connect attributes to Timmy's shelters and compare with sh23
+- collect data on the remaining unvisited shelters
