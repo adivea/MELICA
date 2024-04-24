@@ -31,7 +31,6 @@ s <- s %>%
   st_drop_geometry() %>% 
   st_as_sf(coords = c("long", "lat"), crs = 4326) 
 
-mapview(s, zcol = "verified")  
 
 
 ####################################################### 2023 DATA
@@ -46,10 +45,7 @@ aar <- aar %>%
 # 2023 covered area
 ch <- st_as_sf(st_convex_hull(st_union(s23)))
 
-
-mapview(ch)+
-mapview(s, zcol = "verified")  + mapview(s23) +mapview(aar)
-
+mapview(s, zcol = "verified") + mapview(s23) + mapview(aar)  
 
 #################################################### WORK FOR 2024
 s23buff <- st_buffer(s23, 50)
@@ -100,5 +96,45 @@ s <- s %>%
 
 # Load attribute data  
 library(googlesheets4)
+gs4_deauth()
 s_data <- read_sheet("https://docs.google.com/spreadsheets/d/1hwzvaYz9HX5-r5ZXklhD7eVcFt1RHXyQknXTAzCpxso/edit#gid=0")
-types <- read_sheet("")
+class(s_data)
+
+# streamline coordinates:
+split_and_convert <- function(coord) {
+  parts <- unlist(strsplit(coord, " "))
+  lat <- as.numeric(gsub("[^0-9.]", "", parts[1]))
+  lon <- as.numeric(gsub("[^0-9.]", "", parts[2]))
+  return(list(lat = lat, lon = lon))
+}
+
+# Apply function to each coordinate
+split_coordinates <- lapply(s_data$Decimalkoordinater, split_and_convert)
+
+# Convert list to data frame
+coordinates_df <- do.call(rbind.data.frame, split_coordinates)
+
+# Rename columns
+colnames(coordinates_df) <- c("Latitude", "Longitude")
+
+# Add to s_data
+s_data <- tibble(cbind(s_data, coordinates_df))
+s_addresses <- s_data %>% 
+  filter(!is.na(Latitude)) %>% 
+  select(-Status1987) %>%
+  select(-`1987kort_nr`) %>% 
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)
+
+s_addresses$BDtype <- as.factor(s_addresses$BDtype)
+
+############################################################
+# Tommy's points = 200 shelters
+s$first_number
+# Tommy's work over our(?) addresses = 50
+class(s_addresses$BDtype)
+
+mapview(s_addresses, zcol = "BDtype") # + mapview(s, zcol = "verified")
+
+# Link betweeen TOmmy's points and BD table from kommune
+sum(s$first_number %in% s_addresses$BDnr)
+
