@@ -71,5 +71,5 @@ sh23 %>%
 # Write data to a shapefile
 saveRDS(sh23,"output_data/shelters23.rds")
 st_write(sh23, "output_data/shelters23.shp", append =F) # combined data
-st_write(sh23, "output_data/shelters23.geojson") # all 166 recordss
+st_write(sh23, "output_data/shelters23.geojson", append = F) # all 166 records
 
