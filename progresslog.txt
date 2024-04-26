@@ -9,6 +9,12 @@ and pulled it from a backup to create shelters 2023
 2024
 4 April 24: got kml from Timmy with all ~200 shelters he knows on the basis of archives, 50 of which he verified in GoogleEarth, and 150 which we can verify with shelters23 and in the field.
 
-To DOES:
-- connect attributes to Timmy's shelters and compare with sh23
+WORK IN PROGRESS:
+- connect attributes to Tommy's shelters and compare with sh23
+started on 24 April: Tommy's attributes are only partially relevant for sh23, only 50 overlap, the others refer to kommunens address list, so it needs a bit of tweaking
+
 - collect data on the remaining unvisited shelters
+intown (28) and outoftown datasets (~78) are ready for verification
+
+TO DO: 
+- export s and s_addresses as geojson so as to avoid re-processing

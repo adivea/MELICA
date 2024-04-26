@@ -1,9 +1,13 @@
+
+
 ### Shelters from Tommy Cassoe
 
+# This script explores and evaluates the crowdsources data 
+
+## libraries
 library(tidyverse)
 library(sf)
 library(mapview)
-#library(rgdal)
 
 ## load from KML
 
@@ -31,10 +35,32 @@ s <- s %>%
   st_drop_geometry() %>% 
   st_as_sf(coords = c("long", "lat"), crs = 4326) 
 
+###################################################### ATTRIBUTES
+# join with attribute data CONTINUE
+s$Name[151] <- 9999
+tail(s)
+
+# chat gpt advice on defensive function to get the first number out:
+extract_first_number <- function(column_value) {
+  number <- as.integer(str_extract(column_value, "\\b\\d+\\b"))
+  if (!is.na(number)) {
+    return(number)
+  } else {
+    return(NA)
+  }
+}
+
+# Create a new column
+s <- s %>% 
+  mutate(ID = gsub("\\D", ", ", Name)) %>% 
+  mutate(first_number = map_dbl(ID, extract_first_number))
+
+#st_write(s, "output_data/kmlTommy.geojson")
 
 
 ####################################################### 2023 DATA
-# compare with MELICA 2023 data
+
+# compare Tommy's GE verification with MELICA 2023 data
 s23 <- read_sf("output_data/shelters23.geojson")
 aar <- readRDS("data/gadm36_DNK_2_sp.rds")
 aar <- aar %>% 
@@ -48,6 +74,7 @@ ch <- st_as_sf(st_convex_hull(st_union(s23)))
 mapview(s, zcol = "verified") + mapview(s23) + mapview(aar)  
 
 #################################################### WORK FOR 2024
+
 s23buff <- st_buffer(s23, 50)
 st_is_valid(s23buff)
 
@@ -74,25 +101,7 @@ intowm <- st_intersection(tovisit24, ch)  # 26
 # view
 mapview(intowm, zcol = "verified") + mapview(aar)
 
-###################################################### ATTRIBUTES
-# join with attribute data CONTINUE
-s$Name[151] <- 9999
-tail(s)
-
-# chat gpt advice on defensive function to get the first number out:
-extract_first_number <- function(column_value) {
-  number <- as.integer(str_extract(column_value, "\\b\\d+\\b"))
-  if (!is.na(number)) {
-    return(number)
-  } else {
-    return(NA)
-  }
-}
-
-# Create a new column
-s <- s %>% 
-  mutate(ID = gsub("\\D", ", ", Name)) %>% 
-  mutate(first_number = map_dbl(ID, extract_first_number))
+################################################  Kommune addresses data
 
 # Load attribute data  
 library(googlesheets4)
