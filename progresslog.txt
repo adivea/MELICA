@@ -13,9 +13,13 @@ WORK IN PROGRESS:
 - connect attributes to Tommy's shelters and compare with sh23
 started on 24 April: Tommy's attributes are only partially relevant for sh23, only 50 overlap, the others refer to kommunens address list, so it needs a bit of tweaking
 
+- make map of TOmmy's shelters and rerun Shelter Shiny app! DONE
+
 - collect data on the remaining unvisited shelters
 intown (28) and outoftown datasets (~78) are ready for verification
 
+
 TO DO: 
-- export s and s_addresses as geojson so as to avoid re-processing
-- make map of TOmmy's shelters and rerun Shelter Shiny app!
+- export s and s_addresses as geojson so as to avoid re-processing : STARTED But not as straightforward, only 50 shared features
+- gaps analysis
+- need sikringsrum!
