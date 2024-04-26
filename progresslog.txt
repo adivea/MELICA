@@ -18,3 +18,4 @@ intown (28) and outoftown datasets (~78) are ready for verification
 
 TO DO: 
 - export s and s_addresses as geojson so as to avoid re-processing
+- make map of TOmmy's shelters and rerun Shelter Shiny app!

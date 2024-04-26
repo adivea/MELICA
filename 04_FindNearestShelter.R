@@ -3,12 +3,13 @@ library(leaflet)
 library(mapboxapi)
 library(sf)
 
-token <- my_token
+
+token <- "pk.eyJ1IjoiYWRpdmVhIiwiYSI6ImNrcWdhNGlybjB4OG0ydnNjcWZtOG9mc3UifQ.EbNmMF9aF8th5cb-h5f1lQ"
   # Read in the shelter data
-shelter <- readr::read_rds("data/shelters.rds") 
+shelter <- read_sf("output_data/kmlTommy.geojson") 
 
-
-shelter <- st_transform(shelter,4326)
+# must be in WGSS84
+#shelter <- st_transform(shelter,4326)
 
 # Set up a sidebar panel with a text box for an input address, 
 # and a placeholder to print out the driving instructions
@@ -17,7 +18,10 @@ ui <- fluidPage(
     textInput("address_text", label = "Address",
               placeholder = "Type an address or place name"),
     actionButton("action", "Find the nearest shelter"),
-    textInput("instructions_text", label = "Instructions to the shelter /n (beware:location error ~100m)"),
+    p(),
+    p("Instructions to the shelter:"),
+    em("Beware:unverified shelters may not exist"),
+    #textInput("instructions_text", label = "Instructions to the nearest shelter /n (beware:location error ~100m)"),
     htmlOutput("instructions"),
     width = 3
   ),
@@ -35,7 +39,7 @@ server <- function(input, output) {
       addMapboxTiles(style_id = "satellite-streets-v11",
                      username = "mapbox",
                      access_token = token)  %>%
-      addMarkers(data = shelter)
+      addCircleMarkers(data = shelter, )
                  #, popup = ~placename)
     
     
