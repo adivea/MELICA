@@ -2,6 +2,7 @@
 library(shiny)
 library(leaflet)
 library(mapboxapi)
+library(tidyverse)
 library(sf)
 
 
@@ -148,7 +149,7 @@ server <- function(input, output) {
           leafletProxy(mapId = "map") %>%
             addPolylines(data = route, color = color,
                          opacity = 1,
-                         popup = ~paste0(input$transport, " travel time: ", sum(route$duration), " minutes")) %>%
+                         popup = ~paste0(input$transport, " travel time: ", round(sum(route$duration),2), " minutes")) %>%
             flyTo(lng = flyto_coords[1],
                   lat = flyto_coords[2],
                   zoom = 16)

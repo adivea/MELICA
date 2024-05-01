@@ -1,5 +1,4 @@
 ###################################################
-## This script helps you load and visualize refined merged 2023 field  data on shelters
 ## around Aarhus, stored in GD archive https://drive.google.com/drive/folders/1dDFcHf4Mqa2wMQLSgh_sBkLTWGcnjsBW
 
 ## Input is a csv from OpenRefine (the archive above with 166 features) and 00_MergeFAIMSdata.rmd
@@ -63,13 +62,27 @@ sh23 %>%
   filter(Accessible == "Open") %>% 
   mapview()
 
+
+####################### FIELDWORK SUMMARY
+library(lubridate)
+date(sh23$createdAt0)
+sh23 %>% 
+  mutate(day = date(createdAt0)) %>% 
+  group_by(day, createdBy) %>% 
+  tally() %>% 
+ # mutate(day2 = as.factor(day)) %>%
+  ggplot(aes(x = day, y = n, fill = createdBy)) +
+  geom_bar(stat =  "identity", position = position_dodge2(width = 3, preserve = "single")) + 
+  theme_bw()
+
 #############################################
 
 ### SAVE STREAMLINED 2023 SPATIAL DATA FOR SHELTERS
 # the data that already exists is a csv from open refine
 
 # Write data to a shapefile
-saveRDS(sh23,"output_data/shelters23.rds")
-st_write(sh23, "output_data/shelters23.shp", append =F) # combined data
-st_write(sh23, "output_data/shelters23.geojson", append = F) # all 166 records
+dir.create("output_data2")
+saveRDS(sh23,"output_data2/shelters23.rds")
+st_write(sh23, "output_data2/shelters23.shp", append =F) # combined data
+st_write(sh23, "output_data2/shelters23.geojson", append = F) # all 166 records
 

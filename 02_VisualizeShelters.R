@@ -14,6 +14,8 @@ library(tmap)
 
 # There should be 166 shelters from  2023
 shelter <- read_rds("output_data/shelters23.rds")
+shelter <- read_sf("output_data/shelters23.geojson")
+names(shelter)
 sort(shelter$identifier)
 
 sh_typesclean <- shelter %>% 
@@ -32,6 +34,10 @@ shelter %>%
   filter(FeatureType == "Shelter Type VI") %>% 
   mapview()
 
+############################################################# TMAP FACETS
+
+# Load Tommy's data 
+s <- st_read("output_data/kmlTommy.geojson")
 # Visualize features by type and landuse
 tmap_options(limits = c(facets.view = 5))  # we want to view 5 periods
 
@@ -45,11 +51,12 @@ tm_shape(sh_typesclean)+
   tm_dots()
 
 # Visualise attributes in space
+
 mapview(shelter, zcol = "Accessible")
 mapview(shelter, zcol = "LanduseOnTop")
 mapview(shelter, zcol = "FeatureType")
 
-# Make interactive map for Rosanna
+######################################### Make interactive map for Rosanna
 
 # Packages
 library(leaflet)
