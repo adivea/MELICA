@@ -1,0 +1,33 @@
+{
+"type": "FeatureCollection",
+"name": "2024_in",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "1714", "Description": "", "verified": "N", "z": 7.7715808974902458 }, "geometry": { "type": "Point", "coordinates": [ 10.162825559396071, 56.145996393696578 ] } },
+{ "type": "Feature", "properties": { "Name": "1710 flyttet", "Description": "", "verified": "N", "z": 7.9913181318716378 }, "geometry": { "type": "Point", "coordinates": [ 10.16426165057285, 56.151986133143318 ] } },
+{ "type": "Feature", "properties": { "Name": "499", "Description": "", "verified": "N", "z": 61.763844640044482 }, "geometry": { "type": "Point", "coordinates": [ 10.193546064058701, 56.172764029576022 ] } },
+{ "type": "Feature", "properties": { "Name": "290", "Description": "", "verified": "N", "z": 2.5254392445267202 }, "geometry": { "type": "Point", "coordinates": [ 10.214259621670751, 56.14704445946834 ] } },
+{ "type": "Feature", "properties": { "Name": "506", "Description": "", "verified": "N", "z": 3.217738062933889 }, "geometry": { "type": "Point", "coordinates": [ 10.212889361414947, 56.145203452049358 ] } },
+{ "type": "Feature", "properties": { "Name": "231", "Description": "", "verified": "N", "z": 18.320686762417701 }, "geometry": { "type": "Point", "coordinates": [ 10.19294770733503, 56.144361037430819 ] } },
+{ "type": "Feature", "properties": { "Name": "232+233", "Description": "", "verified": "N", "z": 17.845467669240559 }, "geometry": { "type": "Point", "coordinates": [ 10.194462739869602, 56.14449733818045 ] } },
+{ "type": "Feature", "properties": { "Name": "502", "Description": "", "verified": "N", "z": 12.859299799797681 }, "geometry": { "type": "Point", "coordinates": [ 10.181816265183517, 56.139223305429987 ] } },
+{ "type": "Feature", "properties": { "Name": "222+471 flyttet i 1995", "Description": "", "verified": "N", "z": 13.63710981915621 }, "geometry": { "type": "Point", "coordinates": [ 10.18970182184856, 56.14694579163379 ] } },
+{ "type": "Feature", "properties": { "Name": "210", "Description": "", "verified": "N", "z": 17.8245168909468 }, "geometry": { "type": "Point", "coordinates": [ 10.200830047343141, 56.152027039995275 ] } },
+{ "type": "Feature", "properties": { "Name": "209 flyttet til Kolt", "Description": "", "verified": "N", "z": 17.225495028399731 }, "geometry": { "type": "Point", "coordinates": [ 10.201191467503509, 56.152389787038153 ] } },
+{ "type": "Feature", "properties": { "Name": "203+204 (203 er flyttet)", "Description": "", "verified": "N", "z": 10.002633186577521 }, "geometry": { "type": "Point", "coordinates": [ 10.202363064149433, 56.154861302676657 ] } },
+{ "type": "Feature", "properties": { "Name": "202+205 (202 er flyttet)", "Description": "", "verified": "N", "z": 9.3431479072759398 }, "geometry": { "type": "Point", "coordinates": [ 10.201656865656551, 56.154608918666185 ] } },
+{ "type": "Feature", "properties": { "Name": "111+112", "Description": "", "verified": "N", "z": 9.9815724846891953 }, "geometry": { "type": "Point", "coordinates": [ 10.18983468827582, 56.156594971949545 ] } },
+{ "type": "Feature", "properties": { "Name": "481", "Description": "", "verified": "N", "z": 7.6036084040859153 }, "geometry": { "type": "Point", "coordinates": [ 10.183470132848379, 56.154812846115867 ] } },
+{ "type": "Feature", "properties": { "Name": "260+261", "Description": "", "verified": "N", "z": 6.1475274963535202 }, "geometry": { "type": "Point", "coordinates": [ 10.184560263236319, 56.154786082912644 ] } },
+{ "type": "Feature", "properties": { "Name": "259", "Description": "", "verified": "N", "z": 27.735351901828931 }, "geometry": { "type": "Point", "coordinates": [ 10.205887970864168, 56.165784305248565 ] } },
+{ "type": "Feature", "properties": { "Name": "265", "Description": "", "verified": "N", "z": 16.443168348427228 }, "geometry": { "type": "Point", "coordinates": [ 10.20916422322577, 56.164293026327805 ] } },
+{ "type": "Feature", "properties": { "Name": "489", "Description": "", "verified": "N", "z": 14.55399437528826 }, "geometry": { "type": "Point", "coordinates": [ 10.216635469716589, 56.166008215420597 ] } },
+{ "type": "Feature", "properties": { "Name": "365", "Description": "", "verified": "N", "z": 42.074638844879267 }, "geometry": { "type": "Point", "coordinates": [ 10.211076103840259, 56.169536593006242 ] } },
+{ "type": "Feature", "properties": { "Name": "487", "Description": "", "verified": "N", "z": 46.858126616009002 }, "geometry": { "type": "Point", "coordinates": [ 10.19829523004543, 56.168566467293687 ] } },
+{ "type": "Feature", "properties": { "Name": "120 + 121", "Description": "", "verified": "N", "z": 37.507979386835913 }, "geometry": { "type": "Point", "coordinates": [ 10.18044630634151, 56.161571484800959 ] } },
+{ "type": "Feature", "properties": { "Name": "151+153 Flyttet til Tranbjerg", "Description": "", "verified": "N", "z": 6.827539766676181 }, "geometry": { "type": "Point", "coordinates": [ 10.200273354754129, 56.154912534199248 ] } },
+{ "type": "Feature", "properties": { "Name": "501", "Description": "", "verified": "N", "z": 16.125698895430421 }, "geometry": { "type": "Point", "coordinates": [ 10.186369552008943, 56.146601867257587 ] } },
+{ "type": "Feature", "properties": { "Name": "322", "Description": "", "verified": "N", "z": 16.413598152302679 }, "geometry": { "type": "Point", "coordinates": [ 10.18853109720631, 56.139653741506827 ] } },
+{ "type": "Feature", "properties": { "Name": "410", "Description": "", "verified": "N", "z": 42.802590365817338 }, "geometry": { "type": "Point", "coordinates": [ 10.21582323489783, 56.173243871400899 ] } }
+]
+}

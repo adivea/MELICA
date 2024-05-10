@@ -38,6 +38,8 @@ shelter %>%
 
 # Load Tommy's data 
 s <- st_read("output_data/kmlTommy.geojson")
+mapview(s, zcol = "verified")
+
 # Visualize features by type and landuse
 tmap_options(limits = c(facets.view = 5))  # we want to view 5 periods
 
