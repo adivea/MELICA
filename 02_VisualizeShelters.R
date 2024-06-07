@@ -41,6 +41,7 @@ shelter %>%
 
 
 ## Andreas: how to look up FeatureIDs, BDnr in s$Name
+
 shelter %>% 
   filter(FeatureID == 158 |FeatureID == 159) %>% mapview()
 s %>% 
