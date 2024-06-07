@@ -1,8 +1,9 @@
 
-
 ### Shelters from Tommy Cassoe
 
-# This script explores and evaluates the crowdsources data 
+# This script explores and evaluates the crowdsourced data
+# and integrates it with 2023 data? o
+# outlines which need to be still surveyed!
 
 ## libraries
 library(tidyverse)
@@ -58,92 +59,123 @@ s <- s %>%
 #st_write(s, "output_data/kmlTommy.geojson")
 
 
-####################################################### 2023 DATA
 
-# compare Tommy's GE verification with MELICA 2023 data
-s23 <- read_sf("output_data/shelters23.geojson")
-aar <- readRDS("data/gadm36_DNK_2_sp.rds")
-aar <- aar %>% 
-  st_as_sf() %>% 
-  #slice(31)
-  dplyr::filter(NAME_2 == "Århus")
 
-# 2023 covered area
-ch <- st_as_sf(st_convex_hull(st_union(s23)))
+################################################  Kommune addresses data SKIP FOR NOW 
 
-mapview(s, zcol = "verified") + mapview(s23) + mapview(aar)  
-
-#################################################### WORK FOR 2024
-
-s23buff <- st_buffer(s23, 50)
-st_is_valid(s23buff)
-
-# intersecting
-s %>% 
-  #st_filter(s23buff, .join = intersects) %>% 
-  st_filter(s23buff, .predicate = st_intersects) %>%   # 93 overlap with 30m buffer, 101 with 50m buffer
-  mapview()
-
-# non intersecting
-tovisit24 <- s[st_intersects(s, s23buff) %>% lengths == 0,] # 107 non-overlapping features with 30m buffer, 
-# 99 in 50m buffer, so ca 30 inside the city
-
-mapview(tovisit24, zcol = "verified") + mapview(s23)
-
-### remaining area for 2024 outside of the city
-outoftowm <- st_difference(s, ch)  # 78
-
-# view
-mapview(outoftowm, zcol = "verified")  + mapview(s23) +mapview(aar)
-
-### remaining inside the town for 2024 doublecheck
-intowm <- st_intersection(tovisit24, ch)  # 26
-# view
-mapview(intowm, zcol = "verified") + mapview(aar)
-
-################################################  Kommune addresses data
-
-# Load attribute data  
+# Load attribute data from Tommy "Addresses feedback
 library(googlesheets4)
 gs4_deauth()
-s_data <- read_sheet("https://docs.google.com/spreadsheets/d/1hwzvaYz9HX5-r5ZXklhD7eVcFt1RHXyQknXTAzCpxso/edit#gid=0")
-class(s_data)
 
-# streamline coordinates:
-split_and_convert <- function(coord) {
-  parts <- unlist(strsplit(coord, " "))
-  lat <- as.numeric(gsub("[^0-9.]", "", parts[1]))
-  lon <- as.numeric(gsub("[^0-9.]", "", parts[2]))
-  return(list(lat = lat, lon = lon))
-}
+# s_data <- read_sheet("https://docs.google.com/spreadsheets/d/1hwzvaYz9HX5-r5ZXklhD7eVcFt1RHXyQknXTAzCpxso/edit#gid=0")
+# class(s_data)
+# 
+# # streamline coordinates:
+# split_and_convert <- function(coord) {
+#   parts <- unlist(strsplit(coord, " "))
+#   lat <- as.numeric(gsub("[^0-9.]", "", parts[1]))
+#   lon <- as.numeric(gsub("[^0-9.]", "", parts[2]))
+#   return(list(lat = lat, lon = lon))
+# }
+# 
+# # Apply function to each coordinate
+# split_coordinates <- lapply(s_data$Decimalkoordinater, split_and_convert)
+# 
+# # Convert list to data frame
+# coordinates_df <- do.call(rbind.data.frame, split_coordinates)
+# 
+# # Rename columns
+# colnames(coordinates_df) <- c("Latitude", "Longitude")
+# 
+# # Add to s_data
+# s_data <- tibble(cbind(s_data, coordinates_df))
+# s_addresses <- s_data %>% 
+#   filter(!is.na(Latitude)) %>% 
+#   select(-Status1987) %>%
+#   select(-`1987kort_nr`) %>% 
+#   st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)
+# 
+# s_addresses$BDtype <- as.factor(s_addresses$BDtype)
+# 
+# ############################################################
+# # Tommy's points = 200 shelters
+# s$first_number
+# # Tommy's work over our(?) addresses = 50
+# class(s_addresses$BDtype)
+# 
+# mapview(s_addresses, zcol = "BDtype") # + mapview(s, zcol = "verified")
+# 
+# # Link betweeen TOmmy's points and BD table from kommune
+# sum(s$first_number %in% s_addresses$BDnr)
+# 
 
-# Apply function to each coordinate
-split_coordinates <- lapply(s_data$Decimalkoordinater, split_and_convert)
+############################################################# RECONCILE THE ADDRESSES ATTRIBUTES
 
-# Convert list to data frame
-coordinates_df <- do.call(rbind.data.frame, split_coordinates)
+library(googlesheets4)
+gs4_deauth()
 
-# Rename columns
-colnames(coordinates_df) <- c("Latitude", "Longitude")
+# addresses from kommune marked by Konstantina as verified or not
+address_k_k <- read_sheet("https://docs.google.com/spreadsheets/d/1zKn1vuN_vP_s2G0SosmuuVaOSrf6FvIxp4QQCLuIDJE/edit#gid=1743387780")
 
-# Add to s_data
-s_data <- tibble(cbind(s_data, coordinates_df))
-s_addresses <- s_data %>% 
-  filter(!is.na(Latitude)) %>% 
-  select(-Status1987) %>%
-  select(-`1987kort_nr`) %>% 
-  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)
 
-s_addresses$BDtype <- as.factor(s_addresses$BDtype)
+# addresses from kommune filtered by Konstantina for those 122 that we need to register
+address_k <- read_sheet("https://docs.google.com/spreadsheets/d/15TdABJZveXvHe0L8QT-ujrvkfb1x6TPslGdbrhH2Izs/edit#gid=476511693")
 
-############################################################
-# Tommy's points = 200 shelters
-s$first_number
-# Tommy's work over our(?) addresses = 50
-class(s_addresses$BDtype)
+# addresses from kommune ~280  that Tommy annotated "AddressesFeedback"
+address_t <- read_sheet("https://docs.google.com/spreadsheets/d/1hwzvaYz9HX5-r5ZXklhD7eVcFt1RHXyQknXTAzCpxso/edit#gid=0")
+names(address_k)
+names(address_t)
 
-mapview(s_addresses, zcol = "BDtype") # + mapview(s, zcol = "verified")
 
-# Link betweeen TOmmy's points and BD table from kommune
-sum(s$first_number %in% s_addresses$BDnr)
+################# COMPARE TYPES!! ADD TOMMY'S TYPES FOR 2023 shelters
 
+# Here I combine Konstantina's marked up sheet with Tommy's attributes on the basis of Bdnr and Feature ID
+verified_attr <- address_k_k %>% 
+  filter(EXISTS_IN_MELICA != "NO") %>% 
+  left_join(address_t, by = c("Bdnr" = "BDnr"), relationship = "many-to-many") %>% # beware that at least two features have moved and thus bdnr is duplicated
+  select(Bdnr, FEATURE_ID, BDtype, Status_i_dag, BEMÆRK_L_1, ADDRESS.x, ADDRESS.y, `1987kort_nr`) 
+  
+# Verified 2023 shelters with Tommy's types
+shelter_t_type <- shelter %>% 
+  left_join(verified_attr, by = c("FeatureID" = "FEATURE_ID")) %>% 
+  select(FeatureID, FeatureType, Bdnr, BDtype, Status_i_dag, LanduseOnTop) 
+
+# Type breakdown
+shelter_t_type %>% 
+  group_by(BDtype) %>% 
+  tally()
+
+# compare the look of Tommy's types with 
+shelter_t_type%>% 
+  mapview(zcol = "BDtype")
+# our type definitions... some differences but not too bad
+mapview(shelter, zcol = "FeatureType")
+
+shelter_t_type %>% 
+  mutate(longitude = st_coordinates(.)[,1],
+         latitude = st_coordinates(.)[,2]) %>% 
+  st_drop_geometry() %>% 
+  write_csv("output_data/sh_types2023.csv")
+
+st_write(shelter_t_type, "output_data/sh_types2023.geojson")
+###################### CORRECTED TYPES IN TMAPS
+
+# Visualize features by type and landuse
+tmap_options(limits = c(facets.view = 6))  # we want to view 5 periods
+
+tmap_mode(mode = "view")
+
+tm_shape(shelter_t_type)+
+  tm_facets(by = "BDtype",
+            ncol = 3)+
+  tm_bubbles(col = "LanduseOnTop") +
+  tm_shape(s)+
+  tm_dots(col = "lightgrey")
+
+
+############################## FILTER UNVERIFIED SHELTER ATTRIBUTES 
+
+# we wish to join the two address files filtering out Konstantina's and keeping the notes field to inform groundtruthing
+
+toverify <- address_k %>% 
+  left_join(address_t, by = c("Bd_nr" = "BDnr"), relationship = "many-to-many") # beware that 1623 and 1501 are duplicated (due to move)

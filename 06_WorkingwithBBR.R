@@ -6,10 +6,14 @@
 
 # library 
 library(jsonlite)
+library(tidyverse)
+library(sf)
 
 # download aarhus data from sciencedata.dk (only houses)
-bbr_aarhus_data <- fromJSON("https://sciencedata.dk/public/67e2ad2ca642562dacfa6fdf672a1009/clean_BBR_aarhus_data.json")
-saveRDS(bbr_aarhus_data, "data/bbr_aar_list.rds")
+# bbr_aarhus_data <- fromJSON("https://sciencedata.dk/public/67e2ad2ca642562dacfa6fdf672a1009/clean_BBR_aarhus_data.json")
+# saveRDS(bbr_aarhus_data, "data/bbr_aar_list.rds")
+
+bbr_aarhus_data <- readRDS("data/bbr_aar_list.rds")
 
 #flattening it to a data frame and changing the name of a column to get rid of danish letters
 flatten <- function(json){
@@ -28,7 +32,7 @@ clean_bbr_df <-function(df, year_cutoff){
     filter(byg406Koordinatsystem == "5") %>% 
     filter(!is.na(byg026Year)) %>% 
     filter(byg021BygningensAnvendelse %in% 
-             c("101","120","121","122","131","132","140","150","160","190","321","322","324","331","332","333","334","339","421","422","429","431","432","433","439","441","532","533")) %>% 
+             c("101","120","121","122","131","132","140","150","160","190","236","321","322","324","331","332","333","334","339","421","422","429","431","432","433","439","441","532","533")) %>% 
     distinct(id_lokalId,.keep_all = TRUE) %>% 
     filter(byg026Year >= year_cutoff)
 }
@@ -39,7 +43,22 @@ bbr_aarhus_data_flat <-bbr_aarhus_data %>%
   mutate(city = "Aarhus")%>% 
   st_as_sf(wkt = "byg404Koordinat", crs = 25832)
 
+# trying the sikringsrum code "236" but to no avail >> no records
+bbr_aarhus_sikring <- bbr_aarhus_data_flat %>% 
+  filter(byg021BygningensAnvendelse == "236")
 
+library(mapview)
+mapview(head(bbr_aarhus_data_flat))
+
+# overview of years
+table(bbr_aarhus_data_flat$byg026Year)
+
+bbr_aarhus_data_flat %>% 
+  filter(byg026Year>1960) %>% 
+  group_by(id_lokalId) %>% 
+  #pull(byg026Year) %>% 
+  tally()
+  table()
 #loading distric geoJSONs to get mappable district polygons
 #aarhus_districts <- st_read("https://sciencedata.dk/public/67e2ad2ca642562dacfa6fdf672a1009/aarhus_districts.geojson")
 

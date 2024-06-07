@@ -15,6 +15,7 @@ library(tmap)  # publicaiton quality or facetted maps
 
 # Load Tommy's kml data 
 s <- st_read("output_data/kmlTommy.geojson")
+mapview(s, zcol = "verified")
 
 
 # There should be 166 shelters from FAIMS, verified in 2023
@@ -50,7 +51,7 @@ s %>%
   mapview(shelter)   # plot all FAIMS data so you can compare IDs
 
 
-################################################ TOMMYS DATA + TMAP FACETS
+################################################ TMAP FACETS
 
 # Visualize features by type and landuse
 tmap_options(limits = c(facets.view = 5))  # we want to view 5 periods
