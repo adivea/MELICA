@@ -1,18 +1,23 @@
 ###################################################
 ## This script helps you load and visualize refined merged field data on shelters
-## around Aarhus created in November 2023
+## around Aarhus created in November 2023 and combine it with TOmmy's contributed
+## somewhat verified (either via GE or 1987 archive he has) shelters from 2024 
 
 ## Input is a RDS file generated out of open-refined data
 ## Outputs are various visualisation
 
 
 # Libraries
-library(sf)
-library(mapview)
+library(sf)  # generic spatial data library
+library(mapview) # interactive maps on the pipeline
 library(tidyverse)
-library(tmap)
+library(tmap)  # publicaiton quality or facetted maps
 
-# There should be 166 shelters from  2023
+# Load Tommy's kml data 
+s <- st_read("output_data/kmlTommy.geojson")
+
+
+# There should be 166 shelters from FAIMS, verified in 2023
 shelter <- read_rds("output_data/shelters23.rds")
 shelter <- read_sf("output_data/shelters23.geojson")
 names(shelter)
@@ -34,10 +39,18 @@ shelter %>%
   filter(FeatureType == "Shelter Type VI") %>% 
   mapview()
 
-############################################################# TMAP FACETS
 
-# Load Tommy's data 
-s <- st_read("output_data/kmlTommy.geojson")
+## Andreas: how to look up FeatureIDs, BDnr in s$Name
+shelter %>% 
+  filter(FeatureID == 158 |FeatureID == 159) %>% mapview()
+s %>% 
+  filter(Name == 469) %>%  # look up BdNr 469 in TOmmy's data
+  mapview(cex = 10) +  # make 469 discernible through size
+  mapview(shelter)   # plot all FAIMS data so you can compare IDs
+
+
+################################################ TOMMYS DATA + TMAP FACETS
+
 # Visualize features by type and landuse
 tmap_options(limits = c(facets.view = 5))  # we want to view 5 periods
 
@@ -50,6 +63,17 @@ tm_shape(sh_typesclean)+
   tm_shape(s)+
   tm_dots()
 
+# See BdNr 496 and 470
+
+s %>% 
+  filter(grepl("400", Name)) %>% 
+  #filter(Name == 401) %>% 
+  #glimpse()
+  mapview(cex = 15) + mapview(shelter)
+
+  
+
+mapview(s)
 # Visualise attributes in space
 
 mapview(shelter, zcol = "Accessible")
