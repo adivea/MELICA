@@ -57,7 +57,7 @@ s <- s %>%
   mutate(first_number = map_dbl(ID, extract_first_number))
 
 #st_write(s, "output_data/kmlTommy.geojson")
-
+s <- read_sf("output_data/kmlTommy.geojson")
 
 
 
@@ -159,7 +159,9 @@ shelter_t_type %>%
 
 st_write(shelter_t_type, "output_data/sh_types2023.geojson")
 ###################### CORRECTED TYPES IN TMAPS
+shelter_t_type <- read_sf( "output_data/sh_types2023.geojson")
 
+shelter_t_type
 # Visualize features by type and landuse
 tmap_options(limits = c(facets.view = 6))  # we want to view 5 periods
 
@@ -179,3 +181,27 @@ tm_shape(shelter_t_type)+
 
 toverify <- address_k %>% 
   left_join(address_t, by = c("Bd_nr" = "BDnr"), relationship = "many-to-many") # beware that 1623 and 1501 are duplicated (due to move)
+
+
+##################  COMPARE TYPES
+
+# Many differences are in Tommy list subtypes III A where we list just III
+shelter_t_type %>% 
+  mutate(Type = gsub("Shelter Type ", "" , FeatureType)) %>% 
+  mutate(BDType = gsub(" A", "" , BDtype)) %>%   
+  dplyr::select(FeatureID, Type, BDType) %>% 
+  dplyr::filter(Type != BDType)  %>% 
+  mapview()
+
+# get data out
+shelter_t_type %>% 
+    mutate(Type = gsub("Shelter Type ", "" , FeatureType)) %>% 
+    mutate(BDType = gsub(" A", "" , BDtype)) %>%   
+    dplyr::select(FeatureID, Type, BDType) %>% 
+    dplyr::filter(Type != BDType) %>% 
+      # st_write("output_data/type_mismatch.geojson")
+    mutate(longitude = st_coordinates(.)[,1],
+           latitude = st_coordinates(.)[,2]) %>% 
+    st_drop_geometry() %>% 
+    write_csv("output_data/type_mismatch.csv")
+  
