@@ -205,3 +205,12 @@ shelter_t_type %>%
     st_drop_geometry() %>% 
     write_csv("output_data/type_mismatch.csv")
   
+
+##################  VERIFICATION WITH TOMMY
+
+shelter_t_type %>% 
+  filter(FeatureID %in% c(128, 170, 173, 175, 183, 200, 251, 252, 270, 269)) %>% 
+  mutate(longitude = st_coordinates(.)[,1],
+         latitude = st_coordinates(.)[,2]) %>% 
+  st_drop_geometry() %>% 
+  write_csv("output_data/visit11June.csv")
