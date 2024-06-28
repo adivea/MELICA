@@ -77,7 +77,8 @@ tm_shape(bbr)+
   tm_bubbles(size = "byg069Sikringsrumpladser")
 
 
-# What next? 
+##########################################      What next? 
+# - reverse geocode
 # - intersect with building footprints, crosscheck with archival records, 
 # - calculate total capacity per decade and compare with population trends
-  
+
