@@ -2,6 +2,7 @@
 
 
 # libraries
+library(raster)
 library(sf)
 library(mapview)
 library(tidyverse)
@@ -9,6 +10,10 @@ library(htmlwidgets)
 
 # Load maps (from Downloads)
 maps <- list.files("data/Georeferenced/")
+
+m1982_31 <- raster(paste0("data/Georeferenced/", maps[2]))
+mapview(m1982_31, alpha = 0.5, maxpixels = 5000000)
+
 
 m1935 <- raster(paste0("data/Georeferenced/", maps[2]))
 mapview(m1935, alpha = 0.5, maxpixels = 5000000)

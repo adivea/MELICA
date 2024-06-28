@@ -1,12 +1,15 @@
 ### BBR data from Ulrik with sikringsrum
 
 # library 
-library(jsonlite)
 library(tidyverse)
 library(sf)
+library(mapview)
 
 # data sample
 bbr <- read_csv("data/BBR_SKtest.csv")
+
+# real data
+bbr <- read_csv("data/BBR_AarhusAll.csv")
 
 # kommunekode
 bbr %>% 
