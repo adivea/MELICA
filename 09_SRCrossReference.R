@@ -6,7 +6,7 @@
 library(pacman) # for easier managing of packages
 pacman::p_load(tidyverse, stringr, sf)
 
-# loading in CSVs with SR addresses
+# loading in CSVs with SR addresses, currently only for testing
 addressSR <- read_csv("Own Git Stuff/SR_overview.csv") # manually aggregated SR addresses
 bbr <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv") # data from BBR
 
@@ -91,7 +91,7 @@ if (row_diff > 0) {
   unmatched_addressSR <- bind_rows(unmatched_addressSR, extra_rows)
 }
 
-# gluing columns together
+# gluing columns with unmatched addresses together
 checkAddressUnmatched <- subset(checkAddressUnmatched, select = c(address, oc_formatted))
 
 # - - - - Spatially join identified BBR points with BBR building footprints (?)
