@@ -118,6 +118,4 @@ checkAddressUnmatched <- data.frame(
 geojson_streets <- "https://webkort.aarhuskommune.dk/spatialmap?page=get_geojson_opendata&datasource=vjmdt_tot"
 
 data_geo <- sf::st_read(geojson_streets, quiet = TRUE)
-
-spatial_data$name <- tolower(gsub("[[:punct:][:space:]]", "", spatial_data$name))
-csv_data$name <- tolower(gsub("[[:punct:][:space:]]", "", csv_data$name))
+## look at matching streetnames with geojson data
