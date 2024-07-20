@@ -1,4 +1,4 @@
-## Working with SR_overview csv and bbr csv from Ulrik
+## Working with SR_overview csv and BBR csv from Ulrik
 
 # - - - -  Loading Packages, Data, and Cleaning Data
 
@@ -7,44 +7,43 @@ library(pacman) # for easier managing of packages
 pacman::p_load(tidyverse, stringr, sf)
 
 # loading in CSVs with SR addresses, currently only for testing
-addressSR <- read_csv("Own Git Stuff/SR_overview_test.csv") # manually aggregated SR addresses
-bbr <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv") # data from BBR
+df_addressSR <- read_csv("Own Git Stuff/SR_overview_test.csv") # manually aggregated SR addresses
+df_addressBBR <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv") # data from BBR
 
 # removal of duplicate + empty columns
-addressSR <- subset(addressSR, select = -c(longitude, latitude))
+df_addressSR <- subset(df_addressSR, select = -c(longitude, latitude))
 
 # removing of whitespaces and all lowercase addresses
-addressSR$address <- str_trim(tolower(addressSR$address))
-bbr$oc_formatted <- str_trim(tolower(bbr$oc_formatted))
+df_addressSR$address <- str_trim(tolower(df_addressSR$address))
+df_addressBBR$oc_formatted <- str_trim(tolower(df_addressBBR$oc_formatted))
 
 # replacing strings to avoid any inconsistencies in spelling + spacing across sources
 ## preliminary cleaning of dataframes, to be synthesised later
-addressSR$address <- gsub("å", "aa", addressSR$address)
-bbr$oc_formatted <- gsub("å", "aa", bbr$oc_formatted)
+df_addressSR$address <- gsub("å", "aa", df_addressSR$address)
+df_addressBBR$oc_formatted <- gsub("å", "aa", df_addressBBR$oc_formatted)
 
-bbr$oc_formatted <- gsub("é", "e", bbr$oc_formatted)
-bbr$oc_formatted <- gsub("ü", "u", bbr$oc_formatted)
+df_addressBBR$oc_formatted <- gsub("é", "e", df_addressBBR$oc_formatted)
+df_addressBBR$oc_formatted <- gsub("ü", "u", df_addressBBR$oc_formatted)
 
-addressSR$address <- gsub("i. huitfeldt", "ivar huitfeldt", addressSR$address)
-addressSR$address <- gsub("nordre", "ndr", addressSR$address)
-addressSR$address <- gsub("dr. holstvej", "doktor holstsvej", addressSR$address)
-addressSR$address <- gsub("chr.", "christian", addressSR$address)
-addressSR$address <- gsub("rudolf", "rudolph", addressSR$address)
-addressSR$address <- gsub("rud.", "rudolph", addressSR$address)
-addressSR$address <- gsub("p. muller", "paludan muller", addressSR$address)
-addressSR$address <- gsub("j. knudsen", "jacob knudsen", addressSR$address)
-addressSR$address <- gsub("dr. margrethe", "dronning margrethe", addressSR$address)
+df_addressSR$address <- gsub("i. huitfeldt", "ivar huitfeldt", df_addressSR$address)
+df_addressSR$address <- gsub("nordre", "ndr", df_addressSR$address)
+df_addressSR$address <- gsub("dr. holstvej", "doktor holstsvej", df_addressSR$address)
+df_addressSR$address <- gsub("chr.", "christian", df_addressSR$address)
+df_addressSR$address <- gsub("rudolf", "rudolph", df_addressSR$address)
+df_addressSR$address <- gsub("rud.", "rudolph", df_addressSR$address)
+df_addressSR$address <- gsub("p. muller", "paludan muller", df_addressSR$address)
+df_addressSR$address <- gsub("j. knudsen", "jacob knudsen", df_addressSR$address)
+df_addressSR$address <- gsub("dr. margrethe", "dronning margrethe", df_addressSR$address)
+df_addressSR$address <- gsub("kongsvangsalle", "kongsvangalle", df_addressSR$address)
 
-addressSR$address <- gsub("(?<=[a-zA-Z])-(?=[a-zA-Z])", "", addressSR$address, perl = TRUE)
-bbr$oc_formatted <- gsub("(?<=[a-zA-Z])-(?=[a-zA-Z])", "", bbr$oc_formatted, perl = TRUE)
+df_addressSR$address <- gsub("(?<=[a-zA-Z])-(?=[a-zA-Z])", "", df_addressSR$address, perl = TRUE)
+df_addressBBR$oc_formatted <- gsub("(?<=[a-zA-Z])-(?=[a-zA-Z])", "", df_addressBBR$oc_formatted, perl = TRUE)
 
-addressSR$address <- str_replace_all(addressSR$address, "\\s+", "")
-bbr$oc_formatted = str_replace_all(bbr$oc_formatted, "\\s+", "")
-
-addressSR$address <- gsub("kongsvangsalle", "kongsvangalle", addressSR$address)
+df_addressSR$address <- str_replace_all(df_addressSR$address, "\\s+", "")
+df_addressBBR$oc_formatted = str_replace_all(df_addressBBR$oc_formatted, "\\s+", "")
 
 # getting decades, taken from Adela's code in 07_HistoricalBBR.R
-bbr <- bbr %>%
+df_addressBBR <- df_addressBBR %>%
   mutate(
     decade = case_when(
       byg026Opførelsesår < 1950 ~ '1940s',
@@ -57,13 +56,13 @@ bbr <- bbr %>%
 
 # ignoring all bbr address info. after the first comma
 ## thus ignoring postal codes and instances of "denmark" as well as special chars.
-bbr$oc_formatted <- str_extract(bbr$oc_formatted, "^[^,]*")
-addressSR$address <- str_extract(addressSR$address, "^[^,]*")
+df_addressBBR$oc_formatted <- str_extract(df_addressBBR$oc_formatted, "^[^,]*")
+df_addressSR$address <- str_extract(df_addressSR$address, "^[^,]*")
 
 # - - - - Cross-Checking Addresses
 
 # checking what address info DOES match at the moment (16.07.2024)
-checkAddressMatch <- inner_join(addressSR, bbr, by = c("address" = "oc_formatted"),
+checkAddressMatch <- inner_join(df_addressSR, df_addressBBR, by = c("address" = "oc_formatted"),
                                 relationship = "many-to-many", unmatched = "drop")
 
 # keeping relevant columns + removing empty columns
@@ -89,19 +88,19 @@ checkAddressMatch <- subset(
 # - - - - looking at the leftover addresses from both sources
 
 # Rows in addressSR that don't match bbr and vice versa
-unmatched_addressSR <- anti_join(addressSR, bbr, by = c("address" = "oc_formatted"))
-unmatched_bbr <- anti_join(bbr, addressSR, by = c("oc_formatted" = "address"))
+unmatched_addressSR <- anti_join(df_addressSR, df_addressBBR, by = c("address" = "oc_formatted"))
+unmatched_addressBBR <- anti_join(df_addressBBR, df_addressSR, by = c("oc_formatted" = "address"))
 
 # Calculate the row difference
-row_diff <- nrow(unmatched_addressSR) - nrow(unmatched_bbr)
+row_diff <- nrow(unmatched_addressSR) - nrow(unmatched_addressBBR)
 
 # Adding NA rows to the shorter df
 if (row_diff > 0) {
   # unmatched_addressSR is longer
   extra_rows <- data.frame(oc_formatted = rep(NA, row_diff))
-  unmatched_bbr <- bind_rows(unmatched_bbr, extra_rows)
+  unmatched_addressBBR <- bind_rows(unmatched_addressBBR, extra_rows)
 } else {
-  # unmatched_bbr is longer
+  # unmatched_addressBBR is longer
   extra_rows <- data.frame(address = rep(NA, abs(row_diff)))
   unmatched_addressSR <- bind_rows(unmatched_addressSR, extra_rows)
 }
@@ -109,13 +108,37 @@ if (row_diff > 0) {
 # Combine the two data frames into one with two columns
 checkAddressUnmatched <- data.frame(
   addressSR = unmatched_addressSR$address,
-  addressBBR = unmatched_bbr$oc_formatted
+  addressBBR = unmatched_addressBBR$oc_formatted
 )
 
-# - - - - Spatially join identified BBR points with BBR building footprints (?)
-## geojson open with sf package + create brief report on usability + relevance
+# - - - - Inspecting GeoJSON + Comparing Street Names with those in BBR register 
 
 geojson_streets <- "https://webkort.aarhuskommune.dk/spatialmap?page=get_geojson_opendata&datasource=vjmdt_tot"
 
-data_geo <- sf::st_read(geojson_streets, quiet = TRUE)
-## look at matching streetnames with geojson data
+data_geo <- sf::st_read(geojson_streets, quiet = FALSE)
+summary(data_geo)
+
+df_streetBBR <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv") # data from BBR
+
+# removing everything after the first comma and all numbers that may come before
+df_streetBBR$oc_formatted <- str_extract(df_streetBBR$oc_formatted, "^[^,]*")
+df_streetBBR$all_extracted_numbers <- str_extract_all(df_streetBBR$oc_formatted, "[0-9]+", simplify = TRUE)
+
+# checking matching street names according to how many times they appear in the BBR
+checkStreetMatch <- inner_join(df_streetBBR, data_geo, by = c("oc_formatted" = "vejnavne"),
+                                relationship = "many-to-many", unmatched = "drop")
+
+# keeping relevant columns + removing empty columns
+checkStreetMatch <- subset(
+  checkStreetMatch,
+  select =
+    c(
+      id_lokalId,
+      oc_formatted,
+      byg069Sikringsrumpladser,
+      latitude,
+      longitude,
+      geometry
+    )
+)
+
