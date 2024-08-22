@@ -155,9 +155,9 @@ p50 <- ggplot(docs_monthly, aes(x = year_month, y = count, color = Type)) +
   facet_zoom(x = year_month >as.Date("1949-01-30") & year_month < as.Date("1960-01-31"))+
   
   labs(
-    title = "Document Publication Frequency per Month",
+    title = "Aarhus CDC output per month",
     x = "Year-Month",
-    y = "Number of Documents"
+    y = "Number of shelter-related documents"
   ) +
   theme_light() +
   scale_x_date(date_breaks = "5 years", date_labels = "%Y") 
@@ -169,9 +169,9 @@ p60 <- ggplot(docs_monthly, aes(x = year_month, y = count, color = Type)) +
   facet_zoom(x = year_month >as.Date("1959-01-30") & year_month < as.Date("1970-01-31"))+
   
   labs(
-    title = "Document Publication Frequency per Month",
+    title = "Aarhus CDC output per month",
     x = "Year-Month",
-    y = "Number of Documents"
+    y = "Number of shelter-related documents"
   ) +
   theme_light() +
   scale_x_date(date_breaks = "5 years", date_labels = "%Y") 
@@ -182,9 +182,9 @@ p70 <- ggplot(docs_monthly, aes(x = year_month, y = count, color = Type)) +
   facet_zoom(x = year_month >as.Date("1969-01-30") & year_month < as.Date("1980-01-31"))+
   
   labs(
-    title = "Document Publication Frequency per Month",
+    title = "Aarhus CDC output per month",
     x = "Year-Month",
-    y = "Number of Documents"
+    y = "Number of shelter-related documents"
   ) +
   theme_light() +
   scale_x_date(date_breaks = "5 years", date_labels = "%Y") 
@@ -195,14 +195,18 @@ p80 <- ggplot(docs_monthly, aes(x = year_month, y = count, color = Type)) +
   facet_zoom(x = year_month >as.Date("1979-01-30") & year_month < as.Date("1990-01-31"))+
   
   labs(
-    title = "Document Publication Frequency per Month",
+    title = "Aarhus CDC output per month",
     x = "Year-Month",
-    y = "Number of Documents"
+    y = "Number of shelter-related documents"
   ) +
   theme_light() +
   scale_x_date(date_breaks = "5 years", date_labels = "%Y") 
 
 p50
+ggsave("figures/archiveddocs1950_20240820.png")
 p60
+ggsave("figures/archiveddocs1960_20240820.png")
 p70
+ggsave("figures/archiveddocs1970_20240820.png")
 p80
+ggsave("figures/archiveddocs1980_20240820.png")
