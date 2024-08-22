@@ -95,5 +95,6 @@ bbr_oc_addresses %>%
   st_drop_geometry() %>% 
   write_csv("output_data/SK_bbr_oc_addresses.csv")
 
-# TASK COMPLETED
-test <- readRDS("output_data/SK_bbr_oc_addresses.rds")
+# TASK COMPLETED - Test output 
+bbr <- readRDS("output_data/SK_bbr_oc_addresses.rds")
+bbr # crs = 4326
