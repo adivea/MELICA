@@ -51,6 +51,8 @@ private<- st_read("output_data/bbr_sikringsrum.geojson")
 names(private)
 sum(st_is_empty(st_as_sf(private$geometry)))
 
+private <- private %>% 
+  rename(capacity = places)
 
 
 #########################################################
@@ -76,7 +78,7 @@ pal <- colorNumeric("viridis", walking_isos$time, na.color = "transparent")
 mapbox_map %>% 
   addRasterImage(A_sm4326[[1]]) %>% 
   addCircleMarkers(data = st_transform(private, 4326),
-                   radius = sqrt(private$places), 
+                   radius = sqrt(private$capacity), 
                    color = "black") %>% 
   addPolygons(data = extent, 
               fill = FALSE, 
@@ -113,7 +115,8 @@ mapbox_map %>%
             pal = pal2, 
             title = "Walking time (min)")
 
-################################# Explore "unprotected"  areas 
+################################################## Explore "unprotected"  areas 
+
 isos6_dif  <- isos10m %>% 
   filter(time == 6) %>% 
   st_union() %>% 
@@ -131,11 +134,30 @@ tmap_mode(mode = "view")
 
 tmap_mode(mode = "plot")
 
+
+### facetted private shelters and public isochrones
+
+tm_shape(private, bbox = extent)+
+  tm_facets(by = "decade",
+            ncol = 4)+
+  tm_bubbles(size = "capacity",
+             col = "hotpink", scale = 2)+
+  tm_shape(isos10m %>% filter(time == 5))+
+  tm_polygons(col = "darkgreen", border.alpha = 0.1, 
+              alpha = 0.1,)+
+  tm_layout(legend.outside = "TRUE", 
+            legend.outside.position = "bottom")
+
+# un-facetted private and public sheter extent
 tm_shape(A_sm)+
   tm_rgb(alpha = 0.5)+
 tm_shape(private)+
-  tm_facets(by = "decade",
-            ncol = 4)+
-  tm_bubbles(size = "places")+
+  # tm_facets(by = "decade",
+  #           ncol = 4)+
+  tm_bubbles(size = "capacity", 
+             col = "hotpink",scale = 2)+
+tm_shape(isos10m %>% filter(time == 5))+
+  tm_polygons(col = "red", border.alpha = 0.1, 
+              alpha = 0.1,)+
   tm_layout(legend.outside = "TRUE", 
             legend.outside.position = "bottom")
