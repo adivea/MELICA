@@ -52,14 +52,30 @@ bbr %>%
 
 #now spatialized bbr
 bbr[bbr$id_lokalId%in%missingGeo,]
+bbr
 
-bbr
-bbr
 # save spatial data
 st_write(bbr, "output_data/bbr_sikringsrum.geojson")
 
+
+## testing private shelters and their extent 
+private<- st_read("output_data/bbr_sikringsrum.geojson")
+private <- private %>% 
+  rename(ID = id_lokalId, year = byg026Opførelsesår, places = byg069Sikringsrumpladser, 
+         code = kommunekode)
+
+# find and remove empty geometries
+sum(st_is_empty(st_as_sf(private$geometry)))
+
+private <- private %>% 
+  filter(!st_is_empty(st_as_sf(geometry)))
+
+# save spatial data
+st_write(private, "output_data/bbr_sikringsrum.geojson")
+
 ###################################################  MAPs
 # quick map
+bbr <- st_read("output_data/bbr_sikringsrum.geojson")
 bbr %>% 
   mapview()
 
@@ -81,4 +97,5 @@ tm_shape(bbr)+
 # - reverse geocode
 # - intersect with building footprints, crosscheck with archival records, 
 # - calculate total capacity per decade and compare with population trends
-
+# - check for duplicates: are all private shelters unique or are some double-entered,
+# - because a building got upgraded, etc.?

@@ -11,7 +11,7 @@
 library(sf)  # generic spatial data library
 library(mapview) # interactive maps on the pipeline
 library(tidyverse)
-library(tmap)  # publicaiton quality or facetted maps
+library(tmap)  # publication quality or facetted maps
 
 # Load Tommy's kml data 
 s <- st_read("output_data/kmlTommy.geojson")

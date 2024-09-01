@@ -7,11 +7,19 @@ library(sp)
 library(dodgr)
 library(tmap)
 install.packages("dodgr")
+library(mapview)
 
-shelters <- st_read("shelters.shp")
+sikringsrum <- st_read("output_data/bbr_sikringsrum.geojson")
+sikringsrum <- sikringsrum %>% 
+  st_transform(crs = 4326)
+shelters <- st_read("output_data/kmlTommy.geojson")
+st_crs(shelters) == st_crs(sikringsrum)
+
 parcels <- st_read("parcels.shp")
 streets <- st_read("streets.shp")
 
+plot(shelters$geometry); plot(sikringsrum, color = "blue", add = TRUE)
+mapview(sikringsrum, zcol = "decade") + mapview(shelters)
 #Create a Network Graph
 
 #Convert the street network into a graph object that can be used for network analysis.
