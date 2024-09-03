@@ -4,7 +4,7 @@
 # Libraries
 library(tidyverse)
 library(googlesheets4)
-install.packages("fable")
+# install.packages("fable")
 library(tsibbledata)
 library(fable)
 library(lubridate)
@@ -21,7 +21,7 @@ glimpse(metadata)
 metadata <- metadata %>% 
   rename(ID = ScanningsID, Startdate = `Dato fra (åååå-mm-dd)`, Enddate = `Dato til (åååå-mm-dd)`, Contenttype2 = `Indholdstype 2`,
          Contenttype3 =  `Indholdstype 3`, Contenttype4 = `Indholdstype 4`, Handwriting = `Indeholder håndskrift`, Visuals = `Mulige problemer med OCR`) %>% 
-  select(ID, Startdate, Enddate, Beskrivelsesnoter, Contenttype2, Contenttype3, Contenttype4, Kommentar, Handwriting, Visuals, EnhedsID )
+  dplyr::select(ID, Startdate, Enddate, Beskrivelsesnoter, Contenttype2, Contenttype3, Contenttype4, Kommentar, Handwriting, Visuals, EnhedsID )
 
 table(metadata$Startdate)
 
@@ -46,12 +46,14 @@ metadata <- metadata %>%
 metadata %>% 
   group_by(Type) %>% 
   summarize(sum = n(),
-            percent = round(sum / nrow(m_ts) *100, 1))
+            percent = round(sum / nrow(metadata) *100, 1))
 
 # ------- Start with time
 
 # Convert the tibble into a temporal tsibble (lose 20 records without date)
 m_ts <- as_tsibble(metadata %>% filter(!is.na(Startdate)), key = ID, index = Startdate)
+
+#saveRDS(m_ts, "output_data/archivedocs20240820_tsbl.rds")
 
 # Aggregate publication dates over monthly periods
 df_monthly <- m_ts %>% 
@@ -135,13 +137,91 @@ typed <- autoplot(publ_monthly, count) +
     legend.text = element_text(size = 8)  # Adjust legend text size
   )# Adjust these values to move the legend
 
-combined_plot <- plain / typed
+# grab SK_year or BBR from 11_TemporalOverview
+bbr <- st_read("output_data/bbr_sikringsrum.geojson")
+SK_year<- bbr %>%
+  st_drop_geometry() %>%
+  filter(year > 1920) %>% 
+  group_by(year) %>%
+  summarize(sum = n())%>%
+  ggplot(aes(x = year, y = sum)) +
+  geom_line()+
+  theme_minimal()+
+  labs(x = "Year of construction", 
+       y = "Private shelter containing buildings")
+
+SK_year
+combined_plot <- plain / typed 
+combined_plot <- plain / SK_year
 combined_plot
 
 ggsave("figures/archiveddocsaggr_20240820.png")
 
 
 
+###################### PLOT ARCHIVE VS SK CONSTRUCTION WITH TWO AXES:
+
+library(lubridate)
+library(tsibble)
+
+# Aggregate publication dates over yearly periods
+df_annual <- m_ts %>% 
+  tsibble::index_by(year = ~ year(.)) %>% # annual aggregates
+  summarise(count = n()) 
+
+# First plot (primary axis)
+plot1 <- autoplot(df_annual, count) +
+  labs(
+    title = "Civil Defence Commission document output per Month",
+    x = NULL,
+    y = "Archived documents"
+  ) +
+  theme_minimal()
+
+# Second plot (secondary axis)
+
+# Aggregate BBR into tsibble
+bbr_ts <- bbr %>%
+  st_drop_geometry() %>%
+  filter(year > 1920) %>%
+  mutate(year_dec = ymd(paste(year, "12", "31", sep = "-")))  %>%   # Create year_month with December
+  as_tsibble(index = year_dec, key = ID) %>% 
+  tsibble::index_by(year_month = ~ yearmonth(.))
+
+# Group by the year_month column and count the number of occurrences
+
+bbr_ts_annual <- bbr_ts %>%
+  tsibble::index_by(year = ~ year(.)) %>% # annual aggregates
+  summarise(count = n()) 
+
+glimpse(bbr_ts_annual)
+
+# Overlay the plots
+# Define a scaling factor to align the second plot's y-axis with the first plot's y-axis
+scaling_factor <- 2  # You can adjust this factor to get the desired scaling
+
+# Combined plot
+plot_combined <- ggplot() +
+  # First plot (primary axis)
+  geom_line(data = df_monthly, aes(x = year_month, y = count), color = "black") +
+  # Second plot (secondary axis), with scaled y values
+  geom_line(data = bbr_ts_annual, aes(x = year_month, y = count * scaling_factor), color = "blue") +
+  scale_y_continuous(
+    name = "CDC documents",  # Primary y-axis label
+    sec.axis = sec_axis(~ . / scaling_factor, name = "New buildings containing private shelter")  # Secondary y-axis label with inverse scaling
+  ) +
+  labs(
+    title = "CDC activity vis-a-vis private shelter construction",
+    x = "Year"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.title.y.right = element_text(color = "blue")  # Color the secondary y-axis label to match the line
+  )
+
+plot_combined
+ggsave("figures/archiveddocsvsSK_20240820.png", width = 7, height = 3)
+ggsave("figures/archiveddocsvsSK_20240820.tiff", width = 7, height = 3)
 ######  ------------------- Plotting with zoom facet
 
 library(ggforce)

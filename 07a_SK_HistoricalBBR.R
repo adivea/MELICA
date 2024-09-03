@@ -1,0 +1,226 @@
+### BBR data from Ulrik (BBR) with sikringsrum
+
+# library 
+library(tidyverse)
+library(sf)
+library(mapview)
+
+# data sample
+bbr <- read_csv("data/BBR_SKtest.csv")
+
+# real data
+bbr <- read_csv("data/BBR_AarhusAll.csv")
+
+# kommunekode
+bbr %>% 
+  group_by(kommunekode) %>% 
+  tally() # What is 751 - modern sikringsrum code?
+
+
+# spatialize and get decades
+bbr <- bbr %>% 
+  mutate(decade = case_when(
+    byg026Opførelsesår < 1940 ~ '1930s',
+    byg026Opførelsesår < 1950 ~ '1940s',
+    byg026Opførelsesår < 1960 ~ '1950s',
+    byg026Opførelsesår < 1970 ~ '1960s',
+    byg026Opførelsesår < 1980 ~ '1970s',
+    byg026Opførelsesår < 1990 ~ '1980s',
+    byg026Opførelsesår < 2000 ~ '1990s',
+    byg026Opførelsesår < 2010 ~ '2000s'
+  )) %>% 
+  st_as_sf(wkt = "byg404Koordinat", crs = 25832)
+
+#################################################  VERIFY DATA QUALITY
+
+### Attributes
+# any NAs in the 'decade'?  27 built in 2000-2004
+bbr %>% 
+ # filter(is.na(decade))  
+  filter(decade == '2000s') %>% pull(byg026Opførelsesår)
+
+bbr %>% 
+  group_by(decade) %>% 
+  tally()
+
+### Spatial
+st_is_valid(bbr$byg404Koordinat)
+
+bbr %>% 
+  #group_by(byg404Koordinat) %>% tally()  #13 empty collections
+ filter(grepl("GEOMETRY", byg404Koordinat)) %>% pull(id_lokalId) -> missingGeo
+
+#now spatialized bbr
+bbr[bbr$id_lokalId%in%missingGeo,]
+bbr
+
+# save spatial data
+st_write(bbr, "output_data/bbr_sikringsrum.geojson")
+
+
+## testing private shelters and their extent 
+private<- st_read("output_data/bbr_sikringsrum.geojson")
+private <- private %>% 
+  rename(ID = id_lokalId, year = byg026Opførelsesår, places = byg069Sikringsrumpladser, 
+         code = kommunekode)
+
+# find and remove empty geometries
+sum(st_is_empty(st_as_sf(private$geometry)))
+
+private <- private %>% 
+  filter(!st_is_empty(st_as_sf(geometry)))
+
+# save spatial data
+st_write(private, "output_data/bbr_sikringsrum.geojson")
+
+
+###################################################  SUMMARY MAPs with MAPVIEW
+# quick map
+bbr <- st_read("output_data/bbr_sikringsrum.geojson")
+bbr <- bbr %>%
+  mutate(decade = case_when(
+    decade == '1930s' ~ '1180-1939',
+    TRUE ~ decade  # Keep the original value for other cases
+  )) 
+mapview(bbr, zcol = "decade")
+
+
+bbr_89 <- bbr %>% 
+  dplyr::filter(decade < "1990s") 
+bbr_89 %>% 
+  mapview(zcol = "decade")
+
+###################################################  FACETTED MAPs with TMAP
+# Visualize sikringsrum construction and capacity over time
+library(tmap)
+tmap_options(limits = c(facets.view = 8))  # we want to view 5 periods
+
+tmap_mode(mode = "view")
+
+tm_shape(bbr)+
+  tm_facets(by = "decade",
+            ncol = 4)+
+  tm_bubbles(size = "places")
+
+
+# Up to 1989
+library(tmap)
+tmap_options(limits = c(facets.view = 6))  # we want to view 5 periods
+
+tmap_mode(mode = "plot")
+
+tm_shape(bbr_89)+
+  tm_facets(by = "decade",
+            ncol = 3)+
+  tm_bubbles(size = "places")
+
+tmap_mode("plot")
+
+
+############## ------------------------------------- Create a full map
+install.packages("geodata")
+library(geodata)
+
+dk <- gadm(country = "DNK", level = 0, path = "data/")
+# Create a bounding box for Aarhus if you don't have a shapefile
+aarhus_bbox_sm <- st_as_sfc(st_bbox(c(xmin = 10.1, ymin = 56.1, xmax = 10.25, ymax = 56.2), crs = st_crs(4326)))
+aarhus_bbox <- st_as_sfc(st_bbox(c(xmin = 9.99, ymin = 56.0, xmax = 10.35, ymax = 56.3), crs = st_crs(4326)))
+
+tm_shape(bbr_89) +
+  tm_basemap("CartoDB.Positron") +  # CartoDB.Positron as the basemap
+  tm_dots(col = "decade", 
+          palette = "viridis", 
+          title = "Decade",
+          size = "places",  # Adjust the size of the points
+          alpha = 0.8) +  # Transparency level
+  tm_shape(aarhus_bbox_sm) +
+  tm_borders(lwd = 2, col = "red") +  # Bounding box around Aarhus
+  tm_layout(title = "Private shelter construction in Aarhus",
+            legend.position = c("right", "bottom"),
+            frame = FALSE) +  # Remove outer frame
+  tm_compass(type = "8star", position = c("left", "top"))  # North arrow
+  tm_inset_tm(
+    tm_shape(dk) +
+      tm_polygons(col = "gray90", border.col = "white") +  # Denmark inset
+      tm_shape(aarhus_bbox) +
+      tm_borders(lwd = 2, col = "red"),  # Bounding box in inset map
+    width = 0.2, height = 0.2, 
+    position = c("left", "bottom"))  # Position the inset map
+  
+  
+################------------------------------With inset
+  
+# Create the main map
+main_map <- tm_shape(bbr_89) +
+    tm_basemap("CartoDB.Positron") +  # CartoDB.Positron as the basemap (only if "view" is set)
+    tm_dots(col = "decade", 
+            palette = "viridis", 
+            title = "Decade",  # Label for the color legend
+            size = "places",  # Adjust the size of the points
+            title.size = "Capacity",  # Label for the size legend
+            scale = 1.5,  # Increase the size of all symbols by 1.5 times
+            legend.is.portrait = TRUE,
+            alpha = 0.8) +  # Transparency level
+    tm_shape(st_as_sf(dk)) +
+    tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
+    tm_layout(title = "Private shelter construction in Aarhus municipality",
+              #legend.position = c("right", "bottom"),
+              legend.position = c("left", "top"),
+              legend.title.size = 1.2,  # Adjust the size of the legend title
+              legend.text.size = 0.8,  # Adjust the size of the legend text
+              legend.stack = "vertical",  # Stack the legends vertically
+              frame = TRUE) +  # Remove outer frame
+    tm_compass(type = "8star", position = c("right", "bottom")) +  # North arrow
+    tm_scale_bar(position = c("right", "bottom"))  # Scale bar
+main_map
+
+# Create the inset map of Denmark
+dk <- dk %>% 
+  st_as_sf() 
+
+dk_bbox <- dk %>% 
+  st_as_sf() %>% 
+  st_bbox
+  
+dk_bbox <- st_as_sfc(st_bbox(c(xmin = 8.07, ymin = 54.5, xmax = 13, ymax = 58), crs = st_crs(4326)))
+mapview(dk_bbox)
+
+inset_map <- tm_shape(st_as_sf(dk), bbox = dk_bbox) +
+    tm_polygons(col = "gray90", border.col = "white") +  # Denmark base layer in inset
+    tm_shape(aarhus_bbox) +
+    tm_borders(lwd = 2, col = "red") +  # Bounding box in inset map
+    tm_layout(frame = TRUE)  # Remove frame from inset
+ 
+library(grid)
+  
+  # Draw the main map
+print(main_map)
+  
+  # Overlay the inset map
+vp_inset <- viewport(width = 0.25, height = 0.25, x = 0.12, y = 0.02, just = c("left", "bottom"))
+  
+print(inset_map, vp = vp_inset)
+
+
+
+#######  PRINT IT OUT
+
+# Step 3: Export the combined map as a TIFF at 400 DPI
+tiff("SK_Aarhus_decade_map.tiff", width = 8, height = 10, units = "in", res = 400)
+
+# Draw the main map
+print(main_map)
+
+# Overlay the inset map
+vp_inset <- viewport(width = 0.25, height = 0.25, x = 0.1, y = 0.02, just = c("left", "bottom"))
+print(inset_map, vp = vp_inset)
+
+# Close the TIFF device
+dev.off()
+
+##########################################      What next? 
+# - reverse geocode
+# - intersect with building footprints, crosscheck with archival records, 
+# - calculate total capacity per decade and compare with population trends
+# - check for duplicates: are all private shelters unique or are some double-entered,
+# - because a building got upgraded, etc.?

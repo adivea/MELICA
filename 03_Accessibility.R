@@ -150,12 +150,13 @@ tm_shape(private, bbox = extent)+
 
 # un-facetted private and public sheter extent
 tm_shape(A_sm)+
-  tm_rgb(alpha = 0.5)+
+  tm_rgb(alpha = 0.7)+
 tm_shape(private)+
   # tm_facets(by = "decade",
   #           ncol = 4)+
   tm_bubbles(size = "capacity", 
-             col = "hotpink",scale = 2)+
+             col = "hotpink",
+             scale = 2)+
 tm_shape(isos10m %>% filter(time == 5))+
   tm_polygons(col = "red", border.alpha = 0.1, 
               alpha = 0.1,)+
