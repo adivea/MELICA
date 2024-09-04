@@ -109,7 +109,7 @@ gs4_deauth()
 # sum(s$first_number %in% s_addresses$BDnr)
 # 
 
-############################################################# RECONCILE THE ADDRESSES ATTRIBUTES
+############################################ RECONCILE THE ADDRESSES ATTRIBUTES
 
 library(googlesheets4)
 gs4_deauth()
@@ -158,8 +158,9 @@ shelter_t_type %>%
   write_csv("output_data/sh_types2023.csv")
 
 st_write(shelter_t_type, "output_data/sh_types2023.geojson")
+
 ###################### CORRECTED TYPES IN TMAPS
-shelter_t_type <- read_sf( "output_data/sh_types2023.geojson")
+shelter_t_type <- read_sf( "output_data/sh_types2023.geojson") #Tommy's 2024 contribution
 
 shelter_t_type
 # Visualize features by type and landuse
@@ -177,7 +178,8 @@ tm_shape(shelter_t_type)+
 
 ############################## FILTER UNVERIFIED SHELTER ATTRIBUTES 
 
-# we wish to join the two address files filtering out Konstantina's and keeping the notes field to inform groundtruthing
+# we wish to join the two address files filtering out Konstantina's 
+# and keeping the notes field to inform groundtruthing
 
 toverify <- address_k %>% 
   left_join(address_t, by = c("Bd_nr" = "BDnr"), relationship = "many-to-many") # beware that 1623 and 1501 are duplicated (due to move)
@@ -214,3 +216,46 @@ shelter_t_type %>%
          latitude = st_coordinates(.)[,2]) %>% 
   st_drop_geometry() %>% 
   write_csv("output_data/visit11June.csv")
+
+
+################  SPATIAL aggregation of verified and unverified 
+# there are no shared attributes because Tommy often has one point for multiple features
+# we need to do a spatial join
+names(shelter_t_type)
+names(s)
+
+s <- s %>% 
+  mutate(Source = "Tommy") 
+
+# I am overlapping our verified points over Tommy's points to get true points
+# where he clusters multiple shelters under 1 point
+# result in 182 points
+
+intersecting_points <- sh_typesclean %>% 
+  mutate(Source = "FAIMS23") %>% 
+  st_buffer(50) %>% 
+  st_join(s, join = st_intersects) # %>% glimpse()
+  # group_by(Source.x) %>% 
+  # tally()
+  # mapview(zcol = "verified")
+
+# Difference between Tommy and FAIMS data
+
+# First, create a union of all buffer geometries
+buffer_union <- sh_typesclean %>% 
+  mutate(Source = "FAIMS23") %>% 
+  st_buffer(50) %>% 
+  st_union() %>% 
+  st_make_valid()
+
+all.equal(st_crs(s), st_crs(buffer_union))
+
+# Use st_difference to find points that are not within the buffer_union
+non_intersecting_Tpoints <- s[st_difference(s, buffer_union), ]
+
+# View the result
+mapview(non_intersecting_Tpoints, zcol = "verified") + mapview(intersecting_points)
+
+# Save results
+st_write(intersecting_points, "output_data/TF_verified.geojson")  # Tommy's points we verified with FAIMS in 2023
+st_write(non_intersecting_Tpoints, "output_data/TF_unverified.geojson") # TOmmy's points we need to visit

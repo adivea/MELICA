@@ -1,5 +1,10 @@
 ### BBR data from Ulrik (BBR) with sikringsrum
 
+# This script creates historical sikringsrum spatial data from BBR data provided by Ulrik
+# It removes empty geometries and renames columns to English, saves data as bbr_sikringsrum.geojson
+# and creates bbr_89 data for historical overview and visualisation
+# offers summary mapview and facetted tmaps by decade in undifferentiated dataset
+
 # library 
 library(tidyverse)
 library(sf)
@@ -43,6 +48,8 @@ bbr %>%
   group_by(decade) %>% 
   tally()
 
+#################################################  REMOVE EMPTY GEOMETRIES
+
 ### Spatial
 sum(st_is_valid(bbr$byg404Koordinat))
 sum(st_is_empty(bbr$byg404Koordinat))
@@ -73,8 +80,9 @@ bbr <- bbr %>%
 # save spatial data
 st_write(bbr, "output_data/bbr_sikringsrum.geojson", append = FALSE)
 
+#################################################  TEST DATA QUALITY - - BBR89
 
-## testing private shelters and their extent 
+## Testing private shelters and their extent 
 private<- st_read("output_data/bbr_sikringsrum.geojson")
 private <- private %>% 
   rename(ID = id_lokalId, year = byg026Opførelsesår, places = byg069Sikringsrumpladser, 

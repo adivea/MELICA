@@ -1,16 +1,27 @@
 #### ------------- MAPPING BBR DATA FOR CJ JOURNAL WITH CAPACITY
 
-
+## Maps in Tmap (for overviews see HistoricalBBR end)
 ### BBR data from Ulrik (BBR) with sikringsrum, processed in 07_HistoricalBBR
 
-bbr <- st_read("output_data/bbr_sikringsrum.geojson")
-bbr_89 # reload from HistoricalBBR/Temporal overview
+
 
 # library 
 library(tidyverse)
 library(sf)
 library(mapview)
 library(tmap)
+
+
+# Private shelter data
+bbr <- st_read("output_data/bbr_sikringsrum.geojson")
+
+bbr_89   <- bbr %>%
+  mutate(decade = case_when(
+    decade == '1930s' ~ '1180-1939',
+    TRUE ~ decade  # Keep the original value for other cases
+  )) %>% 
+  dplyr::filter(decade < "1990s") 
+
 
 ############## ------------------------------------- Prep additional map components
 
