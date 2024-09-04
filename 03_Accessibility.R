@@ -43,6 +43,10 @@ mapview(extent)
 
 # Shelters
 token <- "pk.eyJ1IjoiYWRpdmVhIiwiYSI6ImNrcWdhNGlybjB4OG0ydnNjcWZtOG9mc3UifQ.EbNmMF9aF8th5cb-h5f1lQ"
+
+# Public shelters merged (from 7b_Mapping)
+sh_merged <- readRDS("output_data/sh_merged.rds")
+
 # Read in the shelter data
 shelter <- read_sf("output_data/kmlTommy.geojson") 
 
@@ -90,6 +94,7 @@ g
 # Walking range of exactly 5 mins
 walking_isos <- read_sf("output_data/Tommy_walkisos5m_4326.shp")
 # walking_isos <- mb_isochrone(shelter, profile = "walking", time = 5, id = "first_number")
+walking_isos <- mb_isochrone(sh_merged, profile = "walking", time = 5)
 # st_write(walking_isos,"output_data/Tommy_walkisos5m_4326.shp")
 
 # Walking range of 1-10 mins
@@ -133,10 +138,18 @@ mapbox_map %>%
               fill = FALSE,
               stroke = TRUE, color = "black") %>% 
               #label = ~paste0("Total Income: ", dollar(income)),
+  
+  # addPolygons(data = walking_isos, 
+  #             fillColor = ~pal2(time),
+  #             stroke = FALSE, 
+  #             fillOpacity = 0.1,
+  #             highlight = highlightOptions(weight = 10,
+  #                                          color = "blue",
+  #                                          bringToFront = TRUE)) %>%
               
-  addPolygons(data = isos10m %>% filter(time < 6), 
+  addPolygons(data = isos10m %>% filter(time < 6),
               fillColor = ~pal2(time),
-              stroke = FALSE, 
+              stroke = FALSE,
               fillOpacity = 0.1,
               highlight = highlightOptions(weight = 10,
                                            color = "blue",
@@ -155,6 +168,14 @@ aarhus_diff <- aarhus_ch %>%
   st_difference(isos6_dif) %>% 
   st_as_sf()
 
+#######################################################  MAPS
+
+# Create a bounding box for Aarhus if you don't have a shapefile
+aarhus_bbox_sm <- st_as_sfc(st_bbox(c(xmin = 10.1, ymin = 56.1, xmax = 10.25, ymax = 56.2), crs = st_crs(4326)))
+aarhus_bbox_m <- st_as_sfc(st_bbox(c(xmin = 10.05, ymin = 56.05, xmax = 10.28, ymax = 56.25), crs = st_crs(4326)))
+aarhus_bbox <- st_as_sfc(st_bbox(c(xmin = 9.99, ymin = 56.0, xmax = 10.35, ymax = 56.3), crs = st_crs(4326)))
+
+
 # Private shelters construction and capacity over time : facetted maps
 
 library(tmap)
@@ -167,9 +188,11 @@ tmap_mode(mode = "plot")
 
 ### facetted private shelters and public isochrones
 
+
+
 tm_shape(private, bbox = extent)+
-  tm_facets(by = "decade",
-            ncol = 4)+
+  # tm_facets(by = "decade",
+  #           ncol = 4)+
   tm_bubbles(size = "capacity",
              col = "hotpink", scale = 2)+
   tm_shape(isos10m %>% filter(time == 5))+
@@ -178,16 +201,17 @@ tm_shape(private, bbox = extent)+
   tm_layout(legend.outside = "TRUE", 
             legend.outside.position = "bottom")
 
-# un-facetted private and public sheter extent
+# un-facetted private and public sheter extent  FIGURE
 tm_shape(A_sm)+
   tm_rgb(alpha = 0.7)+
-tm_shape(private)+
+tm_shape(private, bbox = st_bbox(A_sm))+
   # tm_facets(by = "decade",
   #           ncol = 4)+
   tm_bubbles(size = "capacity", 
              col = "hotpink",
              scale = 2)+
-tm_shape(isos10m %>% filter(time == 5))+
+# tm_shape(isos10m %>% filter(time == 5))+
+  tm_shape(walking_isos) + 
   tm_polygons(col = "red", border.alpha = 0.1, 
               alpha = 0.1,)+
   tm_layout(legend.outside = "TRUE", 

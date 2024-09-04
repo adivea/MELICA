@@ -48,6 +48,8 @@ sh_merged <- rbind(verified, unverified)
 sh_merged <- sh_merged %>% 
   st_transform(25832)
 sh_merged$Verified <- as.factor(sh_merged$Verified)
+
+saveRDS(sh_merged, "output_data/sh_merged.rds") # only points and 2024 verification status of public shelters
 # View the result
 mapview(sh_merged, zcol = "Verified")
 
@@ -148,7 +150,7 @@ print(inset_map, vp = vp_inset)
 
 
 
-############## -------------------------------------  PRINT IT OUT - Figure 1
+############## -------------------------------------  PRINT IT OUT - Figure 
 
 # Step 3: Export the combined map as a TIFF at 400 DPI
 tiff("figures/SK_BTG_decade_map.tiff", width = 7, height = 10, units = "in", res = 400)
