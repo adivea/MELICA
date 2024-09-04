@@ -4,8 +4,7 @@
 ### BBR data from Ulrik (BBR) with sikringsrum, processed in 07_HistoricalBBR
 
 bbr <- st_read("output_data/bbr_sikringsrum.geojson")
-names(bbr)
-
+bbr_89 # reload from HistoricalBBR/Temporal overview
 
 # library 
 library(tidyverse)
@@ -20,6 +19,7 @@ install.packages("geodata")
 library(geodata)
 
 dk <- gadm(country = "DNK", level = 0, path = "data/")
+
 # Create a bounding box for Aarhus if you don't have a shapefile
 aarhus_bbox_sm <- st_as_sfc(st_bbox(c(xmin = 10.1, ymin = 56.1, xmax = 10.25, ymax = 56.2), crs = st_crs(4326)))
 aarhus_bbox_m <- st_as_sfc(st_bbox(c(xmin = 10.05, ymin = 56.05, xmax = 10.28, ymax = 56.25), crs = st_crs(4326)))
@@ -62,7 +62,7 @@ tm_inset_tm(
 ################------------------------------ Add an inset and public shelters!
 
 # Create the main map
-main_map <- tm_shape(st_as_sf(dk), bbox = aarhus_bbox_m) +
+main_map <- tm_shape(st_as_sf(Aarhus$geometry), bbox = aarhus_bbox_m) +
 #  tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
   tm_polygons(col = "white")+
   tm_shape(bbr_89) +

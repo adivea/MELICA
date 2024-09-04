@@ -44,18 +44,34 @@ bbr %>%
   tally()
 
 ### Spatial
-st_is_valid(bbr$byg404Koordinat)
+sum(st_is_valid(bbr$byg404Koordinat))
+sum(st_is_empty(bbr$byg404Koordinat))
 
-bbr %>% 
-  #group_by(byg404Koordinat) %>% tally()  #13 empty collections
- filter(grepl("GEOMETRY", byg404Koordinat)) %>% pull(id_lokalId) -> missingGeo
 
-#now spatialized bbr
-bbr[bbr$id_lokalId%in%missingGeo,]
-bbr
+## 2 ways of eliminating empty values: 1) st_is_empty() or 2) group and eliminate
+
+# First
+bbr <- bbr %>% 
+  # filter away valid but empty geometries 
+  filter(!st_is_empty(st_as_sf(byg404Koordinat))) %>%
+  # rename columns
+  rename(ID = id_lokalId, year = byg026Opførelsesår, places = byg069Sikringsrumpladser, 
+         code = kommunekode, geometry = byg404Koordinat) %>% 
+  # reinitialize renamed geometry column
+  st_as_sf(wkt = "geometry", crs = 25832)
+
+
+# Second
+# bbr %>% 
+#   #group_by(byg404Koordinat) %>% tally()  #13 empty collections
+#  filter(grepl("GEOMETRY", byg404Koordinat)) %>% pull(id_lokalId) -> missingGeo
+# 
+# #now spatialized bbr
+# bbr[bbr$id_lokalId%in%missingGeo,]
+# bbr
 
 # save spatial data
-st_write(bbr, "output_data/bbr_sikringsrum.geojson")
+st_write(bbr, "output_data/bbr_sikringsrum.geojson", append = FALSE)
 
 
 ## testing private shelters and their extent 
@@ -71,7 +87,7 @@ private <- private %>%
   filter(!st_is_empty(st_as_sf(geometry)))
 
 # save spatial data
-st_write(private, "output_data/bbr_sikringsrum.geojson")
+st_write(private, "output_data/bbr_sikringsrum.geojson", append = FALSE)
 
 
 ###################################################  SUMMARY MAPs with MAPVIEW
