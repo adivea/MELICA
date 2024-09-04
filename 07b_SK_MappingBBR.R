@@ -22,7 +22,20 @@ bbr_89   <- bbr %>%
   )) %>% 
   dplyr::filter(decade < "1990s") 
 
+# Public shelter data
 
+# Load verified and unverified data
+verified <- st_read("output_data/TF_verified.geojson")
+unverified <- st_read("output_data/TF_unverified.geojson")
+
+# Raw datasets
+s <- st_read("output_data/kmlTommy.geojson") # Tommys RS data
+shelter <- read_sf("output_data/shelters23.geojson") # Verified FAIMS data
+sh_typesclean <- shelter %>% 
+  filter(FeatureType != "Other") %>% 
+  filter(FeatureType != "NA") 
+
+mapview(sh_typesclean) + mapview(s, zcol = "verified")  
 ############## ------------------------------------- Prep additional map components
 
 

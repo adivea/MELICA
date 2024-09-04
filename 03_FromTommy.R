@@ -234,7 +234,8 @@ s <- s %>%
 intersecting_points <- sh_typesclean %>% 
   mutate(Source = "FAIMS23") %>% 
   st_buffer(50) %>% 
-  st_join(s, join = st_intersects) # %>% glimpse()
+  st_join(s, join = st_intersects)  %>%  # figure out which intersect and with what
+  st_centroid() %>% glimpse()  # convert back from polyogns (buffers) to points 
   # group_by(Source.x) %>% 
   # tally()
   # mapview(zcol = "verified")
@@ -257,5 +258,5 @@ non_intersecting_Tpoints <- s[st_difference(s, buffer_union), ]
 mapview(non_intersecting_Tpoints, zcol = "verified") + mapview(intersecting_points)
 
 # Save results
-st_write(intersecting_points, "output_data/TF_verified.geojson")  # Tommy's points we verified with FAIMS in 2023
+st_write(intersecting_points, "output_data/TF_verified.geojson", append = FALSE)  # Tommy's points we verified with FAIMS in 2023
 st_write(non_intersecting_Tpoints, "output_data/TF_unverified.geojson") # TOmmy's points we need to visit
