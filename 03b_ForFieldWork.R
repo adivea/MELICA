@@ -59,3 +59,50 @@ tovisit24 %>%
          latitude = st_coordinates(.)[,2]) %>% 
   st_drop_geometry() %>% 
   write_csv("output_data/visit2024.csv")
+
+
+##########################################  SPATIAL aggregation of verified and unverified
+
+# there are no shared attributes because Tommy often has one point for multiple features
+# we need to do a spatial join
+names(shelter_t_type)
+names(s)
+
+s <- s %>% 
+  mutate(Source = "Tommy") 
+
+# I am overlapping our verified points over Tommy's points to get true points
+# where he clusters multiple shelters under 1 point
+# result in 182 points
+
+intersecting_points <- sh_typesclean %>% 
+  mutate(Source = "FAIMS23") %>% 
+  st_buffer(50) %>% 
+  st_join(s, join = st_intersects)  %>%  # figure out which intersect and with what
+  st_centroid() %>% #glimpse()  # convert back from polyogns (buffers) to points 
+  rename(Source = Source.x)
+  # group_by(Source.x) %>% 
+# tally()
+# mapview(zcol = "verified")
+
+# Difference between Tommy and FAIMS data
+
+# First, create a union of all buffer geometries
+buffer_union <- sh_typesclean %>% 
+  mutate(Source = "FAIMS23") %>% 
+  st_buffer(50) %>% 
+  st_union() %>% 
+  st_make_valid()
+
+all.equal(st_crs(s), st_crs(buffer_union))
+
+# Use st_difference to find points that are not within the buffer_union
+non_intersecting_Tpoints <- s[st_difference(s, buffer_union), ]
+
+# View the result
+mapview(non_intersecting_Tpoints, zcol = "verified") + mapview(intersecting_points)
+
+# Save results
+st_write(intersecting_points, "output_data/TF_verified23.geojson", append = FALSE)  # Tommy's points we verified with FAIMS in 2023
+st_write(non_intersecting_Tpoints, "output_data/TF_unverified.geojson") # TOmmy's points we need to visit
+

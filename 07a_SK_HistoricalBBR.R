@@ -80,7 +80,7 @@ bbr <- bbr %>%
 # save spatial data
 st_write(bbr, "output_data/bbr_sikringsrum.geojson", append = FALSE)
 
-#################################################  TEST DATA QUALITY - - BBR89
+#################################################  TEST DATA QUALITY - 
 
 ## Testing private shelters and their extent 
 private<- st_read("output_data/bbr_sikringsrum.geojson")
@@ -98,7 +98,7 @@ private <- private %>%
 st_write(private, "output_data/bbr_sikringsrum.geojson", append = FALSE)
 
 
-###################################################  SUMMARY MAPs with MAPVIEW
+###################################################  - BBR89 - SUMMARY MAPs with MAPVIEW
 # quick map
 bbr <- st_read("output_data/bbr_sikringsrum.geojson")
 bbr <- bbr %>%
@@ -131,7 +131,7 @@ tm_shape(bbr)+
 library(tmap)
 tmap_options(limits = c(facets.view = 6))  # we want to view 5 periods
 
-tmap_mode(mode = "plot")
+tmap_mode(mode = "view")
 
 tm_shape(bbr_89)+
   tm_facets(by = "decade",

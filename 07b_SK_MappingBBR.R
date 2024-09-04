@@ -25,8 +25,15 @@ bbr_89   <- bbr %>%
 # Public shelter data
 
 # Load verified and unverified data
-verified <- st_read("output_data/TF_verified.geojson")
-unverified <- st_read("output_data/TF_unverified.geojson")
+
+verified <- st_read("output_data/TF_verified23.geojson") # very liberal  (some duplicates but spatially in same spot)
+unverified <- st_read("output_data/TF_unverified.geojson") # very conservative 
+unverified <- st_read("output_data/2024_needlgv.geojson")
+
+verified %>% 
+  select(FeatureID, Source) %>% 
+  merge(unverified$first_number) %>% 
+  mapview(Source)
 
 # Raw datasets
 s <- st_read("output_data/kmlTommy.geojson") # Tommys RS data
@@ -36,6 +43,7 @@ sh_typesclean <- shelter %>%
   filter(FeatureType != "NA") 
 
 mapview(sh_typesclean) + mapview(s, zcol = "verified")  
+mapview(verified) +mapview (unverified)
 ############## ------------------------------------- Prep additional map components
 
 
