@@ -8,7 +8,10 @@ library(mapview)
 library(raster)
 
 # Data
-A_sat <- brick("C:/Users/Adela/Documents/RStudio/1_Teaching/cds-spatial-2024/data/Aarhus_1m.TIF")
+
+#A_sat <- brick("C:/Users/Adela/Documents/RStudio/1_Teaching/cds-spatial-2024/data/Aarhus_1m.TIF")
+A_sat <- brick("C:/Users/au616760/OneDrive - Aarhus universitet/Documents/RStudio/1_Teaching/cds-spatial/data/Aarhus_1m.TIF")
+
 A_sm <- aggregate(A_sat, fact = 10) 
 A_sm4326 <- projectRaster(A_sm, crs = 4326,  fun = "ngb")
 
@@ -17,10 +20,13 @@ plotRGB(A_sm)
 # Aarhus sat img
 # Aarhus bounding boxes
 DKmun <- readRDS("C:/Users/Adela/Documents/RStudio/1_Teaching/cds-spatial-2024/data/gadm36_DNK_2_sp.rds")
+DKmun <- readRDS("C:/Users/au616760/OneDrive - Aarhus universitet/Documents/RStudio/1_Teaching/cds-spatial/data/gadm36_DNK_2_sp.rds")
+
 Aarhus <- DKmun %>% 
   st_as_sf() %>% 
   st_transform( crs = 4326) %>% 
   filter(NAME_2 == "Århus")
+
 # Union polygons 
 extent <- walking_isos %>% 
   st_union() %>% 
@@ -56,6 +62,30 @@ private <- private %>%
 
 
 #########################################################
+
+######################################################## Vector building footprints
+
+vector_extract15 <- get_vector_tiles(
+  tileset_id = "mapbox.mapbox-streets-v8",
+  location = c(10.21076, 56.15674),
+  zoom = 15
+)
+
+names(vector_extract)
+
+
+library(ggplot2)
+
+ggplot(vector_extract$building$polygons) + 
+  geom_sf() + 
+  theme_void() +
+  geom_sf(vector_extract$building$polygons) + 
+  theme_void()
+g
+
+
+#########################################################
+
 
 # Walking range of exactly 5 mins
 walking_isos <- read_sf("output_data/Tommy_walkisos5m_4326.shp")

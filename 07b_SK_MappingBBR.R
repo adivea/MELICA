@@ -35,15 +35,22 @@ verified %>%
   merge(unverified$first_number) %>% 
   mapview(Source)
 
-# Raw datasets
-s <- st_read("output_data/kmlTommy.geojson") # Tommys RS data
-shelter <- read_sf("output_data/shelters23.geojson") # Verified FAIMS data
-sh_typesclean <- shelter %>% 
-  filter(FeatureType != "Other") %>% 
-  filter(FeatureType != "NA") 
+unverified <- unverified %>% 
+  dplyr::select(geometry) %>% 
+  mutate(Verified = "No")
+verified <- verified %>%
+  dplyr::select(geometry) %>% 
+  distinct() %>% 
+  mutate(Verified = "Yes") 
 
-mapview(sh_typesclean) + mapview(s, zcol = "verified")  
-mapview(verified) +mapview (unverified)
+# Step 2: Merge the two sf objects into a single sf object
+sh_merged <- rbind(verified, unverified)
+sh_merged <- sh_merged %>% 
+  st_transform(25832)
+sh_merged$Verified <- as.factor(sh_merged$Verified)
+# View the result
+mapview(sh_merged, zcol = "Verified")
+
 ############## ------------------------------------- Prep additional map components
 
 
@@ -65,9 +72,9 @@ dk_bbox <- st_as_sfc(st_bbox(c(xmin = 8.07, ymin = 54.5, xmax = 13, ymax = 58), 
 mapview(dk_bbox)
 
 
-############## ------------------------------------- Create a full map
+############## ------------------------------------- Create a full map interactive
 
-tmap_mode(mode = "plot")
+tmap_mode(mode = "view")
 
 tm_shape(bbr_89) +
   tm_basemap("CartoDB.Positron") +  # CartoDB.Positron as the basemap
@@ -82,19 +89,15 @@ tm_shape(bbr_89) +
             legend.position = c("right", "bottom"),
             frame = FALSE) +  # Remove outer frame
   tm_compass(type = "8star", position = c("left", "top"))  # North arrow
-tm_inset_tm(
-  tm_shape(dk) +
-    tm_polygons(col = "gray90", border.col = "white") +  # Denmark inset
-    tm_shape(aarhus_bbox) +
-    tm_borders(lwd = 2, col = "red"),  # Bounding box in inset map
-  width = 0.2, height = 0.2, 
-  position = c("left", "bottom"))  # Position the inset map
 
 
-################------------------------------ Add an inset and public shelters!
+
+################------------------------------ Static map with an inset and public shelters!
+
+tmap_mode(mode = "plot")
 
 # Create the main map
-main_map <- tm_shape(st_as_sf(Aarhus$geometry), bbox = aarhus_bbox_m) +
+main_map <- tm_shape(dk$geometry, bbox = aarhus_bbox_m) +
 #  tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
   tm_polygons(col = "white")+
   tm_shape(bbr_89) +
@@ -106,15 +109,10 @@ main_map <- tm_shape(st_as_sf(Aarhus$geometry), bbox = aarhus_bbox_m) +
           scale = 1.5,  # Increase the size of all symbols by 1.5 times
           legend.is.portrait = TRUE,
           alpha = 0.8) +  # Transparency level
-  # tm_squares(
-  #   col = "white",
-  #   alpha = 0.8,
-  #   size = 0.08) +
-  # tm_shape(sh_typesclean) +
-  # tm_squares(
-  #          col = "grey50",
-  #          alpha = 0.6,
-  #          size = 0.08) +
+  
+  tm_shape(sh_merged) +
+    tm_squares(size = 0.1, col = "Verified", palette = c("white", "grey9"))+
+  
   tm_layout(title = "Shelter construction in Aarhus municipality",
             #legend.position = c("right", "bottom"),
             legend.position = c("left", "top"),
@@ -122,16 +120,8 @@ main_map <- tm_shape(st_as_sf(Aarhus$geometry), bbox = aarhus_bbox_m) +
             legend.text.size = 0.8,  # Adjust the size of the legend text
             legend.stack = "vertical",  # Stack the legends vertically
             frame = TRUE,  # Remove outer frame
-            bg.color = "grey85") + # Set the background color to a light grey) +  
-  
-  tm_shape(s) +
-  tm_symbols(shape = "verified", 
-             shapes = c(22, 22), 
-             col = c( "white","grey"), 
-             size = 0.08,
-             alpha = 0.8, 
-             label = "Public shelters") +
-  
+            bg.color = "grey85") + # Set the background color to a light grey  
+ 
   tm_compass(type = "8star", position = c("right", "bottom")) +  # North arrow
   tm_scale_bar(position = c("right", "bottom"))  # Scale bar
 
@@ -161,13 +151,13 @@ print(inset_map, vp = vp_inset)
 ############## -------------------------------------  PRINT IT OUT - Figure 1
 
 # Step 3: Export the combined map as a TIFF at 400 DPI
-tiff("figures/SK_BTG_decade_map.tiff", width = 8, height = 10, units = "in", res = 400)
+tiff("figures/SK_BTG_decade_map.tiff", width = 7, height = 10, units = "in", res = 400)
 
 # Draw the main map
 print(main_map)
 
 # Overlay the inset map
-vp_inset <- viewport(width = 0.3, height = 0.3, x = 0.2, y = 0.02, just = c("left", "bottom"))
+vp_inset <- viewport(width = 0.3, height = 0.3, x = 0.07, y = 0.01, just = c("left", "bottom"))
 print(inset_map, vp = vp_inset)
 
 # Close the TIFF device

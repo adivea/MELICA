@@ -51,12 +51,13 @@ library(mapview)
 mapview(head(bbr_aarhus_data_flat))
 
 # overview of years
-table(bbr_aarhus_data_flat$byg026Year)
+hist(table(bbr_aarhus_data_flat$byg026Year))
+
 
 bbr_aarhus_data_flat %>% 
   filter(byg026Year>1960) %>% 
   group_by(id_lokalId) %>% 
-  #pull(byg026Year) %>% 
+  pull(byg026Year) %>% 
   tally()
   table()
 #loading distric geoJSONs to get mappable district polygons
