@@ -80,7 +80,9 @@ intersecting_points <- sh_typesclean %>%
   st_buffer(50) %>% 
   st_join(s, join = st_intersects)  %>%  # figure out which intersect and with what
   st_centroid() %>% #glimpse()  # convert back from polyogns (buffers) to points 
-  rename(Source = Source.x)
+  rename(Source = Source.x) %>% 
+  group_by(FeatureID) %>% 
+    tally() %>% arrange(desc(n))
   # group_by(Source.x) %>% 
 # tally()
 # mapview(zcol = "verified")

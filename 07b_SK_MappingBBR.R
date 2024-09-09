@@ -15,6 +15,8 @@ library(tmap)
 # Private shelter data
 bbr <- st_read("output_data/bbr_sikringsrum.geojson")
 
+mapview(bbr)
+
 bbr_89   <- bbr %>%
   mutate(decade = case_when(
     decade == '1930s' ~ '1180-1939',
@@ -51,6 +53,8 @@ sh_merged$Verified <- as.factor(sh_merged$Verified)
 
 saveRDS(sh_merged, "output_data/sh_merged.rds") # only points and 2024 verification status of public shelters
 # View the result
+sh_merged <- readRDS("output_data/sh_merged.rds") # only points and 2024 verification status of public shelters
+
 mapview(sh_merged, zcol = "Verified")
 
 ############## ------------------------------------- Prep additional map components
