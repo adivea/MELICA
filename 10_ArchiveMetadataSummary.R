@@ -24,8 +24,8 @@ metadata <- metadata %>%
   dplyr::select(ID, Startdate, Enddate, Beskrivelsesnoter, Contenttype2, Contenttype3, Contenttype4, Kommentar, Handwriting, Visuals, EnhedsID )
 
 table(metadata$Startdate)
-
-
+names(metadata)
+unique(metadata$EnhedsID)
 # ---Classification of documents by content (Map, Visuals, Text)
 
 metadata <- metadata %>%

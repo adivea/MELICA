@@ -58,7 +58,7 @@ tmap_options(limits = c(facets.view = 5))  # we want to view 5 periods
 
 tmap_mode(mode = "view")
 
-tm_shape(sh_typesclean)+
+tm_shape(sh_typesclean %>% filter(FeatureType %in% c("Shelter Type III","Shelter Type IV", "Shelter Type VI")))+
   tm_facets(by = "FeatureType",
             ncol = 3)+
   tm_bubbles(col = "LanduseOnTop")+
