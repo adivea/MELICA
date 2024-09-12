@@ -222,6 +222,7 @@ plot_combined <- ggplot() +
 plot_combined
 ggsave("figures/archiveddocsvsSK_20240820.png", width = 7, height = 3)
 ggsave("figures/archiveddocsvsSK_20240820.tiff", width = 7, height = 3)
+
 ######  ------------------- Plotting with zoom facet
 
 library(ggforce)

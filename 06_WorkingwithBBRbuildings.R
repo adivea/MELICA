@@ -64,6 +64,7 @@ bbr_aarhus_data_flat <-bbr_aarhus_data %>%
   st_as_sf(wkt = "byg404Koordinat", crs = 25832)
 
 saveRDS(bbr_aarhus_data_flat,"output_data/bbr_residential_aarhus.rds")
+saveRDS(all_bbr_aarhus,"output_data/bbr_aal_aarhus.rds")
 
 # # trying the sikringsrum code "236" but to no avail >> no records
 # bbr_aarhus_sikring <- bbr_aarhus_data_flat %>% 
@@ -73,9 +74,9 @@ library(mapview)
 mapview(head(bbr_aarhus_data_flat))
 
 # overview of years
-all_bbr <- all_bbr_aarhus %>% 
+all_bbr <- all_bbr_aarhus %>%   # 50,000 entries
   filter(byg026Year >1935 & byg026Year <2005)
-res_bbr <- bbr_aarhus_data_flat %>% 
+res_bbr <- bbr_aarhus_data_flat %>%  # 30,000 entries
   filter(byg026Year >1935 & byg026Year <2005)
 
 hist(all_bbr$byg026Year, main = "Construction in Aarhus (based on BBR)")
@@ -139,6 +140,10 @@ bbr_aarhus_data_flat %>%
   st_drop_geometry() %>% 
   group_by(byg054AntalEtager) %>% 
   tally()
+
+
+
+
 
 ################################################################################
 #Creating choropleth overlays on basemaps from OpenStreetMaps, showing the number of new buildings by districs in a given year or range of years
