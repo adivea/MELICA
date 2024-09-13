@@ -157,7 +157,7 @@ ui <- fluidPage(
                   sep = "")
     ),
     mainPanel(
-      leafletOutput("map", height = "1000px")
+      leafletOutput("map", height = "500px")
     )
   )
 )
