@@ -1,0 +1,30 @@
+---
+title: "Fieldmark data"
+author: "Adela Sobotkova"
+date: "2024-09-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(googlesheets4)
+library(tidyverse)
+library(mapview)
+```
+
+
+Get data
+```{r}
+data <- read_csv("C:/Users/Adela/Downloads/Shelter.csv")
+glimpse(data)
+data_sf <- data %>% 
+  st_as_sf(coords = c("take-point-from-gps_longitude",
+                      "take-point-from-gps_latitude" ), crs = 4326)
+mapview(data_sf)
+
+data_sf <- data %>% 
+  st_as_sf(coords = c("take-point-from-gps_latitude",
+                      "take-point-from-gps_longitude"), crs = 4326)
+mapview(data_sf)
+```
+
