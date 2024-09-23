@@ -13,7 +13,7 @@ ch <- st_as_sf(st_convex_hull(st_union(s23)))
 
 mapview(s, zcol = "verified") + mapview(s23) + mapview(aar)  
 
-#################################################### FIELDWORK FOR 2024
+#################################################### FIELDWORK FOR 2024 on basis of TOMMY's and 2023 data
 
 s23buff <- st_buffer(s23, 50)
 st_is_valid(s23buff)
@@ -108,3 +108,28 @@ mapview(non_intersecting_Tpoints, zcol = "verified") + mapview(intersecting_poin
 st_write(intersecting_points, "output_data/TF_verified23.geojson", append = FALSE)  # Tommy's points we verified with FAIMS in 2023
 st_write(non_intersecting_Tpoints, "output_data/TF_unverified.geojson") # TOmmy's points we need to visit
 
+library(sf)
+tovisit24 <- read_sf("output_data/2024_needlgv.geojson")
+st_write(tovisit24,"output_data/2024_needlgv.shp")
+shelter$identifier
+
+
+########################################################
+########################  ANDREAS' SUGGESTIONS ON BASIS OF STREAMLINING
+
+andreas <- read_sheet("https://docs.google.com/spreadsheets/d/1H8EhFgwhDGKCsM95BTjNwifg5K-oXTv2Q4Qbx84k7ZU/edit?gid=0#gid=0",
+                      range = "Shelters", 
+                      col_types = "ddcccddcddccccccdddcccccdddcdddcccc")
+#filter those needing review in 2024
+andreas <- andreas %>% 
+  #filter(Needs_Revisit == "No") # 144 surveyed
+  filter(Needs_Revisit != "No") %>% # 135 need something verified
+  filter(!is.na(Final_Longitude_1987)) %>%  # 134 valid coordinates
+  st_as_sf(coords = c("Final_Longitude_1987","Final_Latitude_1987" ), crs = 4326)
+
+andreas %>% glimpse()
+
+andreas %>% 
+  mapview(zcol  = "Coordinats_changed_by_Andreas")
+
+st_write(andreas, "output_data/andreas_shelters.geojson")
