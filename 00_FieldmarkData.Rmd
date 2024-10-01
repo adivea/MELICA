@@ -50,7 +50,17 @@ data %>%
   select(identifier, day, updated) %>% 
   group_by(day) %>%
   tally()
-
 st_write(data, "data/Fieldmark/fieldmark_day3.geojson")
+```
+# Reload saved data
+```{r}
+names(data)
+data %>% 
+  select(identifier, shelter.type, entryway.type, landuse.on.top, landuse.around, geometry) %>% 
+  st_write("data/Fieldmark/fieldmark.shp")
+
+data <- st_read("data/Fieldmark/fieldmark_day3.geojson")
+data
+mapview(data)
 ```
 
