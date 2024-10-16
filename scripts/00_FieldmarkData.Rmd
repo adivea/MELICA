@@ -1,0 +1,66 @@
+---
+title: "Fieldmark data"
+author: "Adela Sobotkova"
+date: "2024-09-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(googlesheets4)
+library(tidyverse)
+library(mapview)
+library(sf)
+```
+
+
+Get data
+```{r}
+data <- read_csv("C:/Users/Adela/Downloads/Shelter (1).csv")
+glimpse(data)
+data_sf <- data %>% 
+    filter(id < 1000) %>% 
+  st_as_sf(coords = c("take-point-from-gps_latitude",
+                      "take-point-from-gps_longitude"), crs = 4326)
+
+data2 <- read_csv("C:/Users/Adela/Downloads/Shelter (2).csv")
+data2_sf <- data2 %>% 
+  filter(id < 1000) %>% 
+ st_as_sf(coords = c("take-point-from-gps_latitude",
+                      "take-point-from-gps_longitude"), crs = 4326)
+
+mapview(data2_sf) + mapview(data_sf) + mapview(bbr)
+
+```
+
+Create first week data file
+```{r}
+data <- rbind(data_sf, data2_sf)
+data <- data %>% 
+  mutate(id = as.numeric(id)) %>% 
+  mutate(day = day(updated)) %>% 
+  #select(id) %>% 
+  arrange(id)
+
+mapview(data, zcol = "day") + mapview(shelter)
+
+
+library(lubridate)
+data %>% 
+  select(identifier, day, updated) %>% 
+  group_by(day) %>%
+  tally()
+st_write(data, "data/Fieldmark/fieldmark_day3.geojson")
+```
+# Reload saved data
+```{r}
+names(data)
+data %>% 
+  select(identifier, shelter.type, entryway.type, landuse.on.top, landuse.around, geometry) %>% 
+  st_write("data/Fieldmark/fieldmark.shp")
+
+data <- st_read("data/Fieldmark/fieldmark_day3.geojson")
+data
+mapview(data)
+```
+

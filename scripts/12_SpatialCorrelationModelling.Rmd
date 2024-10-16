@@ -1,0 +1,72 @@
+---
+title: "Equity"
+output: html_document
+date: "2024-09-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##  Equity
+
+### Data loading
+```{rdata}
+# SR : Private shelter locations and buildings in Aarhus
+SR <- st_read("output_data/SK_bbr_oc_addresses.geojson")
+SR <- SR %>% 
+  rename(ID = id_lokalId, byg026Year = byg026Opførelsesår, places = byg069Sikringsrumpladser)
+
+bbr_aarhus_data_flat <- readRDS("output_data/bbr_residential_aarhus.rds")
+
+# Polygons for Aarhus district in geoJSON format for mappable results
+aarhus_districts <- st_read("https://sciencedata.dk/public/67e2ad2ca642562dacfa6fdf672a1009/aarhus_districts.geojson")
+
+# Polygons with data on new buildings: intersections of the district polygons and the point data from BBR
+intersections_aarhus <- st_intersection(aarhus_districts,bbr_aarhus_data_flat) %>% 
+  dplyr::select(id = id_lokalId, navn = prog_distrikt_navn, byg021BygningensAnvendelse,byg026Year, decade, byg054AntalEtager,byg406Koordinatsystem,city,geometry)
+
+# Project polygons to EPSG 4326
+intersections_aarhus <- st_transform(intersections_aarhus, 4326)  # Polygons
+
+```
+
+## 1. Spatial Autocorrelation
+Spatial autocorrelation examines the degree to which the number of new buildings (or shelters/capacity) in one district is similar to its neighboring districts. If nearby districts tend to have similar values, then spatial autocorrelation is present.
+
+Global Moran's I: This is a global measure of spatial autocorrelation that assesses whether the number of new buildings or shelter capacities are clustered, dispersed, or randomly distributed across the study area. Moran's I can be used to assess both variables (new buildings and shelter capacity) individually and their potential relationship.
+Local Moran's I (LISA): This helps identify local clusters or outliers of high/low values (hotspots or coldspots) of new buildings and shelters. It provides insights into specific areas (districts) where new buildings or shelter capacities are unusually high or low compared to their surroundings.
+
+--- I need it in time (or have to do a cumulative assessment from 1950 - 1990)
+
+## 2. Bivariate Moran’s I (Spatial Correlation Between Two Variables)
+If you want to assess the spatial relationship between two variables — in this case, new buildings and shelters/capacity — you can extend the Moran’s I test to a bivariate Moran’s I. This method will help you understand if high (or low) values of one variable (e.g., new buildings) spatially correlate with high (or low) values of another variable (e.g., shelter capacity).
+Implementation: This can also be done using the spdep or spatialreg libraries in R, where you can calculate the bivariate Moran's I and determine if there's a significant spatial correlation between the two variables.
+
+## 3. Geographically Weighted Regression (GWR)
+GWR is a local form of linear regression used to model spatial relationships. It allows the relationship between variables (e.g., number of new buildings and shelter capacity) to vary across the geographic space of Aarhus. This is useful if you suspect that the relationship might not be uniform across districts but instead may vary based on location.
+What you get from GWR: You can see how the strength and direction of the relationship between new buildings and shelter capacity differ from district to district.
+Implementation: The spgwr package in R is commonly used for Geographically Weighted Regression.
+
+## 4. Spatial Lag Models (SLM) and Spatial Error Models (SEM)
+These regression models account for spatial dependencies in the data. The Spatial Lag Model (SLM) assumes that the dependent variable (number of new buildings) in a given district is influenced by the values of the same variable in neighboring districts. Meanwhile, the Spatial Error Model (SEM) assumes that the error terms are spatially correlated, which might indicate some omitted spatial variable driving the relationship between the number of new buildings and shelter capacity.
+When to use: These models are ideal if you expect that spatial interactions between districts influence the variables you're analyzing.
+Implementation: You can use the spatialreg package in R to run spatial regression models.
+
+## 5. Hotspot Analysis (Getis-Ord Gi)*
+This method helps identify significant hotspots or coldspots for the number of new buildings or shelter capacity within Aarhus. By calculating the Getis-Ord Gi* statistic, you can identify districts where there is a statistically significant cluster of either high or low values for your variables.
+Example Use: Identify districts where new buildings are concentrated and overlay this with shelter capacity to see if the hotspots overlap.
+Implementation: The spdep or sf packages, in combination with spatial weights, can be used to perform hotspot analysis.
+
+## 6. Cross-K Function (Point Pattern Analysis)
+If you treat both new buildings and shelter locations as point patterns, you can use the Cross-K function to study the spatial interaction between these two point patterns. This method assesses whether the two point patterns (e.g., new building locations and shelter locations) are spatially correlated, independent, or repel each other over varying distances.
+Implementation: You can explore this using the spatstat package in R for point pattern analysis.
+
+## 7. Multivariate Spatial Analysis: Spatial Durbin Model (SDM)
+This model is an extension of spatial regression models and includes spatial lag terms for both the dependent and independent variables. The Spatial Durbin Model (SDM) allows you to simultaneously model the spatial relationships of multiple variables and their spatial lags. This would be useful to see if, for example, districts with high shelter capacity also have a spillover effect on neighboring districts in terms of new building development.
+Implementation: The spatialreg package can be used for implementing SDM.
+
+## 8. Spatial Econometrics Analysis
+If you have access to socio-economic or demographic data in addition to new buildings and shelters, you can use spatial econometrics to explore the relationship between multiple factors and their spatial dependencies. For example, you could explore whether the number of new buildings and shelter capacity are influenced by population density, economic activity, or land prices, while accounting for spatial autocorrelation.
+Implementation: Explore spatial econometric models using the spatialreg and splm packages in R.
+
