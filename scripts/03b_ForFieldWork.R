@@ -133,3 +133,10 @@ andreas %>%
   mapview(zcol  = "Coordinats_changed_by_Andreas")
 
 st_write(andreas, "output_data/andreas_shelters.geojson")
+
+andreas <- st_read("output_data/andreas_shelters.geojson")
+andreas %>% 
+  mutate(longitude = st_coordinates(.)[,1],
+         latitude = st_coordinates(.)[,2]) %>% 
+  st_drop_geometry() %>% 
+  write_csv("output_data/andreas20240901.csv")

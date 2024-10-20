@@ -1,5 +1,7 @@
 # ------  Testing urban road network
 
+# mockup with ChatGPT input
+
 library(tidyverse)
 library(sf)
 library(igraph)
