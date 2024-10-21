@@ -64,7 +64,7 @@ bbr_aarhus_data_flat <-bbr_aarhus_data %>%
   st_as_sf(wkt = "byg404Koordinat", crs = 25832)
 
 saveRDS(bbr_aarhus_data_flat,"output_data/bbr_residential_aarhus.rds")
-saveRDS(all_bbr_aarhus,"output_data/bbr_aal_aarhus.rds")
+saveRDS(all_bbr_aarhus,"output_data/bbr_all_aarhus.rds")
 
 # # trying the sikringsrum code "236" but to no avail >> no records
 # bbr_aarhus_sikring <- bbr_aarhus_data_flat %>% 

@@ -26,6 +26,8 @@ metadata <- metadata %>%
 table(metadata$Startdate)
 names(metadata)
 unique(metadata$EnhedsID)
+
+
 # ---Classification of documents by content (Map, Visuals, Text)
 
 metadata <- metadata %>%
@@ -138,6 +140,7 @@ typed <- autoplot(publ_monthly, count) +
   )# Adjust these values to move the legend
 
 # grab SK_year or BBR from 11_TemporalOverview
+
 bbr <- st_read("output_data/bbr_sikringsrum.geojson")
 SK_year<- bbr %>%
   st_drop_geometry() %>%
@@ -205,10 +208,10 @@ plot_combined <- ggplot() +
   # First plot (primary axis)
   geom_line(data = df_monthly, aes(x = year_month, y = count), color = "black") +
   # Second plot (secondary axis), with scaled y values
-  geom_line(data = bbr_ts_annual, aes(x = year_month, y = count * scaling_factor), color = "blue") +
+  geom_line(data = bbr_ts_annual, aes(x = year_month, y = count * scaling_factor), color = "red", size = 1.2) +
   scale_y_continuous(
     name = "CDC documents",  # Primary y-axis label
-    sec.axis = sec_axis(~ . / scaling_factor, name = "New buildings containing private shelter")  # Secondary y-axis label with inverse scaling
+    sec.axis = sec_axis(~ . / scaling_factor, name = "New buildings with private shelter")  # Secondary y-axis label with inverse scaling
   ) +
   labs(
     title = "CDC activity vis-a-vis private shelter construction",
@@ -216,7 +219,7 @@ plot_combined <- ggplot() +
   ) +
   theme_minimal() +
   theme(
-    axis.title.y.right = element_text(color = "blue")  # Color the secondary y-axis label to match the line
+    axis.title.y.right = element_text(color = "red")  # Color the secondary y-axis label to match the line
   )
 
 plot_combined
