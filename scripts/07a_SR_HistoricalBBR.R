@@ -1,8 +1,8 @@
-### BBR data from Ulrik (BBR) with sikringsrum
+### SR data from Ulrik (SR) with sikringsrum
 
-# This script creates historical sikringsrum spatial data from BBR data provided by Ulrik
-# It removes empty geometries and renames columns to English, saves data as bbr_sikringsrum.geojson
-# and creates bbr_89 data for historical overview and visualisation
+# This script creates historical sikringsrum spatial data from SR data provided by Ulrik
+# It removes empty geometries and renames columns to English, saves data as SR_sikringsrum.geojson
+# and creates SR_89 data for historical overview and visualisation
 # offers summary mapview and facetted tmaps by decade in undifferentiated dataset
 
 # library 
@@ -10,20 +10,17 @@ library(tidyverse)
 library(sf)
 library(mapview)
 
-# data sample
-bbr <- read_csv("data/BBR_SKtest.csv")
-
 # real data
-bbr <- read_csv("data/BBR_AarhusAll.csv")
+SR <- read_csv("data/SR_AarhusAll.csv")
 
 # kommunekode
-bbr %>% 
+SR %>% 
   group_by(kommunekode) %>% 
   tally() # What is 751 - modern sikringsrum code?
 
 
 # spatialize and get decades
-bbr <- bbr %>% 
+SR <- SR %>% 
   mutate(decade = case_when(
     byg026Opførelsesår < 1940 ~ '1930s',
     byg026Opførelsesår < 1950 ~ '1940s',
@@ -40,25 +37,25 @@ bbr <- bbr %>%
 
 ### Attributes
 # any NAs in the 'decade'?  27 built in 2000-2004
-bbr %>% 
+SR %>% 
  # filter(is.na(decade))  
   filter(decade == '2000s') %>% pull(byg026Opførelsesår)
 
-bbr %>% 
+SR %>% 
   group_by(decade) %>% 
   tally()
 
 #################################################  REMOVE EMPTY GEOMETRIES
 
 ### Spatial
-sum(st_is_valid(bbr$byg404Koordinat))
-sum(st_is_empty(bbr$byg404Koordinat))
+sum(st_is_valid(SR$byg404Koordinat))
+sum(st_is_empty(SR$byg404Koordinat))
 
 
 ## 2 ways of eliminating empty values: 1) st_is_empty() or 2) group and eliminate
 
 # First
-bbr <- bbr %>% 
+SR <- SR %>% 
   # filter away valid but empty geometries 
   filter(!st_is_empty(st_as_sf(byg404Koordinat))) %>%
   # rename columns
@@ -69,21 +66,21 @@ bbr <- bbr %>%
 
 
 # Second
-# bbr %>% 
+# SR %>% 
 #   #group_by(byg404Koordinat) %>% tally()  #13 empty collections
 #  filter(grepl("GEOMETRY", byg404Koordinat)) %>% pull(id_lokalId) -> missingGeo
 # 
-# #now spatialized bbr
-# bbr[bbr$id_lokalId%in%missingGeo,]
-# bbr
+# #now spatialized SR
+# SR[SR$id_lokalId%in%missingGeo,]
+# SR
 
 # save spatial data
-st_write(bbr, "output_data/bbr_sikringsrum.geojson", append = FALSE)
+st_write(SR, "output_data/SR_sikringsrum.geojson", append = FALSE)
 
 #################################################  TEST DATA QUALITY - 
 
 ## Testing private shelters and their extent 
-private<- st_read("output_data/bbr_sikringsrum.geojson")
+private<- st_read("output_data/SR_sikringsrum.geojson")
 private <- private %>% 
   rename(ID = id_lokalId, year = byg026Opførelsesår, places = byg069Sikringsrumpladser, 
          code = kommunekode)
@@ -95,23 +92,23 @@ private <- private %>%
   filter(!st_is_empty(st_as_sf(geometry)))
 
 # save spatial data
-st_write(private, "output_data/bbr_sikringsrum.geojson", append = FALSE)
+st_write(private, "output_data/SR_sikringsrum.geojson", append = FALSE)
 
 
-###################################################  - BBR89 - SUMMARY MAPs with MAPVIEW
+###################################################  - SR89 - SUMMARY MAPs with MAPVIEW
 # quick map
-bbr <- st_read("output_data/bbr_sikringsrum.geojson")
-bbr <- bbr %>%
+SR <- st_read("output_data/SR_sikringsrum.geojson")
+SR <- SR %>%
   mutate(decade = case_when(
     decade == '1930s' ~ '1180-1939',
     TRUE ~ decade  # Keep the original value for other cases
   )) 
-mapview(bbr, zcol = "decade")
+mapview(SR, zcol = "decade")
 
 
-bbr_89 <- bbr %>% 
+SR_89 <- SR %>% 
   dplyr::filter(decade < "1990s") 
-bbr_89 %>% 
+SR_89 %>% 
   mapview(zcol = "decade")
 
 ###################################################  FACETTED MAPs with TMAP
@@ -121,7 +118,7 @@ tmap_options(limits = c(facets.view = 8))  # we want to view 5 periods
 
 tmap_mode(mode = "view")
 
-tm_shape(bbr)+
+tm_shape(SR)+
   tm_facets(by = "decade",
             ncol = 4)+
   tm_bubbles(size = "places")
@@ -133,7 +130,7 @@ tmap_options(limits = c(facets.view = 6))  # we want to view 5 periods
 
 tmap_mode(mode = "view")
 
-tm_shape(bbr_89)+
+tm_shape(SR_89)+
   tm_facets(by = "decade",
             ncol = 3)+
   tm_bubbles(size = "places")

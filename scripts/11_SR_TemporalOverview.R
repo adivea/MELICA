@@ -7,7 +7,7 @@ library(mapview)
 library(tsibble)
 library(fable)
 
-###  BBR- based sikringsum (SR) temporal overviews
+### SR and BBR temporal overviews
 
 ################################################### Temporal overview
 
@@ -47,47 +47,6 @@ SR %>%
   group_by(decade) %>% 
   summarize(buildings = n(), 
             capacity = sum(places))
-
-####################### TIMESERIES SK BLDG CAPACITY per DECADE
-
-SR_summarized <- SR %>% 
-  st_drop_geometry() %>% 
-  group_by(decade) %>% 
-  summarize(buildings = n(), 
-            capacity = sum(places), 
-            avg_places = capacity/buildings) %>%
-  mutate(decade = factor(decade, levels = unique(decade), ordered = TRUE))
-
-SR_summarized %>% 
-  filter(decade < "1990s") %>% 
-  tally(capacity)
-
-library(ggplot2)
-
-# Define a scaling factor to align the capacity with the number of buildings
-scaling_factor <- max(SR_summarized$buildings) / max(SR_summarized$capacity)
-
-# Create the combined plot
-SK_places_buildings <- ggplot(data = SR_summarized, aes(x = decade)) +
-  # First plot (buildings count)
-  geom_line(aes(y = buildings, group = 1), color = "black") +
-  # Second plot (capacity) with scaled y values
-  geom_line(aes(y = capacity * scaling_factor, group = 1), color = "blue") +
-  scale_y_continuous(
-    name = "Number of Buildings",  # Primary y-axis label
-    sec.axis = sec_axis(~ . / scaling_factor, name = "Capacity (Places)")  # Secondary y-axis label with inverse scaling
-  ) +
-  labs(
-    title = "Buildings and Capacity Over Time by Decade",
-    x = "Decade"
-  ) +
-  theme_minimal() +
-  theme(
-    axis.title.y.right = element_text(color = "blue")  # Color the secondary y-axis label to match the capacity line
-  )
-
-# View the plot
-print(SK_places_buildings)  # boring to look at
 
 
 #################### TIMESERIES BLDG and CAPACITY BY YEAR
@@ -162,13 +121,44 @@ bbr_aarhus_data_flat <- readRDS("output_data/bbr_residential_aarhus.rds")
 all_bbr_aarhus <- readRDS("output_data/bbr_all_aarhus.rds")
 all_bbr <- all_bbr_aarhus %>%   # 50,000 entries
   filter(byg026Year >1935 & byg026Year <2005) %>% 
+  mutate(decade = case_when(
+    byg026Year < 1940 ~ '1930s',
+     byg026Year < 1950 ~ '1940s',
+     byg026Year < 1960 ~ '1950s',
+     byg026Year < 1970 ~ '1960s',
+     byg026Year < 1980 ~ '1970s',
+     byg026Year < 1990 ~ '1980s',
+     byg026Year < 2000 ~ '1990s',
+     byg026Year < 2010 ~ '2000s'
+  )) %>% 
   group_by(byg026Year) %>%
   summarise(count = n())
 res_bbr <- bbr_aarhus_data_flat %>%  # 30,000 entries
   filter(byg026Year >1935 & byg026Year <2005) %>% 
-  group_by(byg026Year) %>%
-  summarise(count = n())
+  group_by(byg026Year, byg054AntalEtager) %>%
+  summarise(count = n()) %>% 
+  mutate(decade = case_when(
+      byg026Year < 1940 ~ '1930s',
+      byg026Year < 1950 ~ '1940s',
+      byg026Year < 1960 ~ '1950s',
+      byg026Year < 1970 ~ '1960s',
+      byg026Year < 1980 ~ '1970s',
+      byg026Year < 1990 ~ '1980s',
+      byg026Year < 2000 ~ '1990s',
+      byg026Year < 2010 ~ '2000s'
+    ))
 
+
+# statistics
+res_bbr %>% 
+  st_drop_geometry() %>% 
+  filter(byg054AntalEtager>2) %>% 
+  group_by(decade) %>% 
+  summarize(sum = sum(count))
+  
+
+range(SR$places)
+sort(unique(SR$places))
 # proof of concept 
 SR %>%
   st_drop_geometry() %>%

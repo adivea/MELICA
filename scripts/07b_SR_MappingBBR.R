@@ -1,7 +1,7 @@
-#### ------------- MAPPING BBR DATA FOR CJ JOURNAL WITH CAPACITY
+#### ------------- MAPPING SR DATA FOR CJ JOURNAL WITH CAPACITY
 
-## Maps in Tmap (for overviews see HistoricalBBR end)
-### BBR data from Ulrik (BBR) with sikringsrum, processed in 07_HistoricalBBR
+## Maps in Tmap (for overviews see HistoricalSR end)
+### SR data from Ulrik (SR) with sikringsrum, processed in 07_HistoricalSR
 
 
 
@@ -11,19 +11,27 @@ library(sf)
 library(mapview)
 library(tmap)
 
-# ----------- GET DATA
 
 # Private shelter data
-bbr <- st_read("output_data/bbr_sikringsrum.geojson")
+SR <- st_read("output_data/SR_sikringsrum.geojson")
 
-mapview(bbr)
+mapview(SR)
 
-bbr_89   <- bbr %>%
+SR_89   <- SR %>%
   mutate(decade = case_when(
     decade == '1930s' ~ '1180-1939',
     TRUE ~ decade  # Keep the original value for other cases
   )) %>% 
-  dplyr::filter(decade < "1990s") 
+  dplyr::filter(decade < "1990s" & decade > "1180-1939") 
+
+table(SR_89$decade)
+table(SR_89$year)
+
+SR %>% 
+  #SR_89 %>% 
+  group_by(decade) %>% 
+  summarize(sum = n())
+
 
 # Public shelter data
 
@@ -58,19 +66,13 @@ sh_merged <- readRDS("output_data/sh_merged.rds") # only points and 2024 verific
 
 mapview(sh_merged, zcol = "Verified")
 
-############## ------------------------ Prep additional spatial data / map components
+############## ------------------------------------- Prep additional map components
 
 
 install.packages("geodata")
 library(geodata)
 
-########### Get Denmark boundary
-
 dk <- gadm(country = "DNK", level = 0, path = "data/")
-
-dk_cities <- gadm(country = "DNK", level = 3, path = "data/")
-
-########### Aarhus bboxes: 
 
 # Create a bounding box for Aarhus if you don't have a shapefile
 aarhus_bbox_sm <- st_as_sfc(st_bbox(c(xmin = 10.1, ymin = 56.1, xmax = 10.25, ymax = 56.2), crs = st_crs(4326)))
@@ -84,22 +86,12 @@ dk <- dk %>%
 dk_bbox <- st_as_sfc(st_bbox(c(xmin = 8.07, ymin = 54.5, xmax = 13, ymax = 58), crs = st_crs(4326)))
 mapview(dk_bbox)
 
-############## Aarhus "trading city" boundary
-A_koeb <- st_read("data/Aarhus_koebstkom_pre1970.geojson")
 
-########## Aarhus parish/church boundaries
-A_sogne <- st_read("data/Aarhus_sogne_pre1970.geojson")
-
-## Defining "urban" area of Aarhus
-# Town: An urban area is defined as a built-up area with at least 200 inhabitants. In a built-up area the distance between the buildings is not more than 200 metres, unless the interruption is due to public facilities, parks, cemeteries, etc.(UN definition of urban areas).
-# https://www.dst.dk/en/Statistik/dokumentation/documentationofstatistics/urban-areas/statistical-presentation
-
-# for modern data look at : https://github.com/ok-dk/dagi/tree/master/geojson
 ############## ------------------------------------- Create a full map interactive
 
 tmap_mode(mode = "view")
 
-tm_shape(bbr_89) +
+tm_shape(SR_89) +
   tm_basemap("CartoDB.Positron") +  # CartoDB.Positron as the basemap
   tm_dots(col = "decade", 
           palette = "viridis", 
@@ -123,7 +115,7 @@ tmap_mode(mode = "plot")
 main_map <- tm_shape(dk$geometry, bbox = aarhus_bbox_m) +
 #  tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
   tm_polygons(col = "white")+
-  tm_shape(bbr_89) +
+  tm_shape(SR_89) +
   tm_dots(col = "decade", 
           palette = "viridis", 
           title = "Decade",  # Label for the color legend
@@ -198,7 +190,7 @@ facetted_map <- tm_shape(st_as_sf(dk), bbox = aarhus_bbox_m) +
   tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
   tm_shape(st_as_sf(dk))+
     tm_polygons(col = "white")+
-  tm_shape(bbr_89) +
+  tm_shape(SR_89) +
   tm_dots(
     col = "decade", 
     size = "places",  # Use 'capacity' for size
