@@ -1,0 +1,109 @@
+---
+title: "Shelter data from FAIMS v 2.6"
+author: "Adela Sobotkova"
+date: "2023-11-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Shelter data processing from FAIMS modules
+
+This script is preparatory and needs only to be run when new FAIMS data are collected. If you are trying to visualize existing shelters, go on to use the LoadShelters.R.
+
+This script imports, projects and combines data
+from the two FAIMS2.6 modules (online and local instantiation) from 2023 April and May data collection in Aarhus downtown. See AarhusShelterMapLisaMarie20230510.pdf for coverage
+Upon careful merge (wrong order distorts timestamp), we export the data to OR for further streamlining of multivalued columns and bring back for visualisation.
+
+Note: Must use the 0510 online dataset. if you use the 0507 dataset, it lacks 21 points from 8-10 May !
+
+
+## Libraries
+```{r}
+library(sf)
+library(mapview)
+library(tidyverse)
+```
+
+## CREATE DATA FROM FAIMS SERVER
+```{r local-faims}
+# To load shp or geojson from FAIMS
+
+#sh23_local <- read_sf("C:/Users/adela/Documents/Professional/Projects/AarhusShelters/data/AarhusShelters20230515Localserver/Shelter.shp")
+sh23_local <- read_sf("data/Shelter-local.shp")
+# Data lacks projection so project to UTM32N to faciliate analysis
+st_crs(sh23_local) <- 32632
+
+```
+
+
+```{r online-faims}
+# Load data from online server and process similarly 
+sh23_online <- read_sf("data/Shelter-online32632.shp") 
+#sh23_online <- read_sf("C:/Users/adela/Documents/Professional/Projects/AarhusShelters/data/AarhusShelters20230510online/Shelter32632.shp") # shelters0507 lacks 23 features from 8 and 10 May
+```
+
+
+## Check timeline and authorship
+```{r}
+library(lubridate)
+
+sh23_online %>%  # 145 features
+  #filter(createdBy == "Lise Søndergaard Jensen") %>% 
+  mutate(day = as_date(createdAt0)) %>% 
+  group_by(day, createdBy) %>% 
+  tally()
+
+sh23_local %>%   # 21 features
+  #filter(createdBy == "Lise Søndergaard Jensen") %>% 
+  mutate(day = as_date(createdAt0)) %>% 
+  group_by(day, createdBy) %>% 
+  tally()
+```
+
+## Merge the two datasets
+Careful! timestamp gets messed up with reverse order)
+
+```{r}
+# check column names are identical
+colnames(sh23_local)==colnames(sh23_online) 
+
+# merge
+shelters23 <- rbind(sh23_online, sh23_local)
+
+# check data grouped by date
+shelters23 %>% 
+  mutate(day = as_date(createdAt0)) %>% 
+  group_by(day, createdBy) %>% 
+  tally()
+```
+
+## View the merged data
+```{r}
+# View projected data in interactive map
+mapview(shelters23, cex = "Accuracy", name = "identifier" )
+
+# What's the GPS accuracy? Beware annotations have turned some values into 'characters'
+head(shelters23$Accuracy)
+summary(as.numeric(shelters23$Accuracy))
+
+# What's the accessibility?
+mapview(shelters23, zcol = "Accessibl0")
+
+# view the data
+mapview(shelters23, cex = "Accuracy")
+
+mapview(shelters23, zcol = "LanduseAr0")
+
+```
+Many columns, such as the accessibility, landuse or type need to be cleaned up in OpenRefine
+
+## Export as csv to process in OR
+```{r}
+shelters23 %>% 
+  st_drop_geometry() %>% 
+  write_csv("data/shelters23forOR.csv")
+```
+
