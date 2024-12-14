@@ -92,7 +92,7 @@ mapview(dk_bbox)
 tmap_mode(mode = "view")
 
 tm_shape(SR_89) +
-  tm_basemap("CartoDB.Positron") +  # CartoDB.Positron as the basemap
+  #tm_basemap("CartoDB.Positron") +  # CartoDB.Positron as the basemap
   tm_dots(col = "decade", 
           palette = "viridis", 
           title = "Decade",
@@ -100,6 +100,8 @@ tm_shape(SR_89) +
           alpha = 0.8) +  # Transparency level
   tm_shape(aarhus_bbox_sm) +
   tm_borders(lwd = 2, col = "red") +  # Bounding box around Aarhus
+  tm_shape(area) +
+  tm_borders(lwd = 2, col = "orange") +  # Circle around DGB
   tm_layout(title = "Private shelter construction in Aarhus",
             legend.position = c("right", "bottom"),
             frame = FALSE) +  # Remove outer frame

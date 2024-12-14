@@ -2,6 +2,6 @@
 .Rhistory
 .RData
 .Ruserdata
-/georeferenced
-/large
-/Fieldmark
+/data/georeferenced/
+/data/large/
+/data/Fieldmark/

@@ -57,6 +57,7 @@ streets <- osmdata::opq(sf::st_bbox(area)) %>%
   sf::st_cast("LINESTRING")
 
 # saveRDS(streets, "../data/aarhus_streets_osm.rds")
+#streets <- readRDS("../data/aarhus_streets_osm.rds")
 ```
 
 
@@ -66,8 +67,8 @@ However, shelter locations do not yet exist in OSM, and so we will load our own 
 
 ```{r load_custom_point_data}
 # sikringsrum from BBR
-SR <- st_read("../output_data/bbr_sikringsrum.geojson") %>% 
-  st_transform(crs= 4326)
+SR <- st_read("../output_data/SK_bbr_oc_addresses.geojson") %>% 
+   st_transform(crs= 4326)
 # betondaekning grave from fieldrecording, kommunens data, and CDC records
 BTG <- st_read("../output_data/done20241012.geojson")
 ```
@@ -160,6 +161,9 @@ plot(dplyr::select(streets,level))
 
 # same result     
 plot(streets["level"])
+```
+```{r}
+st_write(streets, "../data/aarhus_streets_enriched.geojson")
 ```
 
 # 4. Construct a routable street network

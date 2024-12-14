@@ -1,0 +1,747 @@
+---
+title: "Spatial Equity"
+output: html_document
+date: "2024-09-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(sf)
+library(raster)
+library(sfnetworks)
+library(tidygraph)
+library(mapview)
+library(googlesheets4)
+```
+
+##  Equity
+
+I would like to evaluate spatial equity of the distribution of civil-defense shelters in Aarhus. I have spatial points for two kinds of shelters, public and private, which have different addresses and capacity. I have a list of coordinates representing all buildings in Aarhus, some of which are residential (occupied at night) and others business or educational (occupied during day). I have polygons of urban districts. These buildings can serve as proxies for the distribution of population that needs shelters in emergency. 
+
+I also have a road network, that may or may not connect all of these addresses above. What are the possible ways of evaluating spatial equity and adequacy of these shelters, given the distribution of population between residences and given the shelter network and capacity? 
+
+### Load Data
+```{r shelters}
+# SR : Private shelter locations and buildings in Aarhus
+SR <- st_read("../output_data/SK_bbr_oc_addresses.geojson")
+SR <- SR %>% 
+  rename(ID = id_lokalId, byg026Year = byg026Opførelsesår, places = byg069Sikringsrumpladser)
+
+# BDG : Public shelters at busstops along roads, playgrounds and intersections
+BDG <- readRDS("../output_data/BDG_andreas.rds")
+```
+
+
+```{r setup_study_area}
+venue <-sf::st_sfc(sf::st_point(c(10.193481442350198,56.15875458855773)), crs = 4326)
+area <-sf::st_buffer(venue, units::set_units(3, "km"))
+```
+
+Then, we load roads for this area
+```{r}
+# Valid spatial network based on on OSM exists for the downtown area of 3km radius
+network <- readRDS("../data/aarhus_network_osm.rds")
+
+# streets contain time and difficulty, but are quite heavy to process
+streets <- st_read("../data/aarhus_streets_enriched.geojson") 
+glimpse(streets)
+
+# To lighten the streets, we dissolve the many strings into larger multistrings
+dissolved_streets <- streets %>%
+  group_by(name) %>%
+  summarize(geometry = st_union(geometry), 
+            time = sum(time),
+            name= first(name)) %>%
+  st_cast("MULTILINESTRING") %>%
+  ungroup()
+
+hist(streets$time)
+hist(dissolved_streets$time)
+```
+
+Aarhus districts from opendata.dk, deposited on sciencedata.dk ("https://sciencedata.dk/public/67e2ad2ca642562dacfa6fdf672a1009/aarhus_districts.geojson")
+```{r households}
+# Residential buildints (speriamo)
+bbr_aarhus_data_flat <- readRDS("../output_data/bbr_residential_aarhus.rds") %>% 
+  st_transform(crs = 4326)
+
+# Polygons for Aarhus district in geoJSON format for mappable results
+
+aarhus_districts <- st_read("../output_data/aa_urb_districts.geojson")
+aarhus_districts %>% 
+  distinct(prog_distrikt_nr)
+
+
+
+# # Districts with new building summaries: intersections of the district polygons and the point data from BBR
+# intersections_aarhus <- st_intersection(aarhus_districts,bbr_aarhus_data_flat) %>% 
+#   dplyr::select(id = id_lokalId, navn = prog_distrikt_navn, byg021BygningensAnvendelse,byg026Year, decade, byg054AntalEtager,byg406Koordinatsystem,city,geometry)
+# 
+# # Project polygons to EPSG 4326
+# intersections_aarhus <- st_transform(intersections_aarhus, 4326)  # Polygons
+```
+
+```{r subset-buildings}
+# First, let's create a subset of buildings
+downtown <- bbr_aarhus_data_flat %>% 
+  st_intersection(area) %>% 
+  mutate(byg021BygningensAnvendelse = as.numeric(byg021BygningensAnvendelse))
+
+housecodes <- read_csv("../output_data/bbr_housecodes.csv")
+# housecodes <- read_sheet("https://docs.google.com/spreadsheets/d/1L7NsU1q4HsgJySSG965z0EqFSZhvYUJ8uBxUqYuwpYw/edit?usp=sharing")
+glimpse(housecodes)
+glimpse(downtown)
+
+downtown <- downtown %>% 
+  left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code"))
+
+mapview(downtown, zcol = "Purpose", cex = "byg054AntalEtager")
+```
+
+
+
+```{r population}
+# Population
+aa_pop <- readRDS("output_data/aarhus_pop_diachronic.rds") 
+# original
+# aa_pop <- read_sheet("https://docs.google.com/spreadsheets/d/1cXwKflMb2A2NydSd07XomroW9yz7nG3evaT6Yn2_XDQ/edit?pli=1&gid=0#gid=0",
+#                      range = "Sheet1!A1:AF44", 
+#                      col_types = "dddcdddddddddddddddddddddddddddd")
+glimpse(aa_pop) 
+
+
+# But it is hard to link individual units to polygons
+# so ..maybe I just use the total for individual years
+
+# When looking at population, the first row is the total, so it needs to be subtracted!
+sum(aa_pop$`1981`[-1], na.rm = T)
+sum(aa_pop$`1990`[-1], na.rm = T)
+```
+
+Next, we set a point in the Den Gamle By and draw a circular buffer around it with a radius of 3km, which will serve as our area of interest. A proxy for historical Aarhus in 1950.
+
+Finally we plot everything
+```{r plot-streets-BDG}
+plot(dissolved_streets["time"])
+plot(dissolved_streets$geometry)
+plot(BDG|>st_intersection(area), col = "blue", cex = BDG$Final_Pub_Size/50, pch = 17, add =TRUE) 
+
+mapview(dissolved_streets, zcol = "time") + mapview(BDG %>% st_intersection(area), cex = "Final_Pub_Size")
+```
+
+Also households
+```{r households-plot}
+# Buildings in Aarhus - review building codes to understand what they represent
+bbr_aarhus_data_flat %>% 
+  distinct(byg021BygningensAnvendelse)
+
+# Plot buildings, color by their code and size by number of floors/etages(proxy for number of households)
+bbr_aarhus_data_flat %>% 
+          st_intersection(area) %>% 
+  filter(byg026Year<1990) %>% 
+  mapview(zcol = "byg021BygningensAnvendelse",  cex = "byg054AntalEtager", burst = TRUE)
+```
+
+## Analyse
+Evaluating spatial equity and adequacy of civil-defense shelters involves analyzing the spatial relationship between shelter locations (supply) and building locations (demand), considering shelter capacities, building types, and accessibility through the road network. Here are possible approaches ranging from simple to more advanced:
+
+## 1. Simple Proximity
+This approach is a basic starting point that ignores road networks but still provides insights:
+
+Measure distances between each building and the nearest shelter using Euclidean distance.
+```{r nearest-SR, eval = false}
+nearest <- st_nearest_feature(bbr_aarhus_data_flat$byg404Koordinat, y = SR)
+bbr_aarhus_data_flat$nearestSR_dist_m <- st_distance(bbr_aarhus_data_flat, SR[nearest,], by_element = TRUE)
+```
+
+```{r nearest-BDG, eval = false}
+nearestBDG <- st_nearest_feature(bbr_aarhus_data_flat$byg404Koordinat, y = BDG)
+bbr_aarhus_data_flat$nearestBDG_dist_m <- st_distance(bbr_aarhus_data_flat, BDG[nearestBDG,], by_element = TRUE)
+
+saveRDS(bbr_aarhus_data_flat, "../output_data/bbr_all_aarhus_dist.rds")
+```
+
+Re-load results
+```{r bbr-with-dist-to-shelters}
+bbr_aarhus_data_flat <- readRDS("../output_data/bbr_all_aarhus_dist.rds")
+
+downtown <- bbr_aarhus_data_flat %>% 
+    st_intersection(area) %>% 
+    mutate(byg021BygningensAnvendelse = as.numeric(byg021BygningensAnvendelse))
+
+downtown <- downtown %>% 
+  left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code"))
+
+mapview(downtown, zcol = "Purpose", cex = "nearestBDG_dist_m")
+mapview(downtown, zcol = "nearestSR_dist_m", cex = "byg054AntalEtager")
+
+```
+
+
+## Evaluation
+Categorize buildings by type (residential vs. non-residential) and calculate statistics like:
+Average/median distance to the nearest shelter.
+Percentage of buildings within a set distance threshold (e.g., 500m).
+```{r downtown-summary}
+summary(downtown[,c("nearestBDG_dist_m", "nearestSR_dist_m")])
+
+downtown_summary <- downtown %>% 
+  st_drop_geometry() %>% 
+  filter(Purpose == "residential") %>% 
+  group_by(byg054AntalEtager) %>% 
+  summarize(meandistSR = mean(unclass(nearestSR_dist_m)),
+            meandistBDG = mean(unclass(nearestBDG_dist_m)),
+            mediandistSR = median(unclass(nearestSR_dist_m)),
+            mediandistBDG = median(unclass(nearestBDG_dist_m)))
+  
+```
+
+```{r pivot-long}
+# Downtown buildings lengthened
+long_summary <- downtown_summary %>%
+  pivot_longer(cols = -byg054AntalEtager, 
+               names_to = "metric", 
+               values_to = "distance") %>% 
+# Add type column (mean/median and shelter type)
+  mutate(
+    type = case_when(
+      str_detect(metric, "meandist") ~ "Mean",
+      str_detect(metric, "mediandist") ~ "Median"
+    ),
+    shelter = case_when(
+      str_detect(metric, "SR") ~ "NearestSR",
+      str_detect(metric, "BDG") ~ "NearestBDG"
+    )
+  ) 
+```
+
+### Barplot proximity
+```{r barplot-distances}
+# Plot
+ggplot(long_summary, aes(x = as.factor(byg054AntalEtager), y = distance, fill = interaction(type, shelter))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    x = "Number of Floors (byg054AntalEtager)",
+    y = "Distance to Shelter (m)",
+    fill = "Metric and Shelter Type",
+    title = "Mean and Median Distance to Nearest Shelters by Number of Floors"
+  ) +
+  theme_minimal()
+```
+
+
+```{r side-by-sideplot-distances}
+ggplot(long_summary, aes(x = as.factor(byg054AntalEtager), y = distance, fill = shelter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ type) +
+  labs(
+    x = "Number of Floors (byg054AntalEtager)",
+    y = "Distance to Shelter (m)",
+    fill = "Shelter Type",
+    title = "Mean and Median Distance to Shelters from Residential Buildings \n by Number of Floors"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+long_summary %>%
+  filter(type == "Median") %>% 
+ggplot(aes(x = as.factor(byg054AntalEtager), y = distance, fill = shelter)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  #facet_wrap(~ type) +
+  labs(
+    x = "Number of Floors (byg054AntalEtager)",
+    y = "Distance to Shelter (m)",
+    fill = "Shelter Type",
+    title = "Median Distance to Shelters from Residential Buildings \n by Number of Floors"
+  ) +
+  theme_minimal()
+```
+
+
+###  Heatmap proximity
+```{r heatmap}
+# Best for visualizing grouped data in a compact grid.
+# Distances are represented by color intensity.
+ggplot(long_summary, aes(x = as.factor(byg054AntalEtager), y = interaction(type, shelter), fill = distance)) +
+  geom_tile() +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(
+    x = "Number of Floors (byg054AntalEtager)",
+    y = "Metric and Shelter Type",
+    fill = "Distance (m)",
+    title = "Heatmap of Mean and Median Distances to Shelters"
+  ) +
+  theme_minimal()
+```
+
+### Percentages proximity
+```{r percentages}
+# Filter buildings within 250m of both types of shelters
+within_200m <- downtown %>%
+    filter(Purpose == "residential") %>% 
+  filter(unclass(nearestSR_dist_m) <= 200)
+
+# Calculate the percentage
+percentage_within_200m <- (nrow(within_200m) / nrow(downtown)) * 100
+
+
+within_200m_BDG <- downtown %>%
+  filter(Purpose == "residential") %>% 
+  filter(unclass(nearestBDG_dist_m) <= 200)
+percentage_within_200mBDG <- (nrow(within_200m_BDG) / nrow(downtown)) * 100
+
+
+# Print the result
+print(paste(round(percentage_within_200mBDG), "% of residential buildings have a public shelter within 200m and",  round(percentage_within_200m),"% have a private shelter within 200m"))
+
+```
+### Map of distances to shelters
+```{r}
+downtown %>% 
+  #filter(Purpose !== "non-residential")
+```
+
+
+
+## Equity assessment: Compare distance distributions between residential and non-residential buildings or neighborhoods
+
+```{r summary-type}
+summary_by_bldg_type <- downtown %>% 
+  st_drop_geometry() %>% 
+  group_by(byg021BygningensAnvendelse) %>% 
+  summarize(meandistSR = mean(unclass(nearestSR_dist_m)),
+            meandistBDG = mean(unclass(nearestBDG_dist_m)),
+            mediandistSR = median(unclass(nearestSR_dist_m)),
+            mediandistBDG = median(unclass(nearestBDG_dist_m)))
+summary_by_bldg_type 
+```
+I need to figure out what the codes mean to make sense of these results. The code explanations are available at https://teknik.bbr.dk/kodelister/0/1/0/BygAnvendelse
+```{r housecodes}
+summary_by_bldg_type %>% 
+  distinct(byg021BygningensAnvendelse) %>% pull()
+
+summary_by_type <- summary_by_bldg_type %>% 
+  left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code")) %>% 
+  rename(Code = byg021BygningensAnvendelse)
+summary_by_type$Code
+```
+
+Plotting the household distribution by purpose and distance to shelters
+```{r bbr-purpose-distances}
+# Group by Purpose and CDpriority, then summarize distance metrics
+summary_grouped <- summary_by_type %>%
+  group_by(Purpose, CDpriority) %>%
+  summarize(
+    mean_SR = mean(meandistSR, na.rm = TRUE),
+    mean_BDG = mean(meandistBDG, na.rm = TRUE),
+    median_SR = median(mediandistSR, na.rm = TRUE),
+    median_BDG = median(mediandistBDG, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# View the grouped summary
+print(summary_grouped)
+
+
+# Bar chart of mean distances grouped by Purpose and CDpriority
+ggplot(summary_grouped, aes(x = Purpose, y = mean_SR)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  facet_wrap(~ CDpriority, scales = "free") +
+  labs(
+    x = "Purpose",
+    y = "Mean Distance to SR Shelter (m)",
+    fill = "Civil Defense Priority",
+    title = "Mean Distance to SR Shelters by Purpose and Priority"
+  ) +
+  theme_minimal()
+```
+
+```{r}
+# Prepare data for heatmap
+heatmap_data <- summary_grouped %>%
+  pivot_longer(
+    cols = starts_with("mean_"),
+    names_to = "Metric",
+    values_to = "Distance"
+  )
+
+# Heatmap of mean distances
+ggplot(heatmap_data, aes(x = Purpose, y = CDpriority, fill = Distance)) +
+  geom_tile() +
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +
+  labs(
+    x = "Purpose",
+    y = "Civil Defense Priority",
+    fill = "Distance (m)",
+    title = "Mean Distances to Shelters (SR and BDG) by Purpose and Priority"
+  ) +
+  theme_minimal()
+
+```
+
+```{r scatterplot}
+# Scatter plot for mean distances
+ggplot(summary_by_type, aes(x = meandistSR, y = meandistBDG, color = CDpriority, shape = Purpose)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(
+    x = "Mean Distance to SR Shelter (m)",
+    y = "Mean Distance to BDG Shelter (m)",
+    color = "Civil Defense Priority",
+    shape = "Purpose",
+    title = "Mean Distances to Shelters by Building Type"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+# Boxplot of distances
+ggplot(summary_by_type %>% filter(CDpriority == "Y"), aes(x = Purpose, y = meandistSR, fill = Purpose)) +
+  geom_boxplot() +
+  labs(
+    x = "",
+    y = "Mean Distance to SR Shelter (m)",
+    fill = "Purpose",
+    title = "Distribution of Distances to SR Shelters by Priority and Purpose"
+  ) +
+  theme_minimal()
+
+```
+
+
+################################
+## 2. Accessibility Analysis via Road Network
+Incorporate the road network to evaluate more realistic travel distances:
+
+Network analysis: Use the road network to calculate travel distance or time from each building to the nearest shelter.
+Threshold coverage: Determine the percentage of buildings (or population) reachable within specific time bands (e.g., 5, 10, 15 minutes).
+Capacity weighting: Consider the capacity of shelters to identify over-served or under-served areas.
+
+```{r MapBoxAPI}
+# Paste your MapBoxAPI code in directly, or in a txt file that you store locally and
+# 'ignore'
+
+my_token <- "YOUR TOKEN GOES HERE"
+my_token <- read_file("mytoken.txt")
+
+library(mapboxapi)
+mb_access_token(my_token, install = TRUE, overwrite = TRUE)
+```
+```{r map}
+library(leaflet)
+library(mapboxapi)
+
+mapbox_map <- leaflet() %>%
+    addMapboxTiles(style_id = "streets-v11", username = "mapbox")
+
+mapbox_map
+```
+
+
+```{r isochrones, eval=FALSE}
+SR_walk6m <- mb_isochrone(SR %>% st_intersection(area), profile = "walking", time = 1:10, id = "ID")
+SR_walk6m 
+BDG_walk6m <- mb_isochrone(BDG %>% st_intersection(area), profile = "walking", time = 1:10, id = "BDnr_1987")
+BDG_walk6m
+
+BDGisos_proj <- st_transform(BDG_walk6m, 25832)
+SRisos_proj <- st_transform(SR_walk6m, 25832)
+
+```
+
+
+```{r iso-raster}
+library(Rcpp)
+library(fasterize)
+
+BDGisos_proj <- readRDS("../output_data/BDGisos10.rds")
+SRisos_proj <- readRDS("../output_data/SRisos10.rds")
+
+template <- raster(BDGisos_proj, resolution = 100)
+
+# make raster and plot it, first for BDG and then for SR
+BDG6m_surface <- fasterize(BDGisos_proj, template, field = "time", fun = "min")
+mapview(BDG6m_surface)
+
+pal <- colorNumeric("viridis", BDGisos_proj$time, na.color = "transparent")
+mapbox_map %>%
+    addRasterImage(BDG6m_surface, colors = pal, opacity = 0.5) %>%
+    addLegend(values = BDGisos_proj$time, pal = pal, title = "Walk-time (min) to BDG")
+
+SR6m_surface <- fasterize(SRisos_proj, template, field = "time", fun = "min")
+pal <- colorNumeric("viridis", SRisos_proj$time, na.color = "transparent")
+mapbox_map %>%
+    addRasterImage(SR6m_surface, colors = pal, opacity = 0.5) %>%
+    addLegend(values = SRisos_proj$time, pal = pal, title = "Walk-time (min) to SR")
+
+```
+### Extract houses that are more than 5 mins away from a BDG
+```{r houses-beyond-5-min}
+glimpse(downtown)
+downtown$timetoBDG <- raster::extract(BDG6m_surface, 
+                             st_sf(st_transform(downtown$byg404Koordinat, crs = 25832)),
+                             fun = mean)
+
+downtown$timetoBDG[is.na(downtown$timetoBDG)] <- 11
+downtown  %>% 
+  group_by(timetoBDG, Purpose) %>% 
+  tally() %>% 
+  filter(timetoBDG > 5) %>% 
+  mapview(zcol = "Purpose", cex = "timetoBDG")  
+
+downtown %>% 
+  filter(is.na(timetoBDG)) %>% 
+  
+  mapview()
+
+?raster::extract()
+```
+
+
+## 3 Spatial adequacy
+Identifying over-served or under-served areas involves combining spatial and capacity data to assess whether the capacity of shelters matches the population demand. 
+
+To get there, we will progress roughly in these steps:
+
+*Calculate Population Demand: Estimate population per building.
+*Map Shelter Supply: Aggregate shelter capacities spatially.
+*Perform Gap Analysis: Compare demand and supply for spatial units.
+*Visualize Gaps: Use maps and plots to identify over-served and under-served areas.
+*Incorporate Priorities: Highlight gaps in high-priority areas.
+
+
+### 1. Define Metrics
+
+Demand: 
+*Estimate the population for each residential building based on the number of floors and building type.
+*Aggregate demand spatially (e.g., by administrative boundaries and/or grid cells).
+
+Supply:
+*Use the capacity attributes of BDG and SR shelters to compute available shelter capacity within a reasonable distance (e.g., 250 meters, 500 meters).
+*Aggregate capacity spatially.
+
+Gap Analysis:
+Compute the difference between supply and demand for each spatial unit.
+
+### 2. Preprocess the Data
+Residential Demand:
+Assign population estimates to each residential building based on floors or building type.
+Example rule:
+Single-family house: ~4 people
+Multifamily (e.g., apartments): Number of floors * Units per floor * Average household size
+
+```{r}
+downtown <- downtown %>% 
+  left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code")) %>% 
+  rename(Code = byg021BygningensAnvendelse)
+
+housecodes %>% 
+  filter(CDpriority == "Y")
+
+# Example: Calculate population demand for residential buildings
+downtown <- downtown %>%
+  mutate(
+    estimated_population = case_when(
+      Purpose == "residential" & Code == "120" ~ 4,  # Single-family homes
+      Purpose == "residential" & Code == "110" ~ 4,  # Single-family homes
+      Purpose == "residential" & Code == "121" ~ 4,  # Single-family 
+      Purpose == "residential" & Code == "122" ~ 4,  # Single-family homes
+      Purpose == "residential" & Code %in% c("130", "131", "132") ~ 6,  # Single-family homes
+      Purpose == "residential" & Code == "140" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
+      Purpose == "residential" & Code == "150" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
+      Purpose == "residential" & Code == "160" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
+      Purpose == "residential" & Code == "190" ~ 2 * byg054AntalEtager ,  # unknown
+      Purpose == "industry or production" & Code %in% c("220":"223") ~ 2 * byg054AntalEtager ,
+      Purpose == "residential" & Code  %in% c("310":"314") ~ 2 * byg054AntalEtager *10,
+      Purpose == "office" & Code  %in% c("320":"324") ~ 2 * byg054AntalEtager * 4,
+      Purpose == "services" & Code  %in% c("330":"416") ~ 2 * byg054AntalEtager *4,
+      Purpose == "educational" & Code  %in% c("419":"429") ~ 2 * byg054AntalEtager * 30,
+      Purpose == "health services" & Code  %in% c("430":"439") ~ 2 * byg054AntalEtager * 15 ,
+      
+      TRUE ~ 0  # Non-residential or unknown
+    )
+  )
+
+# Total population should be around 200,000 according to DK statistik
+sum(downtown$estimated_population)
+
+# Residential population 
+downtown %>% 
+  filter(Purpose == "residential") %>% 
+  summarize(total_res = sum(estimated_population))
+
+```
+
+Shelter Supply:
+Ensure the shelter dataset includes accurate capacities (capacity_BDG, capacity_SR).
+Merge shelter data with proximity data (e.g., distances to buildings).
+
+```{r shelter-capacity+proximity}
+BDG$Final_Pub_Size
+SR$places
+
+```
+
+
+### 3. Spatially Join Demand and Supply
+Use spatial buffers or intersections to link residential buildings to nearby shelters.
+
+```{r}
+# Create buffers around shelters (e.g., 500m)
+buffer_SR <- st_buffer(shelters_SR, dist = 500)
+buffer_BDG <- st_buffer(shelters_BDG, dist = 500)
+
+```
+
+```{r}
+# Spatial join: Assign shelter capacity to nearby residential buildings
+buildings_with_SR <- st_join(downtown, buffer_SR, join = st_intersects) %>%
+  group_by(building_id) %>%
+  summarize(total_capacity_SR = sum(capacity_SR, na.rm = TRUE))
+
+buildings_with_BDG <- st_join(downtown, buffer_BDG, join = st_intersects) %>%
+  group_by(building_id) %>%
+  summarize(total_capacity_BDG = sum(capacity_BDG, na.rm = TRUE))
+
+```
+
+```{r}
+# Combine supply data into the main dataset
+downtown <- downtown %>%
+  left_join(buildings_with_SR, by = "building_id") %>%
+  left_join(buildings_with_BDG, by = "building_id")
+
+```
+
+
+### 4. Aggregate Spatially
+Aggregate demand and supply into spatial units such as administrative boundaries, grid cells, or census tracts.
+
+# Aggregate population demand and shelter capacity by spatial unit
+spatial_summary <- downtown %>%
+  st_join(admin_boundaries) %>%  # Join with administrative boundaries
+  group_by(boundary_id) %>%
+  summarize(
+    total_population = sum(estimated_population, na.rm = TRUE),
+    total_capacity_SR = sum(total_capacity_SR, na.rm = TRUE),
+    total_capacity_BDG = sum(total_capacity_BDG, na.rm = TRUE)
+  )
+### 5. Gap Analysis
+Calculate the difference between supply and demand for each spatial unit.
+R
+Copy code
+spatial_summary <- spatial_summary %>%
+  mutate(
+    gap_SR = total_capacity_SR - total_population,
+    gap_BDG = total_capacity_BDG - total_population,
+    status_SR = case_when(
+      gap_SR < 0 ~ "Under-served",
+      gap_SR == 0 ~ "Well-served",
+      gap_SR > 0 ~ "Over-served"
+    ),
+    status_BDG = case_when(
+      gap_BDG < 0 ~ "Under-served",
+      gap_BDG == 0 ~ "Well-served",
+      gap_BDG > 0 ~ "Over-served"
+    )
+  )
+### 6. Visualization
+A. Choropleth Map
+Visualize over-served and under-served areas using color-coded maps.
+
+R
+Copy code
+library(ggplot2)
+
+# Plot under-served vs. over-served areas
+ggplot(spatial_summary) +
+  geom_sf(aes(fill = status_SR)) +
+  scale_fill_manual(values = c("Under-served" = "red", "Well-served" = "green", "Over-served" = "blue")) +
+  labs(
+    title = "Service Gaps for SR Shelters",
+    fill = "Service Status"
+  ) +
+  theme_minimal()
+B. Scatter Plot
+Compare population and capacity visually to assess relationships.
+
+R
+Copy code
+ggplot(spatial_summary, aes(x = total_population, y = total_capacity_SR)) +
+  geom_point(aes(color = status_SR)) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "black") +
+  labs(
+    title = "Population vs. SR Shelter Capacity",
+    x = "Estimated Population",
+    y = "Shelter Capacity (SR)",
+    color = "Service Status"
+  ) +
+  theme_minimal()
+7. Consider Additional Layers
+Distance weighting: Weight shelter capacity based on proximity, e.g., nearer shelters contribute more to a building’s served population.
+Prioritization: Factor in CDpriority to highlight underserved areas with high-priority buildings.
+R
+Copy code
+# Adjust capacity by distance weighting
+downtown <- downtown %>%
+  mutate(
+    weighted_capacity_SR = total_capacity_SR / (nearestSR_dist_m + 1),  # Avoid division by 0
+    weighted_capacity_BDG = total_capacity_BDG / (nearestBDG_dist_m + 1)
+  )
+
+
+################################
+
+## 3. Weighted Distance or Accessibility Score
+Assign weights to buildings based on population density or importance (e.g., higher weights for residential buildings).
+Calculate a weighted accessibility score for each shelter or building:
+
+
+## 4. Service Area Analysis
+Analyze the areas effectively served by each shelter:
+
+Generate service areas (isochrones) for each shelter based on road network travel times or distances.
+Overlay these areas with building locations to identify:
+Unserved or underserved buildings.
+Areas with overlapping coverage (over-served).
+Factor in shelter capacities to evaluate how well they meet potential demand.
+
+## 5. Spatial Optimization
+If the aim is to improve shelter distribution:
+
+Perform location-allocation modeling to determine optimal shelter placement or capacity upgrades.
+Objectives can include:
+Minimizing average or maximum travel time to shelters.
+Balancing shelter usage by matching capacities to demand.
+Tools:
+ArcGIS Location-Allocation, Python libraries like Pyomo or scipy.
+6. Equity Metrics and Visualization
+Quantify and visualize spatial equity:
+
+Lorenz Curve and Gini Coefficient:
+Measure inequality in accessibility across the population.
+Plot the cumulative share of the population served against the cumulative share of shelter capacity.
+Spatial Autocorrelation:
+Use metrics like Moran's I or Geary's C to evaluate clustering of high/low accessibility.
+Tools:
+R (spdep package), Python (PySAL library).
+7. Capacity Adequacy Analysis
+Evaluate whether shelters have enough capacity to serve the nearby population:
+
+Assign population demand to shelters using a gravity model or nearest-neighbor assignment.
+Compare total demand against shelter capacity.
+Identify areas with unmet demand or surplus capacity.
+Tools:
+Python/R for capacity-demand modeling.
+
+
+#############################
+
+## 6. Spatial Autocorrelation
+Spatial autocorrelation examines the degree to which the number of new buildings (or shelters/capacity) in one district is similar to its neighboring districts. If nearby districts tend to have similar values, then spatial autocorrelation is present.
+
+Global Moran's I: This is a global measure of spatial autocorrelation that assesses whether the number of new buildings or shelter capacities are clustered, dispersed, or randomly distributed across the study area. Moran's I can be used to assess both variables (new buildings and shelter capacity) individually and their potential relationship.
+Local Moran's I (LISA): This helps identify local clusters or outliers of high/low values (hotspots or coldspots) of new buildings and shelters. It provides insights into specific areas (districts) where new buildings or shelter capacities are unusually high or low compared to their surroundings.
+

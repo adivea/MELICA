@@ -1,43 +1,17 @@
 ---
-title: "Equity"
+title: "analysissuggestions"
+author: "Adela Sobotkova"
+date: "2024-11-19"
 output: html_document
-date: "2024-09-13"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##  Equity
-
-### Data loading
-```{rdata}
-# SR : Private shelter locations and buildings in Aarhus
-SR <- st_read("output_data/SK_bbr_oc_addresses.geojson")
-SR <- SR %>% 
-  rename(ID = id_lokalId, byg026Year = byg026Opførelsesår, places = byg069Sikringsrumpladser)
-
-bbr_aarhus_data_flat <- readRDS("output_data/bbr_residential_aarhus.rds")
-
-# Polygons for Aarhus district in geoJSON format for mappable results
-aarhus_districts <- st_read("https://sciencedata.dk/public/67e2ad2ca642562dacfa6fdf672a1009/aarhus_districts.geojson")
-
-# Polygons with data on new buildings: intersections of the district polygons and the point data from BBR
-intersections_aarhus <- st_intersection(aarhus_districts,bbr_aarhus_data_flat) %>% 
-  dplyr::select(id = id_lokalId, navn = prog_distrikt_navn, byg021BygningensAnvendelse,byg026Year, decade, byg054AntalEtager,byg406Koordinatsystem,city,geometry)
-
-# Project polygons to EPSG 4326
-intersections_aarhus <- st_transform(intersections_aarhus, 4326)  # Polygons
-
-```
-
-## 1. Spatial Autocorrelation
-Spatial autocorrelation examines the degree to which the number of new buildings (or shelters/capacity) in one district is similar to its neighboring districts. If nearby districts tend to have similar values, then spatial autocorrelation is present.
-
-Global Moran's I: This is a global measure of spatial autocorrelation that assesses whether the number of new buildings or shelter capacities are clustered, dispersed, or randomly distributed across the study area. Moran's I can be used to assess both variables (new buildings and shelter capacity) individually and their potential relationship.
-Local Moran's I (LISA): This helps identify local clusters or outliers of high/low values (hotspots or coldspots) of new buildings and shelters. It provides insights into specific areas (districts) where new buildings or shelter capacities are unusually high or low compared to their surroundings.
 
 --- I need it in time (or have to do a cumulative assessment from 1950 - 1990)
+Suggestions for analysis
 
 ## 2. Bivariate Moran’s I (Spatial Correlation Between Two Variables)
 If you want to assess the spatial relationship between two variables — in this case, new buildings and shelters/capacity — you can extend the Moran’s I test to a bivariate Moran’s I. This method will help you understand if high (or low) values of one variable (e.g., new buildings) spatially correlate with high (or low) values of another variable (e.g., shelter capacity).
@@ -69,4 +43,5 @@ Implementation: The spatialreg package can be used for implementing SDM.
 ## 8. Spatial Econometrics Analysis
 If you have access to socio-economic or demographic data in addition to new buildings and shelters, you can use spatial econometrics to explore the relationship between multiple factors and their spatial dependencies. For example, you could explore whether the number of new buildings and shelter capacity are influenced by population density, economic activity, or land prices, while accounting for spatial autocorrelation.
 Implementation: Explore spatial econometric models using the spatialreg and splm packages in R.
+
 

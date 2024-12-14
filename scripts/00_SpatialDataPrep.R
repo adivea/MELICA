@@ -1,6 +1,10 @@
 ###  Basic spatial data preparation
 
-install.packages("geodata")
+
+library(sf)
+library(mapview)
+
+#install.packages("geodata")
 library(geodata)
 
 ########### Get Denmark boundary
@@ -50,7 +54,14 @@ mapview(dk_bbox)
 
 
 A_koeb <- st_read("data/Aarhus_koebstkom_pre1970.geojson")
+library(lubridate)
+A_koeb %>%
+  select(fra, fid) %>% 
+  arrange(fra) %>% 
+  mutate(date = as_date(fra)) %>% glimpse()
+  
 A_koeb %>% 
+  filter(fra > "1890-01-01") %>% 
   mapview(zcol = "fra", burst = TRUE, alpha = 0.5)
 
 ######### Aarhus parish/church boundaries
@@ -93,7 +104,9 @@ A_koeb %>%
 
 A_sogne <- st_read("data/Aarhus_sogne_pre1970.geojson")
 A_sogne %>% 
-  mapview( zcol = "fra", burst = TRUE) + mapview(A_koeb %>% filter(fid == 1143))
+  filter(fra < "1900-01-01") %>% 
+  mapview( zcol = "fra", burst = TRUE) + 
+  mapview(A_koeb %>% filter(fid == 321))
 
 
 glimpse(A_koeb)
