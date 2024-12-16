@@ -7,7 +7,9 @@ library(sf)
 library(mapview)
 library(raster)
 
-# Data
+### Load Data
+
+# Background raster: Aarhus sat img
 
 #A_sat <- brick("C:/Users/Adela/Documents/RStudio/1_Teaching/cds-spatial-2024/data/Aarhus_1m.TIF")
 A_sat <- brick("C:/Users/au616760/OneDrive - Aarhus universitet/Documents/RStudio/1_Teaching/cds-spatial/data/Aarhus_1m.TIF")
@@ -17,8 +19,9 @@ A_sm4326 <- projectRaster(A_sm, crs = 4326,  fun = "ngb")
 
 crs(A_sat)
 plotRGB(A_sm)
-# Aarhus sat img
+
 # Aarhus bounding boxes
+
 DKmun <- readRDS("C:/Users/Adela/Documents/RStudio/1_Teaching/cds-spatial-2024/data/gadm36_DNK_2_sp.rds")
 DKmun <- readRDS("C:/Users/au616760/OneDrive - Aarhus universitet/Documents/RStudio/1_Teaching/cds-spatial/data/gadm36_DNK_2_sp.rds")
 
@@ -27,7 +30,8 @@ Aarhus <- DKmun %>%
   st_transform( crs = 4326) %>% 
   filter(NAME_2 == "Århus")
 
-# Union polygons 
+# Union existing isochrone polygons 
+
 extent <- walking_isos %>% 
   st_union() %>% 
   st_as_sf()
@@ -38,11 +42,9 @@ aarhus_ch <- isos10m %>%
   st_union()%>% 
   st_convex_hull()
 
-
 mapview(extent)
 
-# Shelters
-token <- "pk.eyJ1IjoiYWRpdmVhIiwiYSI6ImNrcWdhNGlybjB4OG0ydnNjcWZtOG9mc3UifQ.EbNmMF9aF8th5cb-h5f1lQ"
+## Shelters
 
 # Public shelters merged (from 7b_Mapping)
 sh_merged <- readRDS("output_data/sh_merged.rds")
@@ -65,10 +67,27 @@ private <- private %>%
   rename(capacity = places)
 
 
-#########################################################
+######################################################## Calculate Accessibility
+# MapBoxAPI
 
+token <- "pk.eyJ1IjoiYWRpdmVhIiwiYSI6ImNrcWdhNGlybjB4OG0ydnNjcWZtOG9mc3UifQ.EbNmMF9aF8th5cb-h5f1lQ"
+
+BDG_walking_isos <- BDG %>% 
+  #filter(Location_startdate <1960) %>% 
+  mb_isochrone(profile = "walking", 
+               time = 5, 
+               id = "BDnr")
+
+KOB_walking_isos <- KOB %>% 
+  #filter(Year < 1960) %>% 
+  mb_isochrone(profile = "walking", 
+               time = 5, 
+               id = "Number")
+
+head(KOB_walking_isos)
 ######################################################## Vector building footprints
-
+# Playing with MapBoxAPI to see if I can visualize results in a streetgrid,
+# but it only works for a small quarters.
 vector_extract15 <- get_vector_tiles(
   tileset_id = "mapbox.mapbox-streets-v8",
   location = c(10.21076, 56.15674),

@@ -1,0 +1,280 @@
+---
+title: "Where are the gaps in Aarhus shelter provisioning?"
+author: "Adela Sobotkova"
+date: "2024-12-16"
+output: html_document
+---
+This script explores the accessibility of the streamlined BDG and KOB shelters. Euclidean distances as well as network distances are calculated
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(googlesheets4)
+library(sf)
+library(mapview)
+```
+## Load Data
+### BDG
+
+#### Wide data
+```{r}
+# Load Andreas complete data from Google and create a 1987 version (Wide sf dataset)
+BDG <- readRDS("../output_data/BDG_andreas.rds")
+glimpse(BDG)
+```
+#### Long data
+```{r}
+BDG <- read_sheet("https://docs.google.com/spreadsheets/d/1C4GEgq4UmEwx_Xi84FiNBrRowmmJHi3S191byjF-hWc/edit?gid=0#gid=0",
+                  range = "Ark1", 
+                  col_types = "ddcdddcdccdcc")
+
+BDG  <- BDG %>% 
+  filter(!is.na(Long) | !is.na(Lat) ) %>% 
+  st_as_sf(coords = c("Long", "Lat"), crs = 4326) 
+
+glimpse(BDG)
+
+# Plot BDG in space by year of construction
+m <- BDG %>% 
+  group_by(BDnr) %>% 
+  summarize(Startyear = min(Location_startdate), 
+            Capacity = min(Capacity)) %>% 
+  mapview(cex = "Capacity", zcol = "Startyear")
+m
+```
+
+#### 1944 data
+
+```{r}
+BDG %>% 
+  filter(Location_startdate==1944) %>% 
+  mapview(cex = "Capacity")
+
+BDG %>% 
+  filter(Location_startdate == 1944) %>% 
+ # filter(Location_startdate > 1950 & Location_startdate < 1960) %>% 
+  group_by(Type) %>% 
+  tally()
+```
+When looking at shelter types, in 1944 all shelters in Aarhus are type III (297) or IIIA(4). Variation is only added in 1960s, with 16 type IV and 16 type IVA, and 2 type VI shelters (A and B respectively).
+Some 95 lack Type.
+
+
+### KOB data
+```{r}
+KOB <- readRDS("../output_data/KOB_sf.rds")
+mapview(KOB, cex = "Capacity", zcol = "Year")
+```
+
+
+
+## Euclidian proximity (200m)
+One of the national directives for shelters was that residents should always have a shelter within 200m of their location, day and night. Let's see how the Aarhus public shelters fare vis-a-vis this plan?
+
+### BDG and KOB Buffers
+```{r}
+bdg_buff <- st_buffer(st_transform(BDG, 25832), dist = 200)
+kob_buff <- st_buffer(st_transform(KOB, 25832), dist = 200)
+
+bdg_buff %>% 
+  st_union() %>% 
+  st_union(st_union(kob_buff)) %>% 
+  st_as_sf() %>% 
+  st_write("../output_data/public_buff200.geojson")
+
+sh_buff200 <- read_sf("../output_data/public_buff200.geojson")
+
+mapview(sh_buff200)
+```
+
+### Gaps in Euclidean buffers
+I need the boundary of Aarhus to subtract these buffers from in order to see the gaps. Then I can plot/summarize the <1960 buildings in these gaps and gauge how many residents might have been at risk.
+
+```{r}
+```
+
+
+## MapboxAPI proximity (5 mins)
+Calculate paths to shelters for all Aarhus buildings before 1990. Which ones are missing out?
+let's build a matrix of stacked 5-minute isochrones for all shelter points and then look how many buildings are in the gaps.
+```{r accessibility-KOB-BDG, eval=FALSE}
+token <- "pk.eyJ1IjoiYWRpdmVhIiwiYSI6ImNrcWdhNGlybjB4OG0ydnNjcWZtOG9mc3UifQ.EbNmMF9aF8th5cb-h5f1lQ"
+
+BDG_walking_isos <- BDG %>% 
+  #filter(Location_startdate <1960) %>% 
+  mb_isochrone(profile = "walking", 
+               time = 1:5, 
+               id = "BDnr")
+
+KOB_walking_isos <- KOB %>% 
+  #filter(Year < 1960) %>% 
+  mb_isochrone(profile = "walking", 
+               time = 1:5, 
+               id = "Number")
+
+head(KOB_walking_isos) # 5 x 36 values
+BDG_walking_isos # there is 5 x 498 values
+
+saveRDS(BDG_walking_isos, "../output_data/BDG_walking_isos1_5.rds")
+saveRDS(KOB_walking_isos, "../output_data/KOB_walking_isos1_5.rds")
+```
+
+## Filter 5-min walking accessibility for different decades. 
+For this we need to link the isochrones to shelter data, extract year of construction, map to and merge (st_union) by decade and then st_difference() from city boundary.
+```{r}
+# Load isos
+BDG_walking_isos <- readRDS("../output_data/BDG_walking_isos5.rds")
+KOB_walking_isos <- readRDS("../output_data/KOB_walking_isos5.rds")
+
+
+bdg1960 <- BDG_walking_isos %>% 
+  filter(time == 5) %>% 
+  filter(id %in% BDG$BDnr) %>% 
+  cbind(st_drop_geometry(BDG)) %>% 
+  filter(Location_startdate < 1960) %>% 
+  st_union() %>% st_as_sf()
+
+bdg1980 <- BDG_walking_isos %>% 
+  filter(time == 5) %>% 
+  filter(id %in% BDG$BDnr) %>% 
+  cbind(st_drop_geometry(BDG)) %>% 
+  filter(Location_startdate < 1980) %>% 
+  st_union() %>% st_as_sf()
+
+
+bdg1980diff <- BDG_walking_isos %>% 
+    filter(time == 5) %>% 
+  filter(id %in% BDG$BDnr) %>% 
+  cbind(st_drop_geometry(BDG)) %>% 
+  filter(Location_startdate > 1960 & Location_startdate < 1980) %>% 
+  st_union() %>% st_as_sf()
+
+kob1960 <- KOB_walking_isos %>% 
+  filter(time == 5) %>% 
+  cbind(st_drop_geometry(KOB)) %>% 
+  filter(Year < 1960) %>% 
+  st_union() %>% st_as_sf()
+
+kob1980 <- KOB_walking_isos %>% 
+  filter(time == 5) %>% 
+  cbind(st_drop_geometry(KOB)) %>% 
+  filter(Year < 1980) %>% 
+  st_union() %>% st_as_sf()
+
+kob1980diff <- KOB_walking_isos %>% 
+  filter(time == 5) %>% 
+  cbind(st_drop_geometry(KOB)) %>% 
+  filter(Year > 1960 & Year < 1980) %>% 
+  st_union() %>% st_as_sf()
+
+# Situation in 1960
+mapview(bdg1960) + mapview(kob1960)
+
+# Situation in 1980
+mapview(bdg1980) + mapview(kob1980)
+
+# growth in between
+mapview(bdg1980diff) + mapview(kob1980diff)
+```
+
+### Matrix of accessibility
+Now that we have the one-to-five-minute isochrones, let's overlay them and create an accessibility matrix.
+
+But first we need to link our 1:5 minute isochrones to attribute data (which we need to duplicate 5 times for each 1 min isochrone)
+```{r}
+# Duplicate each row 5 times
+pentupled_BDG <- BDG %>%
+  st_drop_geometry() %>% 
+  uncount(5, .id = NULL)  # .id = NULL prevents the creation of an id column
+
+pentupled_KOB <- KOB %>%
+  st_drop_geometry() %>% 
+  uncount(5, .id = NULL)  # .id = NULL prevents the creation of an id column
+
+# View the result
+print(pentupled_BDG) # 2490 values
+print(pentupled_KOB)  # 180 values
+```
+Now we can link the pentupled KOB and BDG attributes to their 1:5 min isochrones
+and select locations that predate 1960s (preparedness in light of the bomb)
+```{r}
+BDG_isos1960_prj <- BDG_walking_isos %>% 
+  cbind(pentupled_BDG) %>% 
+  filter(Location_startdate < 1960) %>% 
+  st_transform(25832)
+
+KOB_isos1960_prj <- KOB_walking_isos %>% 
+  cbind(pentupled_KOB) %>% 
+  filter(Year < 1960) %>% 
+  st_transform(25832)
+
+```
+
+### Create an accessibility surface out of the 1:5 isochrones to 1960s locations
+First, we create separate surfaces with 50m resolution for each KOB and BDG category
+```{r}
+library(Rcpp)
+library(fasterize)
+library(raster)
+library(leaflet)
+
+# Create rasters from BDG and KOB 1:5min 1960 location isochrones
+template <- raster(BDG_isos1960_prj, resolution = 50)
+BDG1960_iso_surface <- fasterize(BDG_isos1960_prj, template, field = "time", fun = "min")
+
+#writeRaster(BDG1960_iso_surface, "../output_data/BDG1960_iso_surf.tiff", format = 'GTiff' )
+
+template_kob <- raster(KOB_isos1960_prj, resolution = 50)
+KOB1960_iso_surface <- fasterize(KOB_isos1960_prj, template_kob, field = "time", fun = "min")
+
+# Map the results
+pal <- colorNumeric("viridis", BDG_isos1960_prj$time, na.color = "transparent")
+
+mapbox_map <- leaflet() %>%
+    addMapboxTiles(style_id = "streets-v11", username = "mapbox")
+
+mapbox_map %>%
+    addRasterImage(BDG1960_iso_surface, colors = pal, opacity = 0.5) %>%
+    addLegend(values = BDG_isos1960_prj$time, pal = pal, title = "Walktime to the nearest BDG shelter")
+
+mapbox_map %>%
+    addRasterImage(KOB1960_iso_surface, colors = pal, opacity = 0.5) %>%
+    addLegend(values = KOB_isos1960_prj$time, pal = pal, title = "Walktime to the nearest KOB shelter")
+
+```
+### Accessibility surface for 1:5 min walking distances to combined BDG and KOB
+Next, we combine the BDG and KOB isochrones and let the fasterize function select the lowest value for each cell out of the many overlapping isochrones. This captures the 'best scenario', which is unlikely, however captures the planners' best intentions.
+```{r}
+BDG_KOB_iso1960 <- BDG_isos1960_prj %>% 
+  select(time, id, Location_startdate) %>% 
+  rename(Year = Location_startdate) %>% 
+  rbind(KOB_isos1960_prj %>% select(time, id, Year))
+template_public <- raster(BDG_KOB_iso1960, resolution = 50)
+BDG_KOB_60s_iso <- fasterize(BDG_KOB_iso1960, template_public, field = "time", fun = "min")
+
+#writeRaster(BDG_KOB_60s_iso, "../output_data/BDG_KOB_60iso_surf.tiff", format = 'GTiff' )
+
+mapbox_map <- leaflet() %>%
+    addMapboxTiles(style_id = "light-v10", username = "mapbox")
+
+mapbox_map %>%
+    addRasterImage(BDG_KOB_60s_iso, colors = pal, opacity = 0.5) %>%
+    addLegend(values = BDG_KOB_iso1960$time, pal = pal, title = "Walktime to the nearest shelter")
+
+```
+
+### Plot accessibility : combined BDG and KOB isochrones
+
+```{r}
+plot(BDG_KOB_60s_iso)
+mapview(BDG_KOB_iso1960 , zcol = "time")
+mapview(BDG_KOB_60s_iso)
+bbr_aarhus_data_flat
+```
+### Compare Euclidian with Network distance to shelters
+Let's compare the 200m buffer with 2 minute network distance
+```{r}
+mapview(sh_buff200) + mapview(BDG_KOB_iso1960 %>% filter(time < 4), zcol = "time") 
+
+```
+Finally, once we see what the gaps are, we can explore the buildings and population inside.

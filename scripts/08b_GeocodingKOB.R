@@ -19,7 +19,25 @@ gs4_deauth()
 
 KOB <- read_sheet("https://docs.google.com/spreadsheets/d/1kBkz2PdR_jMYIx5Y014oWMiVepXb4sQVx9fc30Vwn4A/edit?usp=sharing", 
                   range = "KOB",
-                  col_types = "dccddcccc" )
+                  col_types = "dccccdcddcccc" )
+
+
+################# PARSE THE MANUAL COORDINATES
+
+glimpse(KOB)
+KOB$Coords
+
+KOB <- KOB %>%
+  mutate(
+    Latitude = as.numeric(sub(",.*", "", Coords)),  # Extract longitude before the comma
+    Longitude = as.numeric(sub(".*, ", "", Coords))   # Extract latitude after the comma
+  ) %>% 
+  filter(!is.na(Longitude) | !is.na(Latitude)) %>%  # Filter out missing values
+  st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326)
+
+saveRDS(KOB, "./output_data/KOB_sf.rds")
+
+################# GEOCODE FROM ADDRESSES (for comparison)
 
 # Clean address column for geocoding
 KOB <- KOB %>% 
