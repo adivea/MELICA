@@ -12,6 +12,7 @@ library(tidyverse)
 library(googlesheets4)
 library(sf)
 library(mapview)
+library(terra)
 ```
 ## Load Data
 ### BDG
@@ -244,11 +245,12 @@ mapbox_map %>%
 ```
 ### Accessibility surface for 1:5 min walking distances to combined BDG and KOB
 Next, we combine the BDG and KOB isochrones and let the fasterize function select the lowest value for each cell out of the many overlapping isochrones. This captures the 'best scenario', which is unlikely, however captures the planners' best intentions.
-```{r}
+```{r public-shelter-surface}
 BDG_KOB_iso1960 <- BDG_isos1960_prj %>% 
   select(time, id, Location_startdate) %>% 
   rename(Year = Location_startdate) %>% 
   rbind(KOB_isos1960_prj %>% select(time, id, Year))
+
 template_public <- raster(BDG_KOB_iso1960, resolution = 50)
 BDG_KOB_60s_iso <- fasterize(BDG_KOB_iso1960, template_public, field = "time", fun = "min")
 
@@ -264,17 +266,107 @@ mapbox_map %>%
 ```
 
 ### Plot accessibility : combined BDG and KOB isochrones
+Let's first look at all the shelters' buffers in relation to the Aarhus 1960s flats within the city wider boundary.
+```{r plot-flats-shelter-isos}
+BDG_walking_isos <- readRDS("../output_data/BDG_walking_isos1_5.rds")
+KOB_walking_isos <- readRDS("../output_data/KOB_walking_isos1_5.rds")
+BDG_KOB_60s_iso <- rast("../output_data/BDG_KOB_60iso_surf.tiff" )
+towns <- read_sf("data/large/DanishCities2024.geojson")
+aarhus <- towns %>% 
+  filter(bebyggelseskode == 11045) 
+
+plot(BDG_KOB_60s_iso)
+mapview(BDG_KOB_60s_iso)
+
+mapview(aarhus)+ 
+  mapview(bbr_aarhus_data_flat %>% 
+                           filter(byg026Year < 1961), 
+                         zcol = "byg054AntalEtager",
+                         cex = 0.1) + 
+  mapview(BDG_walking_isos %>% filter(time == 5))
+```
+
+Now, lets clip the flats by city boundary and by shelter isos, so we see the ones without protection. Repeat with business and institutional buildings
 
 ```{r}
-plot(BDG_KOB_60s_iso)
-mapview(BDG_KOB_iso1960 , zcol = "time")
-mapview(BDG_KOB_60s_iso)
-bbr_aarhus_data_flat
+# Select residences built by 1960 roughly within 2024 Aarhus boundary (excessive I know) 
+aarhus_flats <- bbr_aarhus_data_flat %>%   # 50,000 flats
+  filter(byg026Year < 1961) %>% # 16473 residencies built before 1960
+  st_intersection(aarhus$geometry) # 14283 within Aarhus wider boundary
+
+# Merge public shelters into single multipolygons to find overlapping flats
+BDG_uni <- BDG_walking_isos %>% 
+  filter(time == 5) %>% 
+  st_union() %>% 
+  st_make_valid()
+KOB_uni <- KOB_walking_isos %>% 
+  filter(time == 5) %>% 
+  st_union() %>% 
+  st_make_valid()
+
+st_is_valid(KOB_uni)
+
+# View the merged result == spatial coverage by public shelters 
+mapview(KOB_uni) + mapview(BDG_uni)
+
 ```
+### Check the result
+```{r spatial-equity-residences-5min-1960}
+# View flats (<1960) outside the 5min walking interval from public shelters
+aarhus_flats %>% 
+  st_difference(st_union(BDG_uni, KOB_uni)) %>% 
+  mapview(zcol = "nearestBDG_dist_m", cex = "byg054AntalEtager")
+
+# Residential houses outside 5 min walking isochrones from public shelters in 1960s Aarhus
+outside5isos_1960 <- aarhus_flats %>% 
+  st_difference(st_union(BDG_uni, KOB_uni))  # only 3462 flats are unprotected / well outside of town!
+```
+## Same for 1980s
+Most shelter records we have are from 1987. Let's check what the spatial coverage was for 1985.
+```{r public-sh-coverage-1984}
+aarhus_flats1985 <- bbr_aarhus_data_flat %>%   # 50,000 flats
+  filter(byg026Year <= 1985) %>% # 16473 residencies built before 1960
+  st_intersection(aarhus$geometry)
+
+# Residential houses outside 5 min walking isochrones from public shelters in 1960s Aarhus
+outside5isos1985 <- aarhus_flats1985 %>% 
+  st_difference(st_union(BDG_uni, KOB_uni))
+
+outside5isos1985 %>% mapview(zcol = "nearestBDG_dist_m", cex = "byg054AntalEtager")
+summary(outside5isos1985)
+```
+A whooping 13351  flats are outside 5 min walking interval to a shelter by 1985. Most of these however are outside the immediate danger zone (downtown), where only a dozen new buildings have popped up in the shelter gaps.
+
+Most of the other 13000 homes are single-floor family houses, expected to befurnished with private shelters. Only one 17-floor building is in this list. 
+
+## Check coverage of 3000 and 13000 homes outside isos with private shelters
+
+## Check adequacy : how much capacity is there in the shelters?
+What percentage of population can they accommodate? How many can be on the move at any time in 1960 and 1985?
+How many people are in the homes in Aarhus?
+
+```{r}
+
+```
+
+
+
 ### Compare Euclidian with Network distance to shelters
 Let's compare the 200m buffer with 2 minute network distance
 ```{r}
-mapview(sh_buff200) + mapview(BDG_KOB_iso1960 %>% filter(time < 4), zcol = "time") 
+# filter buffers to 1960s only
+BDG_KOB_60s_buff200 <- bdg_buff %>% 
+  filter(Location_startdate < 1960) %>% 
+  st_union() %>% 
+  st_union(st_union(kob_buff %>% filter(Year < 1960))) %>% 
+  st_as_sf() 
+  
+st_write(BDG_KOB_60s_buff200,"../output_data/BDG_KOB_60s_buff200.geojson")
 
+
+mapview(BDG_KOB_60s_buff200) + mapview(BDG_KOB_iso1960 %>% filter(time < 4), zcol = "time") 
+
+mapview(BDG_KOB_60s_iso) + mapview(BDG_KOB_60s_buff200)
 ```
 Finally, once we see what the gaps are, we can explore the buildings and population inside.
+

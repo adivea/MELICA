@@ -101,6 +101,7 @@ mapview(BDG_noB_lines, zcol = "BDnr") + mapview(BDG_noBrabrand_sf, zcol = "Locat
 #####################################################
 
 #GET WFS data stednavne
+
 install.packages("ows4R")
 library(ows4R)
 library(httr) # generic webservice package
@@ -139,3 +140,18 @@ prov2 <- read_sf(paste0("WFS:", wfs),
                  query = "SELECT * FROM Stednavn WHERE NavnID=751"
 )
 
+#################### Modern cities
+
+## https://dawadocs.dataforsyningen.dk/dok/stednavne
+
+#aarhus <- read_sf("https://api.dataforsyningen.dk/steder?hovedtype=Bebyggelse&undertype=by&primærtnavn=Aarhus&format=geojson")
+#st_write(aarhus, "data/DanishCities2024.geojson")
+towns <- read_sf("data/DanishCities2024.geojson")
+head(towns)
+mapview(towns)
+
+aarhus <- towns %>% 
+  filter(bebyggelseskode == 11045) 
+aarhus %>% 
+  mapview()
+  
