@@ -7,7 +7,7 @@ library(pacman) # for easier managing of packages
 pacman::p_load(tidyverse, stringr, sf)
 
 # loading in CSVs with SR addresses, currently only for testing
-df_addressSR <- read_csv("Own Git Stuff/SR_overview_test.csv") # manually aggregated SR addresses
+df_addressSR <- read_csv("PGit/SR_overview_test.csv") # manually aggregated SR addresses (excerpt of WORKING_SR_overview_filtered)
 df_addressBBR <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv") # data from BBR
 
 # removal of duplicate + empty columns
@@ -42,7 +42,7 @@ df_addressBBR$oc_formatted <- gsub("(?<=[a-zA-Z])-(?=[a-zA-Z])", "", df_addressB
 df_addressSR$address <- str_replace_all(df_addressSR$address, "\\s+", "")
 df_addressBBR$oc_formatted = str_replace_all(df_addressBBR$oc_formatted, "\\s+", "")
 
-# getting decades, taken from Adela's code in 07_HistoricalBBR.R
+# getting decades, taken from Adela's (adivea) code in 07_HistoricalBBR.R
 df_addressBBR <- df_addressBBR %>%
   mutate(
     decade = case_when(
@@ -111,14 +111,39 @@ checkAddressUnmatched <- data.frame(
   addressBBR = unmatched_addressBBR$oc_formatted
 )
 
-# - - - - Inspecting GeoJSON + Comparing Street Names with those in BBR register 
+# - - - - Inspecting Aarhus Kommune GeoJSON + Comparing Street Names with those in BBR register 
+
+### INSPECTION
 
 geojson_streets <- "https://webkort.aarhuskommune.dk/spatialmap?page=get_geojson_opendata&datasource=vjmdt_tot"
 
 data_geo <- sf::st_read(geojson_streets, quiet = FALSE)
 summary(data_geo)
 
-df_streetBBR <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv") # data from BBR
+# number of multilinestring geometries
+multilinestring_count <- sum(st_geometry_type(data_geo) == "MULTILINESTRING")
+## calculated number of multilinestrings / addresses: 10448L
+
+# bounding box of the geojson geometries
+bounding_box <- st_bbox(data_geo)
+bounding_box
+
+# visualising the extent
+bbox_sf <- st_as_sfc(bounding_box)
+
+ggplot() +
+  geom_sf(data = data_geo, color = 'blue', size = 0.5) +
+  geom_sf(data = bbox_sf, color = 'red', fill = NA, size = 1) +
+  ggtitle("Extent of MULTILINESTRING Geometries")
+
+# Add the bounding box
+box_coords <- st_as_sfc(bounding_box)
+plot(box_coords, add = TRUE, border = 'red', lwd = 2)
+
+### COMPARISON
+
+# reading in BBR data
+df_streetBBR <- read_csv("MELICA/output_data/SK_bbr_oc_addresses.csv")
 
 # removing everything after the first comma and all numbers that may come before
 df_streetBBR$oc_formatted <- str_extract(df_streetBBR$oc_formatted, "^[^,]*")
