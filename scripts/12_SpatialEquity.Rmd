@@ -82,7 +82,8 @@ aarhus_districts %>%
 # intersections_aarhus <- st_transform(intersections_aarhus, 4326)  # Polygons
 ```
 
-```{r subset-buildings}
+## Subset to Downtown
+```{r subset-buildings-to-downtown}
 # First, let's create a subset of buildings
 downtown <- bbr_aarhus_data_flat %>% 
   st_intersection(area) %>% 
@@ -532,7 +533,7 @@ Example rule:
 Single-family house: ~4 people
 Multifamily (e.g., apartments): Number of floors * Units per floor * Average household size
 
-```{r}
+```{r residential-demand}
 downtown <- downtown %>% 
   left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code")) %>% 
   rename(Code = byg021BygningensAnvendelse)
@@ -619,7 +620,7 @@ downtown <- downtown %>%
 ### 4. Aggregate Spatially
 Aggregate demand and supply into spatial units such as administrative boundaries, grid cells, or census tracts.
 
-# Aggregate population demand and shelter capacity by spatial unit
+## Aggregate population demand and shelter capacity by spatial unit
 spatial_summary <- downtown %>%
   st_join(admin_boundaries) %>%  # Join with administrative boundaries
   group_by(boundary_id) %>%
@@ -655,7 +656,7 @@ R
 Copy code
 library(ggplot2)
 
-# Plot under-served vs. over-served areas
+## Plot under-served vs. over-served areas
 ggplot(spatial_summary) +
   geom_sf(aes(fill = status_SR)) +
   scale_fill_manual(values = c("Under-served" = "red", "Well-served" = "green", "Over-served" = "blue")) +
@@ -684,7 +685,7 @@ Distance weighting: Weight shelter capacity based on proximity, e.g., nearer she
 Prioritization: Factor in CDpriority to highlight underserved areas with high-priority buildings.
 R
 Copy code
-# Adjust capacity by distance weighting
+## Adjust capacity by distance weighting
 downtown <- downtown %>%
   mutate(
     weighted_capacity_SR = total_capacity_SR / (nearestSR_dist_m + 1),  # Avoid division by 0

@@ -30,13 +30,20 @@ mapview(BDG, zcol = "Year_of_Construction")
 # Load Andreas historical "long" data and show through time
 BDG <- read_sheet("https://docs.google.com/spreadsheets/d/1C4GEgq4UmEwx_Xi84FiNBrRowmmJHi3S191byjF-hWc/edit?gid=0#gid=0",
                   range = "Ark1", 
-                  col_types = "ddcdddcdccdcc")
+                  col_types = "ddcdddcdccdc")
 
 BDG  <- BDG %>% 
   filter(!is.na(Long) | !is.na(Lat) ) %>% 
   st_as_sf(coords = c("Long", "Lat"), crs = 4326) 
 
 glimpse(BDG)
+
+BDG %>% 
+  mutate(longitude = st_coordinates(.)[,1],
+         latitude = st_coordinates(.)[,2]) %>% 
+  rename(id = ID) %>% 
+  st_drop_geometry() %>% 
+  write_csv("output_data/BDGlong.csv")
 
 # Plot BDG in space by year of construction
 m <- BDG %>% 
@@ -154,4 +161,4 @@ aarhus <- towns %>%
   filter(bebyggelseskode == 11045) 
 aarhus %>% 
   mapview()
-  
+

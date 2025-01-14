@@ -162,7 +162,7 @@ ui <- fluidPage(
   )
 )
 
-# Define server logic required to draw the choropleth
+# Define server logic required to draw the chloropleth
 server <- function(input, output) {
   # Draw the initial map
   output$map <- renderLeaflet({

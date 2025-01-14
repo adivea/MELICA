@@ -1,0 +1,500 @@
+id,BDnr,Type,Capacity,Certain_location,Location_startdate,Certain_startdate,origin_of_location,Accuracy,Notes,longitude,latitude
+1,101,III,50,Certain,1944,Certain,FAIMS,4,It is 6 meters off on Google Earth Pro 2024. The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1769558333333,56.1567073166667
+2,102,III,50,Certain,1944,Certain,FAIMS,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1774677333333,56.1568350166667
+3,104,III,50,Certain,1944,Certain,FAIMS,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1778154166667,56.1567694833333
+4,107,III,50,Certain,1944,Certain,FAIMS,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1790969166667,56.15684295
+5,108,III,50,Certain,1944,Certain,FAIMS,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1795102833333,56.1568894666667
+6,109,III,50,Certain,1944,Certain,Google maps,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.186514,56.156781
+7,110,III,50,Certain,1944,Certain,FAIMS,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1863330666667,56.1569525833333
+8,111,III,50,Certain,1944,Certain,KML,5,The archival data claims it was build in 1944,10.1898346882758,56.1565949719496
+9,111,NA,NA,Certain,1988,Uncertain,FlyfotoArkivet,4,"The shelter is no longer visible at the former location. The maps from 1987 show it, so it must have been moved after that. FlyfotoArkivet shows new buildings at the location in 1988. Must have been destroyed before they were built. Precise date uncertain",10.107009,56.150046
+10,112,III,50,Certain,1944,Certain,Google maps,5,The archival data claims it was build in 1944,10.1880524,56.1564188
+11,112,IIIA,100,Certain,1988,Uncertain,FlyfotoArkivet,4,The shelter has been moved. It is seen drawn with a blue pen on map 63 from 1987. Must have been moved after that map was created. Flyfotoarkivet shows newly constructed buildings at the old location in 1988. Make sense it would have been moved during the construction phase of does buildings. Needs FAIMS,10.2005319781253,56.053722455923
+12,113,III,50,Certain,1944,Certain,Google maps,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.186496,56.157126
+13,120,III,50,Certain,1944,Uncertain,Google maps,3,The archival data does not show a year of construction. Based on the type 1944 is a good guess. No FAIMS. Uncertain if still exist,10.180485,56.161504
+14,121,III,50,Certain,1944,Uncertain,Google maps,3,The archival data does not show a year of construction. Based on the type 1944 is a good guess. No FAIMS. Uncertain if still exist,10.180068,56.161643
+15,123,III,50,Certain,1944,Certain,Archival data,5,The archival data claims it was build in 123 at the address Vestre Ringgade v. 176,10.190177,56.167297
+16,123,IIIA,100,Certain,1974,Uncertain,KML,4,The maps from 1987 show it as a type IIIA at this location. Start date of this location uncertain. Must be before 1987. FlyfotoArkivet show it being build in 1974,10.152106,56.123555
+17,123,NA,NA,Certain,1988,Uncertain,FlyfotoArkivet,4,The maps from 1987 show it. But it does not exist today. Based on the Flyfotoarkivet it is not visible in 1988. Uncertain since it could just be a bad angle,10.107009,56.150046
+18,124,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.190111,56.16725
+19,124,IIIA,100,Certain,1974,Uncertain,KML,3,Location on the maps from 1987. Date must be before 1987. Visible on Flyfotoarkivet 1974. Unsure if still exists. Needs FAIMS,10.153626578686,56.1241998405971
+20,125,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.189634,56.166947
+21,125,NA,NA,Certain,2005,Uncertain,FlyfotoArkivet,4,It no longer exists. Is on the maps from 1987. Flyfotoarkivet shows the road has been changed around 2005. Most likely the year of the shelter's destruction. Not sure,10.107009,56.150046
+22,126,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1891793,56.1666612833333
+23,127,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.188818,56.1663762833333
+24,128,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1880309,56.1657684333333
+25,129,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1839594166667,56.16184925
+26,130,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1837658,56.1616751666667
+27,131,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.183515,56.161581
+28,131,III,50,Certain,1968,Certain,KML,5,Year ofchange in archival data. Location based on the maps from 1987,10.193997,56.187709
+29,132,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.182823,56.160566
+30,132,NA,NA,Certain,1966,Certain,Archival data,5,Year of destruction based on archival data. However another number 132 appears on the maps from 1987,10.107009,56.150046
+31,132,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,Appears on the first map from 1987. This can be seen from Flyfotoarkivet in 1974. Properly build a few years before that but exact year is uncertain,10.26995,56.210672
+32,132,NA,NA,Certain,2004,Uncertain,Google Earth Pro,4,Appears on Flyfotoarkivet in 2002 and does not appear on Google Earth Pro 2005. Must have been destroyed between does two years,10.107009,56.150046
+33,133,III,50,Certain,1944,Certain,FAIMS,5,The archival data claims it was build in 1944 and FAIMS confirmes it is still at the location,10.1845634,56.1623970666667
+34,134,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.182864,56.159845
+35,134,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"Does no longer exist, year of destruction uncertain. Does not appear on list from 1987, must be destroyed before that",10.107009,56.150046
+36,135,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.182877,56.159489
+37,135,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Does no longer exist, year of destruction uncertain. Does not appear on list from 1987, must be destroyed before that",10.107009,56.150046
+38,135,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,Appears on the first map from 1987. This can be seen from Flyfotoarkivet in 1974. Properly build a few years before that but exact year is uncertain,10.270126,56.210398
+39,135,NA,NA,Certain,2004,Uncertain,Google Earth Pro,4,Appears on Flyfotoarkivet in 2002 and does not appear on Google Earth Pro 2005. Must have been destroyed between does two years,10.107009,56.150046
+40,136,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.182876,56.159329
+41,136,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Does no longer exist, year of destruction uncertain. Does not appear on list from 1987, must be destroyed before that",10.107009,56.150046
+42,137,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.18425865,56.1621303333333
+43,138,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.182789,56.15738
+44,138,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Does no longer exist, year of destruction uncertain. Does not appear on list from 1987, must be destroyed before that",10.107009,56.150046
+45,139,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.182783,56.156726
+46,139,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Does no longer exist, year of destruction uncertain. Does not appear on list from 1987, must be destroyed before that",10.107009,56.150046
+47,139,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,Appears on the first map from 1987. This can be seen from Flyfotoarkivet in 1974. Properly build a few years before that but exact year is uncertain,10.270138,56.210675
+48,139,NA,NA,Certain,2004,Uncertain,Google Earth Pro,4,Appears on Flyfotoarkivet in 2002 and does not appear on Google Earth Pro 2005. Must have been destroyed between does two years,10.107009,56.150046
+49,140,III,50,Certain,1944,Certain,KML,5,Year of build and address in archival data. Is FAIMS verified,10.1834481633263,56.1565169918034
+50,142,III,50,Uncertain,1944,Certain,Google maps,3,"Achival data contains startdate, but not a accurate location",10.197338,56.160336
+51,142,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,"Location based on the maps from 1987, must have been moved before that",10.2080969833333,56.1401344333333
+52,151,III,50,Certain,1944,Certain,Google Maps,5,"Location based on maps from 1987, construction date based on archvial data",10.200093,56.154926
+53,151,IIIA,100,Certain,1979,Uncertain,FlyfotoArkivet,4,"location based on the maps from 1987, must have been moved before that but after 1974, as that is the last time it can be seen on the fotos from Flyfotoarkivet",10.1432623255454,56.0891245934688
+54,152,III,50,Uncertain,1944,Certain,Archival data,3,"Achival data contains startdate, but not a accurate location",10.198727,56.155657
+55,152,III,50,Certain,1963,Certain,Archival data,5,Year of move based on archival data. Location FAIMS verified,10.1834821,56.17242585
+56,153,III,50,Certain,1944,Certain,Google Maps,5,"Location based on maps from 1987, construction date based on archvial data",10.200447,56.15498
+57,153,IIIA,100,Certain,1979,Uncertain,FlyfotoArkivet,4,"location based on the maps from 1987, must have been moved before that but after 1974, as that is the last time it can be seen on the fotos from Flyfotoarkivet",10.1447034099386,56.0892495374345
+58,154,III,50,Uncertain,1944,Certain,Google Maps,3,"Achival data contains startdate, but not a accurate location",10.195904,56.153619
+59,154,NA,NA,Certain,1966,Certain,Archival data,5,Achival data contains year of destroction,10.107009,56.150046
+60,155,III,50,Uncertain,1944,Certain,Archival data,3,"Achival data contains startdate, but not a accurate location",10.195615,56.153425
+61,155,NA,NA,Certain,1966,Certain,Archival data,5,Achival data contains year of destroction,10.107009,56.150046
+62,156,III,50,Uncertain,1944,Certain,Archival data,3,"Achival data contains startdate, but not a accurate location",10.193937,56.152212
+63,156,NA,NA,Certain,1966,Certain,Archival data,5,Achival data contains year of destruction,10.107009,56.150046
+64,157,III,50,Uncertain,1944,Certain,Archival data,3,"Achival data contains startdate, but not a accurate location",10.198077,56.151391
+65,157,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"Was destroyed around 1974, before 1987 since it is not mentioned on those maps.",10.107009,56.150046
+66,158,III,50,Uncertain,1944,Certain,Archival data,3,"Achival data contains startdate, but not a accurate location",10.197853,56.151197
+67,158,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,"Location from maps 1987. Startdate uncertain, appears on Flyfotoarkivet on 1974, must be before that",10.220849,56.19491
+68,160,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.20160025,56.1537292666667
+69,161,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.186758,56.14572
+70,161,NA,NA,Certain,1965,Certain,Archival data,5,Achival data contains year of destruction,10.107009,56.150046
+71,163,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data. Still exist,10.187336,56.145267
+72,164,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.187599,56.14509
+73,164,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,Not on maps from 1987 must have been removed before that,10.107009,56.150046
+74,165,III,50,Certain,1944,Certain,Google Maps,5,Year of build and address in archival data. Is FAIMS verified,10.187855,56.144898
+75,166,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.188168,56.144664
+76,166,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,Not on maps from 1987 must have been removed before that,10.107009,56.150046
+77,167,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data,10.18879,56.144272
+78,167,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,Road was expaned at some point and the shelter destroyed. Around 1974,10.107009,56.150046
+79,168,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data. Is FAIMS verified,10.1765056166667,56.16268035
+80,169,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data. Is FAIMS verified,10.1761651833333,56.1628057
+81,170,III,50,Certain,1944,Certain,Archival data,5,Year of build and address in archival data. Is FAIMS verified,10.1757724833333,56.1630080166667
+82,174,IIIA,100,Certain,1944,Uncertain,KML,4,Address in archival data. Is FAIMS verified,10.18295765,56.1640948
+83,175,III,50,Uncertain,1944,Uncertain,Archival data,2,Neither year of build nor accurate address is mentioned in archival data,10.183028,56.163968
+84,175,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"Archival data mentioned something happend, but not what nor when",10.107009,56.150046
+85,178,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.18309495,56.1705823666667
+86,179,III,50,Certain,1944,Certain,KML,5,Year of build and address in archival data. Is FAIMS verified,10.1801460912923,56.1685830249381
+87,180,III,50,Certain,1944,Certain,KML,5,Year of build and address in archival data. Is FAIMS verified,10.180100809294,56.1684801889814
+88,181,III,50,Certain,1944,Certain,KML,5,Year of build and address in archival data. Is FAIMS verified,10.19693,56.163872
+89,182,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1967566833333,56.1637706
+90,183,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1967366833333,56.1636573333333
+91,184,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1967159333333,56.1635641833333
+92,187,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.201725,56.16470945
+93,188,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1989591166667,56.1650732
+94,190,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.201,56.155697
+95,190,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Uncertain destruction year, most changes in the area around 1979, most be around that time, since it is not on the maps from 1987",10.107009,56.150046
+96,191,III,50,Certain,1944,Uncertain,Google Maps,4,Address in archival data. Is FAIMS verified,10.201833,56.161594
+97,192,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.1982617666667,56.1613751166667
+98,194,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.200374,56.155628
+99,194,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Uncertain destruction year, most changes in the area around 1979, most be around that time, since it is not on the maps from 1987",10.107009,56.150046
+100,196,III,50,Certain,1944,Certain,FAIMS,5,Year of build and address in archival data. Is FAIMS verified,10.2031582166667,56.1617956
+101,202,III,50,Certain,1944,Certain,KML,5,"Location based on maps from 1987, construction date based on archvial data",10.201861,56.154542
+102,202,IIIA,100,Certain,1979,Uncertain,FlyfotoArkivet,4,"Location based on maps from 1987, unsure of the year of the move. 1979 it is visible on Flyfotoarkivet",10.1836636044909,56.116015705112
+103,203,III,50,Certain,1944,Certain,KML,5,"Location based on maps from 1987, construction date based on archvial data",10.202162,56.154655
+104,203,IIIA,100,Certain,1979,Uncertain,FlyfotoArkivet,4,"Location based on maps from 1987, unsure of the year of the move. 1979 it is visible on Flyfotoarkivet",10.183783,56.115636
+105,204,III,50,Certain,1944,Certain,Google Maps,5,"Location based on maps from 1987, construction date based on archvial data",10.202561,56.154961
+106,204,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Other shelters from that area was moved around 1974, this one was most likely destroyed around the same time",10.107009,56.150046
+107,205,III,50,Certain,1944,Certain,Google Maps,5,"Location based on maps from 1987, construction date based on archvial data",10.201107,56.154784
+108,205,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Other shelters from that area was moved around 1974, this one was most likely destroyed around the same time",10.107009,56.150046
+109,206,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.152715,56.164895
+110,206,III,50,Certain,1968,Certain,FlyfotoArkivet,5,Moved in 1968 based on archival data. Location based on maps 1987,10.193276,56.188254
+111,207,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.160222,56.166779
+112,207,III,50,Certain,1968,Certain,Archival data,5,Moved in 1968 based on archival data. Location based on maps 1987. Combined with 206 and called 206 after the move,10.193276,56.188254
+113,208,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.204145,56.150612
+114,208,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Changes to the area around 1979, most likely removed at that time",10.107009,56.150046
+115,209,III,50,Certain,1944,Certain,Archival data,5,"Location based on maps from 1987, construction date based on archvial data",10.2011914675035,56.1523897870382
+116,209,IIIA,100,Certain,1993,Uncertain,FlyfotoArkivet,3,"Location based on maps from 1987, construction date based on Flyfotoarkivet. I was visible in 1993, could have been moved before. Unsure if exsit today",10.0748830659454,56.1090828881998
+117,210,III,50,Certain,1944,Certain,Archival data,5,"Location based on maps from 1987, construction date based on archvial data",10.2008300473431,56.1520270399953
+118,210,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Year of destruction unsure, 1966 had alot of changes to the area, would make sence about that time. Could be late do to appearing on maps from 1987",10.107009,56.150046
+119,212,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.201733,56.151177
+120,212,NA,NA,Certain,1967,Certain,Archival data,5,Destoyed in 1967 based on archival data,10.107009,56.150046
+121,214,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.20428,56.158265
+122,214,IIIA,100,Certain,1968,Uncertain,FlyfotoArkivet,4,"Other shelters in the new location was moved at 1968, would make sence this one also was. Was moved before 1987, since it appears at the new location in those maps",10.193833,56.187861
+123,215,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.205258,56.157727
+124,215,NA,NA,Certain,1979,Uncertain,Archival data,4,Uncertain destruction year,10.107009,56.150046
+125,216,III,50,Uncertain,1944,Certain,Archival data,3,"Construction year in archival data, address not accurate",10.204798,56.15772
+126,216,IIIA,100,Certain,1979,Uncertain,FAIMS,4,"Location based on the maps from 1987, must have been moved before that, FAIMS verified",10.2085901,56.1400038833333
+127,220,III,50,Uncertain,1944,Certain,Archival data,3,"The location is based on archival data, which is not accurate. Date on construction based on archival data",10.1934,56.148831
+128,220,III,50,Certain,1968,Certain,FAIMS,5,Year of move based on archival data and location based on FAIMS data,10.18824595,56.1478777333333
+129,221,III,50,Uncertain,1944,Certain,Archival data,3,"The location is based on archival data, which is not accurate. Date on construction based on archival data",10.192875,56.148765
+130,221,III,50,Certain,1968,Certain,FAIMS,5,Year of move based on archival data and location based on FAIMS data,10.1882611333333,56.1478780833333
+131,222,III,50,Certain,1944,Certain,Archival data,5,Location based on maps from 1987 and archival data. Year of construction in archival data,10.189749,56.146997
+132,222,III,50,Certain,1995,Uncertain,KML,4,Location based on maps from 1987. FlyFotoarkivet shows the shelters in 1995,10.195768,56.1061
+133,231,III,50,Certain,1944,Certain,Archival data,5,Location based on maps from 1987 and archival data. Year of construction in archival data,10.192947707335,56.1443610374308
+134,231,NA,NA,Certain,1995,Uncertain,FlyfotoArkivet,4,"year of destruction based on flyfotoarkivet, last time visible in 1995",10.107009,56.150046
+135,232,III,50,Certain,1944,Certain,Archival data,5,Location based on maps from 1987 and archival data. Year of construction in archival data,10.194095,56.144436
+136,232,NA,NA,Certain,1995,Uncertain,FlyfotoArkivet,4,"year of destruction based on flyfotoarkivet, last time visible in 1995",10.107009,56.150046
+137,233,III,50,Certain,1944,Certain,Archival data,5,Location based on maps from 1987 and archival data. Year of construction in archival data,10.194596,56.144489
+138,233,NA,NA,Certain,1995,Uncertain,FlyfotoArkivet,4,"year of destruction based on flyfotoarkivet, last time visible in 1995",10.107009,56.150046
+139,234,III,50,Uncertain,1944,Certain,Archival data,3,"Stated to be at Banegårdspladsen, but not where. Year of construction in Archival data",10.203892,56.150579
+140,234,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Flyfotoarkivet shows changes to the are in 1979, not on maps from 1987",10.107009,56.150046
+141,237,III,50,Uncertain,1944,Certain,Archival data,3,"Stated to be at Banegårdspladsen, but not where. Year of construction in Archival data",10.203611,56.150531
+142,237,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Flyfotoarkivet shows changes to the are in 1979, not on maps from 1987",10.107009,56.150046
+143,240,III,50,Certain,1944,Certain,FAIMS,5,Location and year of construction in archival data,10.1921267203435,56.1422111699548
+144,241,III,50,Certain,1944,Certain,Archival data,5,Location and year of construction in archival data,10.190586,56.143177
+145,241,NA,NA,Certain,2015,Uncertain,Google Earth Pro,4,"Changes to the area around 2015, could have been destroyed at that time",10.107009,56.150046
+146,243,III,50,Certain,1944,Certain,Archival data,5,Location and year of construction in archival data,10.192616,56.141925
+147,243,NA,NA,Certain,2015,Uncertain,Google Earth Pro,4,"Changes to the area around 2015, could have been destroyed at that time",10.107009,56.150046
+148,244,III,50,Certain,1944,Certain,Google Maps,5,Location and year of construction in archival data. FAIMS verified,10.193098,56.141607
+149,246,III,50,Certain,1944,Certain,Google Maps,5,Location and year of construction in archival data. FAIMS verified,10.193381,56.14143
+150,250,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and archival data. Year of construction in archival data,10.186481,56.142136
+151,250,NA,NA,Uncertain,2020,Uncertain,Google Earth Pro,2,"Unsure if still exists. If gone, it must have been around 2020",10.107009,56.150046
+152,251,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and archival data. Year of construction in archival data. Is  FAIMS,10.1864851728386,56.1420893930437
+153,252,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and archival data. Year of construction in archival data. Is  FAIMS,10.186739,56.142031
+154,252,NA,NA,Uncertain,2020,Uncertain,Google Earth Pro,2,"Unsure if still exists. If gone, it must have been around 2020",10.107009,56.150046
+155,253,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and archival data. Year of construction in archival data. Is  FAIMS,10.186329,56.1420247
+156,253,NA,NA,Uncertain,2020,Uncertain,Google Earth Pro,2,"Unsure if still exists. If gone, it must have been around 2020",10.107009,56.150046
+157,254,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and archival data. Year of construction in archival data. Is  FAIMS,10.186407,56.141984
+158,254,NA,NA,Uncertain,2020,Uncertain,Google Earth Pro,2,"Unsure if still exists. If gone, it must have been around 2020",10.107009,56.150046
+159,255,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and archival data. Year of construction in archival data. Is  FAIMS,10.186478,56.141944
+160,255,NA,NA,Uncertain,2020,Uncertain,Google Earth Pro,2,"Unsure if still exists. If gone, it must have been around 2020",10.107009,56.150046
+161,258,III,50,Uncertain,1944,Certain,Archival data,3,"Location unsure, based on archival data. Year of construction based on archival data",10.204607,56.165934
+162,258,IIIA,100,Certain,1974,Uncertain,KML,4,Location based on maps from 1987. FlyFotoarkivet shows the shelters in 1974,10.091841732643,56.1898714687356
+163,259,III,50,Uncertain,1944,Certain,KML,3,"Location unsure, based on archival data. Year of construction based on archival data",10.2058879708642,56.1657843052486
+164,259,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"Was destroyed around 1974, before 1987 since it is not mentioned on those maps.",10.107009,56.150046
+165,260,III,50,Uncertain,1944,Uncertain,Google Maps,1,"Location based on archival data, startdate not mentioned. Type III mostly build around 44",10.186249,56.154956
+166,260,NA,NA,Certain,1995,Uncertain,Google Earth Pro,4,Was last visible on Flyfotoarkivet in 1995,10.107009,56.150046
+167,261,III,50,Uncertain,1944,Uncertain,Google Maps,1,"Location based on archival data, startdate not mentioned. Type III mostly build around 44",10.186142,56.154747
+168,261,NA,NA,Certain,1995,Uncertain,Google Earth Pro,4,Was last visible on Flyfotoarkivet in 1995,10.107009,56.150046
+169,263,III,50,Uncertain,1944,Certain,Archival data,3,"Not accurate location in archival data, startdate accurate",10.208399,56.162341
+170,263,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,Unsure of the year of destruction,10.107009,56.150046
+171,264,III,50,Uncertain,1944,Certain,Archival data,3,"Not accurate location in archival data, startdate accurate",10.200027,56.155584
+172,264,NA,NA,Certain,1986,Uncertain,FlyfotoArkivet,4,Unsure of the year of destruction,10.107009,56.150046
+173,265,III,50,Certain,1944,Certain,KML,5,Location-based on maps from 1987 start date on archival data,10.2091642232258,56.1642930263278
+174,265,NA,NA,Certain,2011,Uncertain,Google Earth Pro,4,"Unsure of the year of destruction, seems to be 2011 on Google Earth Pro",10.107009,56.150046
+175,266,III,50,Uncertain,1944,Certain,Archival data,3,"Location very unsure, the park is gone so hard to determine the location. Start date is stated to be 1944",10.208697,56.170303
+176,266,III,50,Uncertain,1964,Certain,Archival data,3,"Location unsure, just stated to be Lystrupvej. Year of move 1964 in archival data",10.237601,56.199973
+177,266,NA,NA,Certain,1984,Uncertain,FlyfotoArkivet,4,"Unsure of the year of destruction, must be before 1987 since it is not mentioned on those maps",10.107009,56.150046
+178,267,III,50,Uncertain,1944,Certain,Archival data,3,"Location very unsure, the park is gone so hard to determine the location. Start date is stated to be 1944",10.209354,56.169512
+179,267,III,50,Uncertain,1964,Certain,Archival data,3,"Location unsure, just stated to be Lystrupvej. Year of move 1964 in archival data",10.237145,56.199633
+180,267,NA,NA,Certain,1984,Uncertain,FlyfotoArkivet,4,"Unsure of the year of destruction, must be before 1987 since it is not mentioned on those maps",10.107009,56.150046
+181,272,III,50,Uncertain,1944,Certain,Archival data,3,"Location unsure, based on archival data. Year of construction based on archival data",10.203794,56.154829
+182,272,III,50,Certain,1965,Certain,KML,5,Statdate stated to be 1965 in Archival data. Location FAIMS verified,10.171158205644,56.1966866991939
+183,276,III,50,Uncertain,1944,Certain,Archival data,3,"Location unsure, based on archival data. Year of construction based on archival data",10.209992,56.156222
+184,276,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Based on Flyfotoarkivet changes happened in the area around 1966, could have been moved there.",10.107009,56.150046
+185,279,III,50,Uncertain,1944,Certain,Archival data,3,"Location unsure, based on archival data. Year of construction based on archival data",10.209765,56.156346
+186,279,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Based on Flyfotoarkivet changes happened in the area around 1966, could have been moved there.",10.107009,56.150046
+187,282,IIIA,100,Certain,1944,Uncertain,FAIMS,4,"No startdate, a type III most likely from 1944. Location FAIMS verified",10.2018657333333,56.1615187666667
+188,284,III,50,Certain,1944,Certain,KML,5,Startdate in archival data loction FAIMS Verified,10.2090096522971,56.1455190782685
+189,286,III,50,Uncertain,1944,Certain,Archival data,3,"Startdate in archival data location unsure, not accurate in archival data",10.206176,56.15521
+190,286,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"year of change unsure, most be before 1987",10.107009,56.150046
+191,288,III,50,Certain,1944,Certain,Archival data,5,Location and startdate in archival data. FAIMS verified,10.20743185,56.1410126833333
+192,290,III,50,Certain,1944,Certain,KML,5,"Location from maps 1987. Startdate from archival data. Unsure if still exist, could have been removed in 1974 based on flyfotorkivet",10.2142596216708,56.1470444594683
+193,292,III,50,Certain,1944,Certain,FAIMS,5,Location and startdate in archival data. FAIMS verified,10.2074660333333,56.14122735
+194,293,III,50,Certain,1944,Certain,FAIMS,5,Location and startdate in archival data. FAIMS verified,10.2074597333333,56.1408953333333
+195,298,III,50,Certain,1944,Certain,Archival data,5,Location and startdate in archival data.,10.20721,56.14357
+196,298,III,50,Certain,1988,Certain,FlyfotoArkivet,5,combined with 299 in 1988 based on archival data. FAIMS verified,10.2073044402469,56.1434897279909
+197,299,III,50,Certain,1944,Certain,Archival data,5,Location and startdate in archival data.,10.207372,56.14341
+198,299,III,50,Certain,1988,Certain,FlyfotoArkivet,5,combined with 298 in 1988 based on archival data. FAIMS verified,10.2073044402469,56.1434897279909
+199,300,III,50,Certain,1944,Certain,KML,5,Location and startdate in archival data. FAIMS verified,10.2070965382324,56.143455717409
+200,301,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and startdate based on archival data,10.203246,56.144512
+201,301,III,50,Certain,1980,Certain,Google Maps,5,"Moved to Runevej, based on Tommys notes and maps from 1987",10.136367,56.173323
+202,302,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and startdate based on archival data,10.203853,56.144619
+203,302,NA,NA,Certain,1993,Uncertain,FlyfotoArkivet,4,Unsure iof year of move. Alot of visible changes to the area around 1993,10.107009,56.150046
+204,303,III,50,Certain,1944,Certain,Google Maps,5,Location based on maps from 1987 and startdate based on archival data,10.203868,56.144483
+205,303,NA,NA,Certain,1993,Uncertain,FlyfotoArkivet,4,Unsure iof year of move. Alot of visible changes to the area around 1993,10.107009,56.150046
+206,304,III,50,Certain,1944,Certain,FAIMS,5,Location based on FAIMS data and startdate based on archival data,10.2029191833333,56.1434620833333
+207,305,III,50,Certain,1944,Certain,FAIMS,5,Location based on FAIMS data and startdate based on archival data,10.2043096613887,56.1409188749893
+208,308,III,50,Certain,1944,Certain,KML,5,Location based on FAIMS data and startdate based on archival data,10.2010409609757,56.1428392114533
+209,309,III,50,Certain,1944,Certain,KML,5,Location based on FAIMS data and startdate based on archival data,10.2012527241488,56.1428630496242
+210,310,III,50,Uncertain,1944,Certain,Archival data,3,Startdate stated in Archival data. Location not acurrate in archival data,10.194841,56.141252
+211,310,NA,NA,Certain,1966,Certain,Archival data,5,Destoyed in 1966 based on archival data,10.107009,56.150046
+212,311,III,50,Certain,1944,Certain,FAIMS,5,Location based on FAIMS data and startdate based on archival data,10.1954575986572,56.1414485705361
+213,312,III,50,Certain,1944,Certain,FAIMS,5,Location based on FAIMS data and startdate based on archival data,10.1952786907117,56.1414012225237
+214,319,III,50,Certain,1944,Certain,FAIMS,5,Location based on FAIMS data and startdate based on archival data,10.1840724160293,56.1395034176926
+215,321,III,50,Certain,1944,Certain,FAIMS,5,Location based on FAIMS data and startdate based on archival data,10.1846243846834,56.1394909271806
+216,322,III,50,Certain,1944,Certain,Google Maps,5,Startdate in archival data. FAIMS Verified,10.189525,56.13973
+217,326,III,50,Certain,1944,Certain,Google maps,5,Location and startdate in Archival data,10.191119,56.139892
+218,326,III,50,Uncertain,1968,Certain,Archival data,3,"Movedate in archival data. Combined with 1906, still called 326. Location not accurate from historical data",10.194884,56.187113
+219,326,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"Most have been destroyed before 1987, not on those maps",10.107009,56.150046
+220,327,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS Verified,10.1913439119043,56.1399127194924
+221,328,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS Verified,10.1928607591801,56.1400778768386
+222,329,III,50,Certain,1944,Certain,Archival data,5,Location and startdate in Archival data,10.193286,56.140126
+223,329,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,"Was destroyed, unsure when",10.107009,56.150046
+224,330,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS Verified,10.1934966513254,56.1402165365024
+225,335,III,50,Certain,1944,Certain,Archival data,5,Location and startdate in Archival data,10.206845,56.142019
+226,335,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,"Location on maps from 1987, exact year of move uncertain",10.151812,56.123457
+227,335,NA,NA,Certain,2005,Uncertain,Google Earth Pro,4,"Was destroyed, unsure when",10.107009,56.150046
+228,337,III,50,Certain,1944,Certain,Archival data,5,Location and startdate in Archival data,10.184271,56.174583
+229,337,III,50,Certain,1963,Certain,Archival data,5,On maps from 1987 date of move from archival data,10.1834821,56.17242585
+230,342,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS Verified,10.191733,56.17449775
+231,343,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS Verified,10.19161095,56.1743088666667
+232,351,III,50,Uncertain,1968,Uncertain,Google maps,2,"Location-based on maps from 1987, maps not entirely accurate not sure when it was built",10.191719,56.189427
+233,352,III,50,Uncertain,1944,Uncertain,Archival data,1,"Location based on the address in archival data is not accurate. No startdate, type III are normally from 1944",10.206049,56.17075
+234,352,III,50,Certain,1974,Uncertain,FlyfotoArkivet,4,"Location based on maps from 1987. Visible on Flyfotoarkivet from 1974, combined with 353 and 354. Called 352",10.213638,56.127419
+235,352,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Not visible from 1979 and onwards, gone today, unsure when",10.107009,56.150046
+236,353,III,50,Uncertain,1944,Uncertain,Archival data,1,"Location based on the address in archival data is not accurate. No startdate, type III are normally from 1944",10.205646,56.170608
+237,353,III,50,Certain,1974,Uncertain,FlyfotoArkivet,4,Location based on maps from 1987. Visible on Flyfotoarkivet from 1974. combined with 352 and 354. Called 352,10.213638,56.127419
+238,353,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Not visible from 1979 and onwards, gone today, unsure when",10.107009,56.150046
+239,354,III,50,Uncertain,1944,Uncertain,Archival data,1,"Location based on the address in archival data is not accurate. No startdate, type III are normally from 1944",10.205996,56.17077
+240,354,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,Location based on maps from 1987. Visible on Flyfotoarkivet from 1974. combined with 352 and 353. Called 352,10.107009,56.150046
+241,357,III,50,Uncertain,1944,Certain,Archival data,3,"Location based on archival data, not accurate. Startdate mentioned in archival data",10.201377,56.169753
+242,357,IIIA,100,Certain,1966,Uncertain,KML,4,"Location from 1987 maps, still visible. Not sure of year of move. Not sure which shelter was combined with it",10.0956363295118,56.1915334009003
+243,358,III,50,Uncertain,1944,Certain,Archival data,3,"Location based on archival data, not accurate. Startdate mentioned in archival data",10.201656,56.169617
+244,358,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Was destroyed, unsure when",10.107009,56.150046
+245,359,III,50,Uncertain,1944,Certain,Archival data,3,"Location based on archival data, not accurate. Startdate mentioned in archival data",10.201691,56.169379
+246,359,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Was destroyed, unsure when",10.107009,56.150046
+247,362,III,50,Certain,1944,Certain,KML,5,Location from 1987 maps startdate from archival data,10.2107064789841,56.1726025952284
+248,362,NA,NA,Certain,2022,Certain,FAIMS,5,FAIMS claims it was destroyed in 2022,10.107009,56.150046
+249,363,III,50,Certain,1944,Certain,Google maps,5,Location from 1987 maps startdate from archival data,10.211479,56.172029
+250,363,NA,NA,Certain,2022,Certain,FAIMS,5,FAIMS claims it was destroyed in 2022,10.107009,56.150046
+251,364,III,50,Certain,1944,Certain,Google Maps,5,Location from 1987 maps startdate from archival data,10.211546,56.171807
+252,364,NA,NA,Certain,2022,Certain,FAIMS,5,FAIMS claims it was destroyed in 2022,10.107009,56.150046
+253,365,III,50,Certain,1944,Certain,KML,5,Location from 1987 maps startdate from archival data,10.2110761038403,56.1695365930062
+254,366,III,50,Certain,1944,Certain,KML,5,Location from 1987 maps startdate from archival data. FAIMS verified,10.2105170197021,56.1686462385203
+255,367,III,50,Certain,1944,Certain,Google Maps,5,Location from 1987 maps startdate from archival data. FAIMS verified,10.209872,56.168798
+256,368,III,50,Certain,1944,Certain,Google Maps,5,Location from 1987 maps startdate from archival data. FAIMS verified,10.209986,56.168667
+257,369,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,"Location based on address in archival data, not accurate. Startdate noted in archival data",10.210099,56.169329
+258,369,NA,NA,Certain,1987,Uncertain,FlyfotoArkivet,4,"Destroyed, not on maps from 1987, unsure when it was destroyed",10.107009,56.150046
+259,370,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Address in archival data not accurate. Startdate in archival data,10.213783,56.167089
+260,370,III,50,Certain,1967,Certain,Archival data,5,"Moved, new address on maps form 1987 and FAIMS verified. Move date in archival data. Stated to be combined with 371. Called 370",10.1810419166668,56.15700996
+261,371,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Address in archival data not accurate. Startdate in archival data,10.213714,56.166999
+262,371,III,50,Certain,1967,Certain,Archival data,5,"Moved, new address on maps form 1987 and FAIMS verified. Move date in archival data. Stated to be combined with 370. Called 370",10.1810419166668,56.15700996
+263,372,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Address in archival data not accurate. Startdate in archival data,10.213561,56.166785
+264,372,III,50,Certain,1967,Certain,Archival data,5,"Moved, new address on maps form 1987 and FAIMS verified. Move date in archival data. Stated to be combined with 377. Called 372",10.1814191,56.1572059
+265,377,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Address in archival data not accurate. Startdate in archival data,10.213498,56.166693
+266,377,III,50,Certain,1967,Certain,Archival data,5,"Moved, new address on maps form 1987 and FAIMS verified. Move date in archival data. Stated to be combined with 372. Called 372",10.1814191,56.1572059
+267,378,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Address in archival data not accurate. Startdate in archival data,10.213323,56.16641
+268,378,III,50,Certain,1967,Certain,Archival data,5,"Moved, new address on maps form 1987 and FAIMS verified. Move date in archival data. Stated to be combined with 379. Called 378",10.181988,56.157096
+269,379,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Address in archival data not accurate. Startdate in archival data,10.213256,56.166316
+270,379,III,50,Certain,1967,Certain,Archival data,5,"Moved, new address on maps form 1987 and FAIMS verified. Move date in archival data. Stated to be combined with 378. Called 378",10.181988,56.157096
+271,380,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2051727662972,56.1383547473629
+272,381,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2051257503929,56.1382703611571
+273,382,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2016246279532,56.1363942549545
+274,383,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2018049235803,56.1362715410474
+275,386,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.19497391,56.13618129
+276,387,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.1949739142709,56.1361812933734
+277,388,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.1949961324447,56.1362521281337
+278,389,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.1945572050933,56.1361692994807
+279,390,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.1942805863348,56.1362516438658
+280,394,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.1996226,56.1727144833333
+281,395,III,50,Certain,1944,Uncertain,Archival data,4,"Location from 1987 maps startdate not mentioned, most III types are from 1944",10.2110242075766,56.1827420475916
+282,395,NA,NA,Certain,2017,Certain,Google Earth Pro,5,"Visible on Google Earth Pro in 2016, 2017 the work started on removing shelters in that area",10.107009,56.150046
+283,397,III,50,Certain,1944,Certain,KML,5,Startdate in archival data. FAIMS verified location,10.2020486750684,56.1762051940929
+284,400,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2101806666667,56.1752335166667
+285,401,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2100521,56.1751942333333
+286,402,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2100315166667,56.1750387333333
+287,403,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2099979333333,56.1748685833333
+288,404,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2100248,56.17479345
+289,405,III,50,Uncertain,1944,Uncertain,Archival data,1,"Location in archival data is not accurate. Startdate not mentioned. Type III are often from 1944, so it is guessed to be from that time",10.21494,56.173563
+290,405,III,50,Certain,1964,Uncertain,FAIMS,4,Location FAIMS verified. Startdate not stated. Other shelters in the area is confirmed to be moved around that time.,10.1838771166667,56.1718434833333
+291,406,III,50,Uncertain,1944,Uncertain,Archival data,1,"Location in archival data is not accurate. Startdate not mentioned. Type III are often from 1944, so it is guessed to be from that time",10.214518,56.173629
+292,406,III,50,Certain,1964,Uncertain,FAIMS,4,Location FAIMS verified. Startdate not stated. Other shelters in the area is confirmed to be moved around that time.,10.1841577,56.17172635
+293,409,III,50,Certain,1944,Certain,KML,5,Location mentioned in archival data FAIMS verified and visible from Google maps. Startdate mentioned in archival data,10.2178366976543,56.1741400537905
+294,410,III,50,Certain,1944,Certain,KML,5,Startdate and location in archival data. In maps from 1987. Needs FAIMS,10.2158232348978,56.1732438714009
+295,411,III,50,Certain,1944,Uncertain,FAIMS,4,"Location in archival data FAIMS verified. Startdate not mentioned. Type III are often from 1944, so it is guessed to be from that time.",10.2181114,56.1681050333333
+296,411,III,50,Certain,1976,Uncertain,FAIMS,4,Stated to be combined with 412. Still called 411 unsure of the year they have been combined. Based on Flyfotoarkivet i was around 1976,10.2181114,56.1681050333333
+297,412,III,50,Uncertain,1944,Uncertain,Archival data,2,"Location in archival data is not accurate. Startdate not mentioned. Type III are often from 1944, so it is guessed to be from that time",10.21768,56.167814
+298,412,III,50,Certain,1976,Uncertain,FlyfotoArkivet,4,Stated to be combined with 411. Still called 411 unsure of the year they have been combined. Based on Flyfotoarkivet i was around 1976,10.2181114,56.1681050333333
+299,414,III,50,Certain,1944,Certain,FAIMS,5,Location in archival data FAIMS verified. Startdate mentioned in archival data,10.1978143237468,56.1331201175201
+300,414,III,50,Certain,1976,Uncertain,FAIMS,4,"Stated to be combined with 415. no year of change, due to changes on Flyfotoarkivet it is believed to have happened around 1976",10.1978143237468,56.1331201175201
+301,415,III,50,Uncertain,1944,Certain,FlyfotoArkivet,3,Location uncertain found using location from archival data and flyfotoarkivet. It is in a wooded area so it's hard to tell accurately. Startdate mentioned in archival data,10.198156000000001,56.133073
+302,415,III,50,Certain,1976,Uncertain,Archival data,4,"Stated to be combined with 414. no year of change, due to changes on Flyfotoarkivet it is believed to have happened around 1976. Part of 414 afterwards and called 414",10.1978143237468,56.1331201175201
+303,419,III,50,Certain,1944,Certain,KML,5,Startdate in archival data location FAIMS verified,10.2060854183549,56.1793136959158
+304,420,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data location FAIMS verified,10.2062450166667,56.17948205
+305,422,III,50,Certain,1944,Uncertain,FAIMS,4,"Location in archival data FAIMS verified. Startdate not mentioned. Type III are often from 1944, so it is guessed to be from that time.",10.1857221166667,56.18119605
+306,423,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2174906333333,56.1783012666667
+307,424,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2175540666667,56.1784068166667
+308,425,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2179599333333,56.1783840833333
+309,426,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2179845333333,56.17841225
+310,428,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2196314,56.1776762
+311,429,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2201437333333,56.1776378166667
+312,430,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2202788166667,56.1777136833333
+313,431,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.22127805,56.17571795
+314,432,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.22142145,56.1756171
+315,433,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2221828333333,56.173913
+316,434,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2221672333333,56.1737238333333
+317,435,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2203398833333,56.17083775
+318,436,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2202558666667,56.1706694666667
+319,437,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2204940833333,56.1705179166667
+320,438,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2205716666667,56.1703454833333
+321,439,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2207125666667,56.17037355
+322,440,III,50,Certain,1944,Certain,Google Maps,5,"Location and startdate in archival data. No FAIMS, but still visible with Google maps and Google Earth Pro",10.230921,56.177653
+323,441,III,50,Certain,1944,Certain,Google Maps,5,"Location and startdate in archival data. No FAIMS, but still visible with Google maps and Google Earth Pro",10.231112,56.177487
+324,442,III,50,Certain,1944,Certain,Google Maps,5,"Location and startdate in archival data. No FAIMS, but still visible with Google maps and Google Earth Pro",10.230948,56.17736
+325,443,III,50,Certain,1944,Certain,KML,5,"Location and startdate in archival data. No FAIMS, but still visible with Google maps and Google Earth Pro",10.2299095817653,56.1763692674742
+326,444,III,50,Uncertain,1944,Certain,Google Maps,2,"Location unsure. Mentioned in archival data but not accurate. Startdate in archival data, unsure if it is destroyed",10.221699,56.168936
+327,445,III,50,Uncertain,1944,Certain,Archival data,3,Location unsure. Mentioned in archival data but not accurate. Startdate in archival data,10.215645,56.163445
+328,445,NA,NA,Certain,1976,Uncertain,FlyfotoArkivet,4,Unsure of the year of destruction,10.107009,56.150046
+329,446,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.21091635,56.1308411166667
+330,447,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2111144166667,56.1306809166667
+331,448,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.21259155,56.1302764
+332,449,III,50,Certain,1944,Certain,KML,5,Startdate in archival data. FAIMS verified location,10.2121372688238,56.1299205211555
+333,450,III,50,Certain,1944,Certain,Google Maps,5,Address in archival data accurate. Startdate in archival data,10.213613,56.127567
+334,450,IIIA,100,Certain,1976,Uncertain,Tommy,4,"Year of move unsure. New location confirmed by Tommy, Shelter still visible today",10.096105,56.105296
+335,451,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2136583,56.1272553833333
+336,452,III,50,Certain,1944,Certain,Google Maps,5,Address in archival data accurate. Startdate in archival data,10.213601,56.1266
+337,452,IIIA,100,Certain,1966,Uncertain,FlyfotoArkivet,4,"Location based on maps from 1987. Startdate not sure, changes to the area in 1966 on Flyfotoarkivet shows it could have happened around there",10.221364,56.194912
+338,453,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2153822833333,56.1253619
+339,454,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.21591,56.1253271333333
+340,455,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2053528653619,56.1399071807904
+341,456,III,50,Certain,1944,Certain,FAIMS,5,Startdate in archival data. FAIMS verified location,10.2055504180809,56.1397077159913
+342,457,III,50,Certain,1944,Certain,Danmark set fra luften,5,Location based on description in archival data and  a picture from Danmark set fra luften,10.203933,56.129852
+343,457,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Based on Flyfotoarkivet changes happened in the area around 1979, could have been destroyed there",10.107009,56.150046
+344,458,III,50,Certain,1944,Certain,Danmark set fra luften,5,Location based on description in archival data and a picture from Danmark set fra luften,10.203927,56.129957
+345,458,NA,NA,Certain,1979,Uncertain,Archival data,4,"Based on Flyfotoarkivet changes happened in the area around 1979, could have been destroyed there",10.107009,56.150046
+346,459,III,50,Certain,1944,Certain,Danmark set fra luften,5,Location based on description in archival data and a picture from Danmark set fra luften,10.20392,56.130066
+347,459,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Based on Flyfotoarkivet changes happened in the area around 1979, could have been destroyed there",10.107009,56.150046
+348,460,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.197077,56.127024
+349,461,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.197028,56.127053
+350,462,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.196904,56.127106
+351,463,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.196841,56.127142
+352,464,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.2017965579319,56.1246442451887
+353,465,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.201803,56.124532
+354,466,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and  startdate from archival data",10.2175549152893,56.1809499774161
+355,466,NA,NA,Certain,2017,Certain,Google Earth Pro,5,Goolge Earth Pro shows they were removed in 2017,10.107009,56.150046
+356,467,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and startdate from archival data",10.2169519249722,56.181203703834
+357,467,NA,NA,Certain,2017,Certain,Google Earth Pro,5,Goolge Earth Pro shows they were removed in 2017,10.107009,56.150046
+358,468,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and startdate from archival data",10.2163485131875,56.1814674728068
+359,468,NA,NA,Certain,2017,Certain,Google Earth Pro,5,Goolge Earth Pro shows they were removed in 2017,10.107009,56.150046
+360,469,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and startdate from archival data",10.2158426480299,56.181672183526
+361,469,NA,NA,Certain,2017,Certain,Google Earth Pro,5,Goolge Earth Pro shows they were removed in 2017,10.107009,56.150046
+362,470,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and startdate from archival data",10.2151911992749,56.1818683577157
+363,470,NA,NA,Certain,2017,Certain,Google Earth Pro,5,Goolge Earth Pro shows they were removed in 2017,10.107009,56.150046
+364,471,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987 and startdate from archival data",10.189598,56.147114
+365,471,III,50,Certain,1995,Uncertain,KML,4,"Location from maps 1987, unsure of the year of move 1995 shows changes to the area",10.195039,56.106296
+366,472,III,50,Certain,1944,Certain,KML,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.2083250266979,56.1250982970517
+367,473,III,50,Certain,1944,Certain,KML,5,"Location from archival data, maps from 1987 and still visible today, startdate from archival data",10.2072010613572,56.1227434001467
+368,475,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987, startdate from archival data.",10.207028,56.12179
+369,476,III,50,Uncertain,1944,Uncertain,Archival data,2,Location not sure based on archival data no startdate mentioned,10.194307,56.169308
+370,476,NA,NA,Certain,1993,Uncertain,FlyfotoArkivet,4,"Destroyed, on maps from 1987 destroyed after that not sure when",10.107009,56.150046
+371,477,III,50,Certain,1944,Certain,Archival data,5,"Startdate from archival record. Location from archival record, maps from 1987 and Google maps shows a shelter at the location.",10.206992,56.121549
+372,478,III,50,Certain,1944,Certain,Archival data,5,"Location from archival data, maps from 1987, startdate from archival data.",10.206931,56.121161
+373,479,III,50,Certain,1944,Certain,KML,5,"Location from archival data, maps from 1987, startdate from archival data.",10.20742592144,56.1180686184636
+374,480,VIB,150,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987, FAIMS verified. Unsure of startdate, not mentioned but type VI is normally build after 1961",10.2012994626738,56.1502972260914
+375,481,IVA,100,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.1834701328484,56.1548128461159
+376,481,NA,NA,Certain,2022,Uncertain,Google Earth Pro,4,"Unsure of destruction date, must be after 1987. 2022 saw alot of building in the area could have been destroyed as a part of that",10.107009,56.150046
+377,482,IVA,100,Uncertain,1961,Uncertain,Archival data,2,Location not sure based on archival data no startdate mentioned,10.186027,56.159805
+378,482,NA,NA,Certain,1986,Uncertain,FlyfotoArkivet,4,Unsure of year of destruction,10.107009,56.150046
+379,483,IVA,100,Certain,1961,Uncertain,Archival data,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally built after 1961",10.19618655,56.1606919666667
+380,484,VIA,100,Certain,1961,Uncertain,Archival data,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally built after 1961",10.2104990666667,56.1586330166667
+381,485,IVA,100,Certain,1961,Uncertain,Archival data,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally built after 1961",10.2032855166667,56.1607794833333
+382,486,IIIA,100,Certain,1944,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type III is normally built 1944",10.1948606,56.1694302833333
+383,487,IVA,100,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type IV is normally built after 1961",10.1982952300454,56.1685664672937
+384,487,NA,NA,Certain,1993,Uncertain,FlyfotoArkivet,4,Unsure of destruction date,10.107009,56.150046
+385,488,IVA,100,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.2090759333333,56.1657132666667
+386,489,IVA,100,Certain,1961,Uncertain,KML,3,"Location from archival data and maps from 1987. Unsure of startdate, not mentioned but type IV is normally built after 1961. Needs FAIMS to be sure if it still exists",10.2166354697166,56.1660082154206
+387,490,IVA,100,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.2089161833333,56.1728994166667
+388,491,III,50,Certain,1944,Uncertain,KML,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type III is normally build 1944",10.2070420774615,56.1742170467764
+389,492,IV,50,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.21355635,56.174177
+390,493,IVA,100,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.20993655,56.1793290666667
+391,494,IV,50,Certain,1961,Uncertain,FAIMS,4,"Location from archival data and maps from 1987 . Unsure of startdate, not mentioned but type IV is normally build after 1961",10.2046278990839,56.1837154635797
+392,494,NA,NA,Certain,2017,Certain,Tommy,5,"Visible on Google Earth Pro in 2016, 2017 the work started on removing shelters in that area",10.107009,56.150046
+393,495,IV,50,Certain,1961,Uncertain,FAIMS,4,"Location from archival data and maps from 1987 . Unsure of startdate, not mentioned but type IV is normally build after 1961",10.2079013833333,56.1832077833333
+394,496,IVA,100,Uncertain,1961,Uncertain,Archival data,1,"Lcoation from archival data. Unsure of location not accurate. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.196482,56.182804
+395,496,IV,50,Certain,1975,Uncertain,KML,3,"Unsure of year of move.On the maps from 1987, must have been before that. Unsure if still exists, needs FAIMS",10.1787673801785,56.1763023329102
+396,497,IV,50,Uncertain,1961,Uncertain,Archival data,1,"Lcoation from archival data. Unsure of location not accurate. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.177455,56.176384
+397,497,NA,NA,Certain,1986,Uncertain,FlyfotoArkivet,3,"Not on maps from 1987, must have been destroyed before that, not visible in any maps, so cant be sure of when it was destroyed, just that i was.",10.107009,56.150046
+398,498,IV,50,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.1880070666667,56.1673979833333
+399,499,IVA,100,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type IV is normally build after 1961. Is still visible on google maps, needs FAIMS",10.1935460640587,56.172764029576
+400,500,IV,50,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.1966620981501,56.1487154840992
+401,501,IV,50,Certain,1961,Uncertain,KML,3,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type IV is normally build after 1961. Is not visible on google maps, needs FAIMS, unsure if it exists",10.1863695520089,56.1466018672576
+402,502,IVA,100,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type IV is normally build after 1961. Needs FAIMS",10.1818162651835,56.13922330543
+403,503,IVA,100,Uncertain,1961,Uncertain,Archival data,2,"Lcoation from archival data. Unsure of location not accurate. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.190865,56.141408
+404,503,NA,NA,Certain,1964,Certain,Archival data,5,Archival data claims it was destroyed in 1964,10.107009,56.150046
+405,504,IV,50,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.1967465666667,56.1458451666667
+406,505,IVA,100,Certain,1961,Uncertain,FAIMS,4,"Location from archival data, maps from 1987 and FAIMS. Unsure of startdate, not mentioned but type IV is normally build after 1961",10.2072688,56.14496225
+407,506,IVA,100,Certain,1961,Uncertain,KML,4,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type IV is normally build after 1961. Is still visible on google maps, needs FAIMS",10.212889361415,56.1452034520494
+408,507,III,50,Certain,1944,Uncertain,Google Maps,4,"Location from archival data, maps from 1987. Unsure of startdate, not mentioned but type III is normally build after 1944.",10.216766,56.162297
+409,507,NA,NA,Certain,2022,Uncertain,Google Maps,4,Seems to have been moved in 2022 and there is currently alot of construction on the location,10.107009,56.150046
+410,1500,IIIA,100,Certain,1944,Uncertain,Archival data,4,"No year of contruction, location from map from 1960's",10.237433,56.193736
+411,1500,IIIA,100,Certain,1961,Certain,KML,5,Year of move from archival data. Location from archival data and maps from 1987,10.2345939679239,56.1951658600114
+412,1501,III,50,Certain,1944,Uncertain,KML,4,"Location from the maps from th 60's and 1987. Needs FAIMS, no year of construction type III mostly from 1944",10.2188623349507,56.1866624424318
+413,1502,III,50,Certain,1944,Uncertain,KML,4,"Location from the maps from th 60's and 1987. Needs FAIMS, no year of construction type III mostly from 1944",10.2259915853062,56.1852910025738
+414,1503,III,50,Certain,1944,Uncertain,KML,4,"Location from the maps from th 60's and 1987. Needs FAIMS, no year of construction type III mostly from 1944",10.2291350673263,56.182474179118
+415,1504,III,50,Certain,1944,Uncertain,KML,4,"Location from the maps from th 60's and 1987. Needs FAIMS, no year of construction type III mostly from 1944",10.235449,56.183469
+416,1504,III,50,Certain,1988,Uncertain,KML,4,"based on the maps from 1987 it was moved after the maps were made since it is drawn on with a blue pen, exact year not mentioned",10.2337215272446,56.1838058013183
+417,1505,III,50,Certain,1944,Uncertain,Archival data,4,Location from the maps from th 60's and 1987. No year of construction type III mostly from 1944,10.238185,56.187474
+418,1505,III,50,Certain,1962,Certain,FlyfotoArkivet,5,"Location based on maps from 60's and 1987, year of move from archival data. Needs FAIMS",10.2378794329606,56.1862435069087
+419,1506,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.246632,56.190592
+420,1509,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.229307,56.191764
+421,1510,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.243072,56.192197
+422,1512,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.2203303,56.1947171
+423,1513,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.226884,56.197777
+424,1515,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.2487094795913,56.1946665842186
+425,1515,III,50,Certain,1966,Certain,Archival data,5,combinded with shelter 1916 based on archival data location from maps from 1987 needs FAIMS unsure if still exists,10.2487094795913,56.1946665842186
+426,1516,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.247052,56.194723
+427,1516,III,50,Certain,1966,Certain,Archival data,5,combinded with shelter 1915 based on archival data. Called 1915 from this point unwards. location from maps from 1987 needs FAIMS unsure if still exists,10.2487094795913,56.1946665842186
+428,1517,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.2345939679239,56.1951658600114
+429,1517,NA,NA,Certain,1961,Certain,Archival data,5,Based on archival data it was destroyed in 1961,10.107009,56.150046
+430,1519,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.266848,56.202599
+431,1520,III,50,Certain,1944,Uncertain,KML,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.2709505288003,56.1990937867415
+432,1605,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.182812,56.132432
+433,1605,NA,NA,Certain,1961,Uncertain,FlyfotoArkivet,4,It must have been destroyed before 1987 since it is not visible on that map,10.107009,56.150046
+434,1606,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,"Is not on the maps from the 60's but is on the maps from 1987 must have been build in between, is visible from 1974 on Flyfotoarkivet",10.220795,56.195015
+435,1607,III,50,Certain,1944,Uncertain,KML,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.1863846362444,56.1264772605937
+436,1608,III,50,Certain,1944,Uncertain,KML,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.1843124761141,56.1270298766114
+437,1609,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.176948,56.126518
+438,1609,III,50,Certain,1963,Certain,KML,5,Year of move stated in archival data. Location on maps from 1987. Needs FAIMS,10.178842,56.124375
+439,1610,III,50,Certain,1944,Uncertain,KML,4,"Location based on maps from 60's and 1987,  Needs FAIMS, still visible. No year of construction",10.168741,56.126107
+440,1614,III,50,Certain,1944,Uncertain,Archival data,4,"No year of construction. Type III mostly from 1944. Location from maps from 60's, have been moved",10.169884,56.129665
+441,1614,III,50,Certain,1980,Uncertain,FlyfotoArkivet,4,"Location from maps 1987, unsure of the year of move 1980 shows changes to the area and the text on the shelter on the maps from 1978 seems to have been drawn on later on",10.076059,56.108855
+442,1617,III,50,Certain,1944,Uncertain,KML,4,Location based on maps from 60's . No year of construction,10.1619323955385,56.1235243574695
+443,1617,III,50,Certain,1962,Certain,Archival data,5,the archival data shows it was combined in  1962 with 1618. Still called 1617 and still visible as type IIIA,10.1619323955385,56.1235243574695
+444,1618,III,50,Certain,1944,Uncertain,KML,4,Location based on maps from 60's . No year of construction,10.161566,56.121887
+445,1618,III,50,Certain,1962,Certain,Archival data,5,the archival data shows it was combined in  1962 with 1617. Called 1617 and still visible as type IIIA,10.1619323955385,56.1235243574695
+446,1620,III,50,Certain,1944,Certain,Archival data,4,Location based on maps from 60's and 1987. No year of construction. Needs FAIMS unsure if it still exits,10.152925,56.123201
+447,1623,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.15907,56.126986
+448,1623,III,50,Certain,1990,Certain,KML,5,Location and year of move from KML file and Tommys data,10.1367275719015,56.17327
+449,1624,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.168381,56.128361
+450,1701,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's . No year of construction,10.14443,56.153833
+451,1701,IIIA,100,Certain,1968,Uncertain,FlyfotoArkivet,4,"Location from maps 1987. Unsure of date of move, other shelters was moved in the same area at this time. Still visible",10.192208,56.189106
+452,1702,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's and 1987,  Needs FAIMS. No year of construction",10.1485407854064,56.1541436403169
+453,1704,III,50,Certain,1961,Certain,Archival data,5,"Location based on maps from 60's, 1987 and FAIMS. Year of move based on archival data. Not sure of were it was moved from? It does not mention former location in archival data, only the current",10.1582095333333,56.1543069
+454,1706,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.1696733166667,56.1561945
+455,1708,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's. No construction data but type III are mostly from 1944,10.172128,56.156985
+456,1708,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,The shelter is not on the maps from 1987 and changes to the area hints at the shelter being destroyed around 1966,10.107009,56.150046
+457,1709,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.171664,56.153203
+458,1710,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. No year of construction,10.1642616505729,56.1519861331433
+459,1710,NA,NA,Certain,1979,Uncertain,FlyfotoArkivet,4,"Shelter not there anymore, but is on the maps from 1987. 1979 saw some changes to the area, could have been destroyed there.",10.107009,56.150046
+460,1711,III,50,Certain,1944,Uncertain,KML,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.1601919152077,56.1509239750747
+461,1712,III,50,Certain,1944,Uncertain,KML,4,Location based on maps from 60's and 1987. No year of construction.,10.1542032506271,56.1485657651798
+462,1712,NA,NA,Certain,1996,Certain,KML,5,Tommys data and KML claims it was destroyed in 1996,10.107009,56.150046
+463,1713,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.148211252275,56.1508595172895
+464,1713,III,50,Certain,1965,Certain,Archival data,5,"Based on archival data it was moved in 1965, appears on maps from 1987 needs FAIMS",10.14859,56.150555
+465,1714,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. No year of construction.,10.1628255593961,56.1459963936966
+466,1715,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.159584,56.145788
+467,1715,III,50,Certain,1986,Certain,FAIMS,5,Location and year of move from maps from 1987 and FAIMS,10.1597596333333,56.1464094333333
+468,1716,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.153477,56.146554
+469,1716,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Shelter not on maps from 1987, must have been destroyed before that. Changes to area in 1966 could be around that time",10.107009,56.150046
+470,1719,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.14879,56.156529
+471,1719,NA,NA,Certain,1965,Certain,Archival data,5,"Archival data claims it was moved in 1965 and combined with an unknown shelter on Lystrupvej, since it can't be traced more than that it is instead stated to be destroyed in this sheet",10.107009,56.150046
+472,1720,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. No year of construction.,10.1553029776708,56.1574845034679
+473,1723,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.16701,56.158868
+474,1723,NA,NA,Certain,1966,Uncertain,Archival data,4,"Shelter not on maps from 1987, must have been destroyed before that. Changes to area in 1966 could be around that time",10.107009,56.150046
+475,1724,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.1658595333333,56.1538845666667
+476,1724,IIIA,100,Certain,1966,Certain,Archival data,5,"changes to the shelter in 1966,changes from type III to IIIA, unsure which shelter it was combined with.on the maps from 1987 nd has FAIMS ID",10.1658595333333,56.1538845666667
+477,1725,III,50,Certain,1944,Uncertain,Archival data,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.15823515,56.15424655
+478,1727,IVA,100,Certain,1961,Uncertain,Archival data,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.1641298833333,56.1551963666667
+479,1728,III,50,Certain,1944,Uncertain,FAIMS,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.1612900833333,56.1482860666667
+480,1729,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.156679,56.157726
+481,1804,IV,50,Certain,1961,Uncertain,Archival data,4,"Location based on maps from 60's, 1987 and FAIMS. Unsure of year of construction",10.1680431201957,56.1652002860448
+482,1805,IV,50,Certain,1961,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.1578199257387,56.1702538963743
+483,1902,III,50,Certain,1944,Uncertain,KML,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.1783942048468,56.1148854964741
+484,1903,III,50,Certain,1944,Uncertain,KML,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.1889808657943,56.1169799613696
+485,1906,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.201683,56.1181855
+486,1906,III,50,Certain,1968,Certain,Archival data,5,Based on archival data it was combined with 326 in 1968 called 326 afterwards,10.194884,56.187113
+487,1906,NA,NA,Certain,1974,Uncertain,FlyfotoArkivet,4,Year of destruction uncertain,10.107009,56.150046
+488,1909,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.202574,56.113242
+489,1911,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.207233,56.114207
+490,1912,III,50,Certain,1944,Uncertain,Archival data,4,Location from maps from 60's no construction date,10.220533,56.110143
+491,1912,NA,NA,Certain,1966,Uncertain,FlyfotoArkivet,4,"Shelter not on maps from 1987, must have been destroyed before that. Changes to area in 1966 could be around that time",10.107009,56.150046
+492,1915,III,50,Certain,1944,Uncertain,KML,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.141720434754,56.1044070355166
+493,1916,III,50,Certain,1944,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.1343989143563,56.0961171376854
+494,1917,IV,50,Certain,1961,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.2095656375238,56.1125943138671
+495,1918,IV,50,Certain,1961,Uncertain,Archival data,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.2092767563876,56.116454369367
+496,2001,IV,50,Certain,1961,Uncertain,KML,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.0938968248128,56.1529010065201
+497,2002,IV,50,Certain,1961,Uncertain,KML,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.1010808543556,56.1539949613797
+498,2003,IV,50,Certain,1961,Uncertain,KML,4,Location based on maps from 60's and 1987. Unsure of year of construction,10.1127739024331,56.1527547874712
+499,9999,IIIA,100,Certain,1974,Uncertain,FlyfotoArkivet,4,Location based on maps from 1987. Unsure of year of construction,10.1703671153095,56.1967897400044
