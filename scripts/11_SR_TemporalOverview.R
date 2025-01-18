@@ -1,4 +1,5 @@
-# -----------------  TEMPORAL WORK WITH BBR PRIVATE SHELTERS
+# -----------------  TEMPORAL OVERVIEW Of SIKRINGSRUM (PRIVATE SHELTERS FROM BBR)
+
 
 # library 
 library(tidyverse)
@@ -8,10 +9,15 @@ library(tsibble)
 library(fable)
 
 ### SR and BBR temporal overviews
+#In this script I take the SR records from BBR and map the diachronic development in safe room construction
+# in Aarhus from 1950 on, including their capacity. The final trend correlates with overall building trend 
+# and population growth in Aarhus. To be used in the Cartographic Journal or other.
 
 ################################################### Temporal overview
 
-SR <- st_read("output_data/bbr_sikringsrum.geojson")
+# SR <- st_read("output_data/bbr_sikringsrum.geojson") # old file not found, probably SR
+
+SR <- st_read("output_data/SR_sikringsrum.geojson")
 names(SR)
 
 ### Oldest buildings that contain private shelters
@@ -38,7 +44,7 @@ SR %>%
   #filter(year < 1940 & year > 1200) %>% 
 # filter(year > 1939 & year < 1950) %>% 
   filter(year < 1950) %>%   # 72
-  summarize(sum = sum(places)) #%>% 
+  summarize(sum = sum(places)) #%>%  # before 1950, there were 12431 places in safe rooms
   #tally(places)
   mapview(cex = "places", zcol = "year")
 
@@ -46,10 +52,10 @@ SR %>%
   st_drop_geometry() %>% 
   group_by(decade) %>% 
   summarize(buildings = n(), 
-            capacity = sum(places))
+            capacity = sum(places)) # by 2000 there were some 250,000 places in safe rooms
 
 
-#################### TIMESERIES BLDG and CAPACITY BY YEAR
+#################### TIMESERIES BLDG with SR and CAPACITY BY YEAR
 
 SR_summarized_annual <- SR %>% 
   st_drop_geometry() %>% 

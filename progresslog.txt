@@ -27,9 +27,11 @@ TO DO:
 intown (28) and outoftown datasets (~78) are ready for verification
 
 
-2025
+January 2025
 - fieldwork nearly completed for remaining features, add notes on Fieldmark recording to Andreas' data
 - Tommy and kommunens' data is all verified
 - BBR private shelters also verified
 - gaps analysis with BDG is in progress but spread between 12_SpatialEquity and 14_Acess_RQ1.Rmd, needs separation; needs inclusion of KOB
 - gaps analysis with SR is needed
+- 10 BDGs with undefined Type need revisiting if they still exist
+- work over Andreas' data 

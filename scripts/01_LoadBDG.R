@@ -8,24 +8,33 @@ library(mapview)
 BDG <- read_sheet("https://docs.google.com/spreadsheets/d/1H8EhFgwhDGKCsM95BTjNwifg5K-oXTv2Q4Qbx84k7ZU/edit?gid=0#gid=0",
                   range = "Shelters", 
                   col_types = "dddccddcddcccccdddcccccdddccddcccdc")
-BDG <- BDG %>% 
+
+# Load saved rds based on wide data above
+BDGw <- readRDS("output_data/BDG_andreas.rds")
+glimpse(BDGwide)
+
+BDGw <- BDGw %>% 
   filter(!is.na(Final_Longitude_1987) | !is.na(Final_Latitude_1987) ) %>% 
   st_as_sf(coords = c("Final_Longitude_1987", "Final_Latitude_1987"), crs = 4326) %>% 
-  dplyr::select(BDnr_1987,Year_of_Construction,  Final_type, Final_Pub_Size, Needs_Revisit, Final_Longitude_2024, Final_Latitude_2024)
+  dplyr::select(BDnr_1987,Year_of_Construction,  Final_type, Final_Pub_Size, 
+                Needs_Revisit, Final_Longitude_2024, Final_Latitude_2024)
 
 # 10 closely undefined shelters - NEED REVISIT
-BDG %>% 
+BDGw %>% 
   filter(is.na(Final_type))
 
 # Summaries of capacities
-BDG %>% 
+BDGw %>% 
   group_by(Final_type) %>% 
-  summarize(total_capacity = sum(Final_Pub_Size))
+  summarize(number = n(),
+    total_capacity = sum(Final_Pub_Size))
 
-saveRDS(BDG, "output_data/BDG_andreas.rds")
-glimpse(BDG)
-mapview(BDG, zcol = "Year_of_Construction")
-########################################################################
+#saveRDS(BDGw, "output_data/BDG_wide.rds")
+
+glimpse(BDGw)
+mapview(BDGw, zcol = "Year_of_Construction")
+        
+######################################################################
 
 # Load Andreas historical "long" data and show through time
 BDG <- read_sheet("https://docs.google.com/spreadsheets/d/1C4GEgq4UmEwx_Xi84FiNBrRowmmJHi3S191byjF-hWc/edit?gid=0#gid=0",
@@ -35,6 +44,8 @@ BDG <- read_sheet("https://docs.google.com/spreadsheets/d/1C4GEgq4UmEwx_Xi84FiNB
 BDG  <- BDG %>% 
   filter(!is.na(Long) | !is.na(Lat) ) %>% 
   st_as_sf(coords = c("Long", "Lat"), crs = 4326) 
+
+# saveRDS(BDG, "output_data/BDG_long.rds")
 
 glimpse(BDG)
 
@@ -58,12 +69,6 @@ m <- BDG %>%
 BDG %>% 
   filter(Location_startdate==1944) %>% 
   mapview(cex = "Capacity")
-
-
-BDG_noBrabrand_sf <- BDG %>% 
-  filter(!is.na(Long) | !is.na(Lat) ) %>% 
-  filter(Lat != 56.150046 & Long !=10.107009) %>% 
-  st_as_sf(coords = c("Long", "Lat"), crs = 4326) 
 
 
 # Some shelters changed location, in which case they are mentioned multiple times.  
@@ -90,7 +95,12 @@ mapview(BDG_lines, zcol = "BDnr") + mapview(BDG, zcol = "Location_startdate")
 
 ######################################################################
 
-## Filter away the Brabrand location
+## Filter away the Brabrand location from the csv dataset
+BDG_noBrabrand_sf <- read_csv("output_data/BDG_long.csv")%>% 
+  filter(!is.na(longitude) | !is.na(latitude) ) %>% 
+  filter(latitude != 56.150046 & longitude !=10.107009) %>% 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) 
+
 movedBDG_noB <- BDG_noBrabrand_sf %>% 
   group_by(BDnr) %>% 
   tally() %>% 
@@ -105,7 +115,23 @@ BDG_noB_lines <- movedBDG_noB %>%
 library(mapview)
 mapview(BDG_noB_lines, zcol = "BDnr") + mapview(BDG_noBrabrand_sf, zcol = "Location_startdate")
 
-#####################################################
+##################################################### ANIMATE BDG IN TIME
+
+library(gganimate)
+
+?transition_time()
+anim_bdg <- ggplot(data = BDG_noBrabrand_sf )+
+    geom_sf(aes(color = Location_startdate))+
+    theme_bw() +
+    transition_time(Location_startdate)+
+    labs(subtitle = "BDG shelter movement in {frame_time}")
+
+# Keep the shelters plotted if they were not moved
+# Fade out moved shelters' original locations
+
+    #geom_sf(data = BDG_noB_lines, aes(color = n))
+mapview(BDG_noB_lines, zcol = "BDnr") + transition_time("Location_startdate")
+#################################################### GET AARHUS BOUNDARY STEDNAVN API
 
 #GET WFS data stednavne
 

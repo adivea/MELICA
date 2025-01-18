@@ -139,212 +139,12 @@ SR %>%
   summarize(total_cap = sum(places, na.rm = T))  # 216,327 places in 1985
 SR %>% distinct(places) %>% arrange(desc(places))
 ```
-
-## Check adequacy : how does capacity of the shelters map against city population?
-In 1960, some 15,250 people can be on the move and accommodated in public and 52,451 people in private shelters in Aarhus. 
-
-In 1985, the number of shelter places in public places drops to 14,150 despite the increasing population. In both times, combined shelters accommodate additional 13,000 people.
-Private shelters accommodated 216,327 people by 1985.
-Private shelters can accommodate 2 - 2000 people
-
-### Use urban districts and population to assess equity/adequacy of shelters
-City limits: I think there are many different conceptualisations. In terms of CD, they employed a term called a civil defence area, in Danish, Civilforsvarsområde, CFO. In our case this included Aarhus Købstad and Viby, Aaby, Vejlby-Risskov, Holme-Tranbjerg, Hasle-Skejby-Lisbjerg og Brabrand-Sdr. Aarslev kommuner. 
-
-This was the local level, of course CD was also organised regionally and nationally. 
 ```{r}
 mapview(aarhus_districts, zcol = "prog_distrikt_navn")
 aarhus_districts
 ```
-## Equity
-First calculate geography-wide percentage: ie. fraction of population by city district
-Second, calculate data-implied percentage: ie. number of people who fit in shelters within a given city district.
-Third, calculate demographic disparity score by gauging the difference between the data-implied percentage and the geography-wide percentage.
-For full explanation, see:
-https://ui-research.github.io/sedt_documentation/sedt_algorithm.html
 
 ### Estimate population
-
-```{r estimate-population}
-# Intersect aarhus districts with flats and estimate the houses' population
-intersections_aarhus <- st_intersection(aarhus_districts, st_transform(bbr_aarhus_data_flat, 25832)) %>% 
-  dplyr::select(id = id_lokalId, navn = prog_distrikt_navn, 
-                byg021BygningensAnvendelse, byg026Year, byg054AntalEtager, byg406Koordinatsystem, city, geometry) %>% 
-    mutate(byg021BygningensAnvendelse = as.numeric(byg021BygningensAnvendelse)) %>% 
-  left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code")) %>% 
-  rename(Code = byg021BygningensAnvendelse) %>% 
-  mutate(
-    estimated_population = case_when(
-      Purpose == "residential" & Code == "120" ~ 4,  # Single-family homes
-      Purpose == "residential" & Code == "110" ~ 4,  # Single-family homes
-      Purpose == "residential" & Code == "121" ~ 4,  # Single-family 
-      Purpose == "residential" & Code == "122" ~ 4,  # Single-family homes
-      Purpose == "residential" & Code %in% c("130", "131", "132") ~ 6,  # Single-family homes
-      Purpose == "residential" & Code == "140" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
-      Purpose == "residential" & Code == "150" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
-      Purpose == "residential" & Code == "160" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
-      Purpose == "residential" & Code == "190" ~ 2 * byg054AntalEtager ,  # unknown
-      Purpose == "industry or production" & Code %in% c("220":"223") ~ 2 * byg054AntalEtager ,
-      Purpose == "residential" & Code  %in% c("310":"314") ~ 2 * byg054AntalEtager *10,
-      Purpose == "office" & Code  %in% c("320":"324") ~ 2 * byg054AntalEtager * 4,
-      Purpose == "services" & Code  %in% c("330":"416") ~ 2 * byg054AntalEtager *4,
-      Purpose == "educational" & Code  %in% c("419":"429") ~ 2 * byg054AntalEtager * 30,
-      Purpose == "health services" & Code  %in% c("430":"439") ~ 2 * byg054AntalEtager * 15 ,
-      
-      TRUE ~ 0  # Non-residential or unknown
-    )
-  )
-
-
-get_year_df <- function(df,year){
-temp_df <- df %>% 
-  filter(byg026Year %in% year)
-    return(temp_df)
-}
-```
-
-### Summarize population by district 
-
-```{r new-buildings-in-years}
-## new buildings built in a certain interval
-n_new_buildings_startend <- function(start_year, year) {
-  n_new <- rep(0, length(aarhus_districts$prog_distrikt_navn))
-  
-  # Loop through each year from start_year to the specified year
-  for (current_year in start_year:year) {
-    intersections_year <- get_year_df(intersections_aarhus, current_year)
-    
-    # Aggregate data for each district
-    for (i in 1:length(aarhus_districts$prog_distrikt_navn)){
-      n_new[i] <- n_new[i] + nrow(filter(intersections_year, navn == aarhus_districts$prog_distrikt_navn[i]))
-    }
-  }
-
-  temp <- cbind(aarhus_districts, n_new)
-  return(temp)
-}
-
-buildings1900_1960 <- n_new_buildings_startend(1900, 1960)
-
-## dplyr version for all buildings AND population up to a certain year
-
-# Assuming intersections_aarhus already contains all data from all years
-n_buildings_and_population_cumulative <- function(end_year) {
-  # Filter data for all years up to the end year
-  data_filtered <- intersections_aarhus %>%
-    st_drop_geometry() %>% 
-    filter(byg026Year <=end_year) %>%
-    group_by(navn) %>%
-    summarise(n_new = n(), # Count of new buildings
-      total_population = sum(estimated_population, na.rm = TRUE)  # Sum of estimated population
-    ) %>%
-            
-    ungroup()
-
-  # Join with district names to ensure all districts are included
-  result <- aarhus_districts %>%
-    select(prog_distrikt_type_kode:prog_distrikt_nr) %>% 
-    left_join(data_filtered, by = c("prog_distrikt_navn" = "navn"))
-
-  # Replace NA with 0 in case some districts have no constructions
-  result$n_new[is.na(result$n_new)] <- 0
-
-  return(result)
-}
-
-buildings1960 <- n_buildings_and_population_cumulative(1960)
-buildings1950 <- n_buildings_and_population_cumulative(1950)
-mapview(buildings1960 %>% filter(n_new > 0), zcol = "total_population") + mapview(BDG, cex = 0.1)
-
-buildings1960 %>% tally(total_population)
-```
-Second, calculate data-implied percentage: ie. number of people who fit in shelters within a given city district.
-Third, calculate demographic disparity score by gauging the difference between the data-implied percentage and the geography-wide percentage.
-For full explanation, see:
-https://ui-research.github.io/sedt_documentation/sedt_algorithm.html
-### Implied percentage : shelter population
-```{r}
-shelter_intersections <- aarhus_districts %>% 
-   select(prog_distrikt_type_kode:prog_distrikt_nr) %>% 
-  st_intersection(st_transform(BDG, 25832))
-
-get_year_shelter <- function(df,year){
-temp_df <- df %>% 
-  filter(Location_startdate < year)
-    return(temp_df)
-}
-
-shelter_capacity_district <- function(end_year) {
-  # Filter data for all years up to the end year
-  data_filtered <- shelter_intersections %>%
-    st_drop_geometry() %>% 
-    filter(Location_startdate <= 1950) %>%
-    group_by(prog_distrikt_navn) %>%
-    summarise(n_shelters = n(), # Count of shelters per district
-      total_protected = sum(Capacity, na.rm = TRUE)  # Sum of estimated protected population
-    ) %>%
-            
-    ungroup()
-
-  # Join with district names to ensure all districts are included
-  result <- aarhus_districts %>%
-    select(prog_distrikt_type_kode:prog_distrikt_nr) %>% 
-    left_join(data_filtered, by = "prog_distrikt_navn")
-
-  # Replace NA with 0 in case some districts have no constructions
-  result$n_new[is.na(result$n_shelters)] <- 0
-
-  return(result)
-}
-
-shelter_capacity_district(1950) %>% 
-  mapview(zcol = "n_shelters")
-
-shelter_capacity_district(1950) %>% 
-  mapview(zcol = "total_protected")
-```
-
-### Add KOB to total protected count
-### Demographic disparity (adequacy)
-Third, calculate demographic disparity score by gauging the difference between the data-implied percentage and the geography-wide percentage.
-For full explanation, see:
-https://ui-research.github.io/sedt_documentation/sedt_algorithm.html
-
-```{r}
-library(dplyr)
-
-# Assume n_new_buildings_and_population_cumulative has been defined as above
-# Assume shelter_capacity_district has been defined as provided
-
-# Function to calculate demographic disparity scores
-calculate_demographic_disparity <- function(end_year) {
-  # Gather data for buildings and populations up to the specified year
-  building_population_data <- n_buildings_and_population_cumulative(end_year)
-
-  # Gather shelter capacity data up to the specified year
-  shelter_data <- shelter_capacity_district(end_year) %>% st_drop_geometry()
-
-  # Combine the datasets
-  combined_data <- left_join(building_population_data, shelter_data, by = "prog_distrikt_navn")
-
-  # Calculate disparity scores (example calculation)
-  combined_data <- combined_data %>%
-    mutate(
-      demographic_disparity = round((total_population-total_protected) / total_population, 2),
-      protected_pct = 1 - demographic_disparity
-      # Example score calculation
-    )
-
-  # Replace NA with appropriate values in demographic_disparity
-  combined_data$demographic_disparity[is.na(combined_data$demographic_disparity)] <- 0
-
-  return(combined_data)
-}
-
-# Call the function for a specific year
-disparity_scores <- calculate_demographic_disparity(1960)
-mapview(disparity_scores, zcol = "protected_pct")
-
-```
 
 
 ## Euclidian proximity (200m)
@@ -566,7 +366,7 @@ mapview(BDG_walking_isos %>% filter(time == 5))
 
 Now, lets clip the flats by city boundary and by shelter isos, so we see the ones without protection. Repeat with business and institutional buildings
 
-```{r}
+```{r flats-1960-boundary}
 # Select residences built by 1960 roughly within 2024 Aarhus boundary (excessive I know) 
 aarhus_flats <- bbr_aarhus_data_flat %>%   # 50,000 flats
   filter(byg026Year < 1961) %>% # 16473 residencies built before 1960
@@ -588,7 +388,7 @@ st_is_valid(KOB_uni)
 mapview(KOB_uni) + mapview(BDG_uni)
 
 ```
-### Flats outside the 5 min walking distance
+### Flats outside the 5 min walking distance and their estimated population
 ```{r spatial-equity-residences-5min-1960}
 # View flats (<1960) outside the 5min walking interval from public shelters
 aarhus_flats %>% 
@@ -599,7 +399,12 @@ aarhus_flats %>%
 outside5isos1960 <- aarhus_flats %>% 
   st_difference(st_union(BDG_uni, KOB_uni))  # only 3462 flats are unprotected / well outside of town!
 ```
-## Same for 1980s
+
+
+
+
+
+## FLATS COVERAGE 1980s TO BE COMPLETED REDO for BDGS confirmed in 1985
 Most shelter records we have are from 1987. Let's check what the spatial coverage was for 1985.
 ```{r public-sh-coverage-1984}
 aarhus_flats1985 <- bbr_aarhus_data_flat %>%   # 50,000 flats
@@ -624,7 +429,41 @@ mapview(outside5isos1985, zcol = "nearestBDG_dist_m", cex = "byg054AntalEtager")
 
 Most of the other 13000 homes are single-floor family houses, expected to be furnished with private shelters. Only one 17-floor building is in this list. 
 
-## Check coverage of 3000 and 13000 homes outside isos with private shelters
+## Estimate population for flats by type FINISH
+```{r estimate-population}
+# Intersect aarhus districts with flats and estimate the houses' population
+intersections_aarhus <- st_intersection(aarhus_districts, st_transform(bbr_aarhus_data_flat, 25832)) %>% 
+  dplyr::select(id = id_lokalId, navn = prog_distrikt_navn, 
+                byg021BygningensAnvendelse, byg026Year, byg054AntalEtager, byg406Koordinatsystem, city, geometry) %>% 
+    mutate(byg021BygningensAnvendelse = as.numeric(byg021BygningensAnvendelse)) %>% 
+  left_join(housecodes, by = c("byg021BygningensAnvendelse"="Code")) %>% 
+  rename(Code = byg021BygningensAnvendelse) %>% 
+  mutate(
+    estimated_population = case_when(
+      Purpose == "residential" & Code == "120" ~ 4,  # Single-family homes
+      Purpose == "residential" & Code == "110" ~ 4,  # Single-family homes
+      Purpose == "residential" & Code == "121" ~ 4,  # Single-family 
+      Purpose == "residential" & Code == "122" ~ 4,  # Single-family homes
+      Purpose == "residential" & Code %in% c("130", "131", "132") ~ 6,  # Single-family homes
+      Purpose == "residential" & Code == "140" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
+      Purpose == "residential" & Code == "150" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
+      Purpose == "residential" & Code == "160" ~ 2 * byg054AntalEtager * 6,  # Multi-family, 2 units/floor
+      Purpose == "residential" & Code == "190" ~ 2 * byg054AntalEtager ,  # unknown
+      Purpose == "industry or production" & Code %in% c("220":"223") ~ 2 * byg054AntalEtager ,
+      Purpose == "residential" & Code  %in% c("310":"314") ~ 2 * byg054AntalEtager *10,
+      Purpose == "office" & Code  %in% c("320":"324") ~ 2 * byg054AntalEtager * 4,
+      Purpose == "services" & Code  %in% c("330":"416") ~ 2 * byg054AntalEtager *4,
+      Purpose == "educational" & Code  %in% c("419":"429") ~ 2 * byg054AntalEtager * 30,
+      Purpose == "health services" & Code  %in% c("430":"439") ~ 2 * byg054AntalEtager * 15 ,
+      
+      TRUE ~ 0  # Non-residential or unknown
+    )
+  )
+```
+
+## Outside SR isos FINISH
+Check the protection of the 3000 and 13000 homes outside BDGisos with e.g. private shelters
+
 
 ```{r sirkingsum-outof5}
 SR %>% 
