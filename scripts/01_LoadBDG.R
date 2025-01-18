@@ -75,8 +75,9 @@ BDG %>%
 # How many shelter moves do we have on file? (1-3 moves)
 movedBDG <- BDG %>% 
   group_by(BDnr) %>% 
-  tally() %>% 
-  filter(n>1)
+  summarize(n = n(),
+    year = last(Location_startdate)) %>% 
+  filter(n==2)
 
 # 8 shelters moved twice times, three thrice, 134 were moved at least once. 
 
@@ -89,7 +90,7 @@ BDG_lines <- movedBDG %>%
   st_cast("LINESTRING")
 
 library(mapview)
-mapview(BDG_lines, zcol = "BDnr") + mapview(BDG, zcol = "Location_startdate")
+mapview(BDG_lines, zcol = "year") + mapview(BDG, zcol = "Location_startdate")
 
 ## majority of shelters are disposed of to fortify the banks of Brabrand!
 
@@ -103,8 +104,9 @@ BDG_noBrabrand_sf <- read_csv("output_data/BDG_long.csv")%>%
 
 movedBDG_noB <- BDG_noBrabrand_sf %>% 
   group_by(BDnr) %>% 
-  tally() %>% 
-  filter(n>1)
+  summarize(n = n(),
+            year = last(Location_startdate)) %>% 
+  filter(n==2)
 
 ## Let's map the movements besides Brabrand
 
@@ -124,10 +126,46 @@ anim_bdg <- ggplot(data = BDG_noBrabrand_sf )+
     geom_sf(aes(color = Location_startdate))+
     theme_bw() +
     transition_time(Location_startdate)+
-    labs(subtitle = "BDG shelter movement in {frame_time}")
-
+    labs(subtitle = "Year {round(frame_time,0)}")
+anim_bdg 
 # Keep the shelters plotted if they were not moved
 # Fade out moved shelters' original locations
+BDG %>% 
+  select(ID, BDnr, Capacity, Location_startdate) %>% 
+  arrange(ID)
+
+A <- ggplot(data = BDG )+
+  geom_sf(aes(color = Location_startdate))+
+  theme_bw() +
+  transition_time(Location_startdate)+
+  labs(subtitle = "Year {round(frame_time,0)}")
+
+# (In theory) Animate with custom settings to slow down the animation
+anim <- animate(A, 
+                fps = 10,                # Lower frames per second
+                duration = 20,           # Total duration of the animation in seconds
+                end_pause = 5)           # Adds a pause at the end of the animation
+
+B <- BDG_noBrabrand_sf %>% 
+  rename(year = Location_startdate) %>% 
+  ggplot()+
+  geom_sf(aes(size = 2, color = year, group = seq_along(year)),show.legend = F)
+
+G2 <- B  +
+  transition_states(states = year, state_length = 10, wrap = FALSE)+
+   enter_recolor(fill = "#f0f5f9") +
+  shadow_mark(past = TRUE, alpha = 1, fill = "#3a6589")
+
+G1 <- B+
+  transition_time(time = year, )
+
+BDG_noB_lines
+
+# Animate without rewinding
+animate(G2, rewind = FALSE)
+
+
+
 
     #geom_sf(data = BDG_noB_lines, aes(color = n))
 mapview(BDG_noB_lines, zcol = "BDnr") + transition_time("Location_startdate")
