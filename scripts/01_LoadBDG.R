@@ -17,7 +17,7 @@ BDGw <- BDGw %>%
   filter(!is.na(Final_Longitude_1987) | !is.na(Final_Latitude_1987) ) %>% 
   st_as_sf(coords = c("Final_Longitude_1987", "Final_Latitude_1987"), crs = 4326) %>% 
   dplyr::select(BDnr_1987,Year_of_Construction,  Final_type, Final_Pub_Size, 
-                Needs_Revisit, Final_Longitude_2024, Final_Latitude_2024)
+                Needs_Revisit, Final_Longitude_2024, Final_Latitude_2024, Status_1987, Status_2024)
 
 # 10 closely undefined shelters - NEED REVISIT
 BDGw %>% 
