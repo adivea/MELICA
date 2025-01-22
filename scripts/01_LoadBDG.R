@@ -5,13 +5,13 @@ library(mapview)
 
 
 # Load Andreas complete data from Google and create a 1987 version (Wide dataset)
-BDG <- read_sheet("https://docs.google.com/spreadsheets/d/1H8EhFgwhDGKCsM95BTjNwifg5K-oXTv2Q4Qbx84k7ZU/edit?gid=0#gid=0",
+BDGw <- read_sheet("https://docs.google.com/spreadsheets/d/1H8EhFgwhDGKCsM95BTjNwifg5K-oXTv2Q4Qbx84k7ZU/edit?gid=0#gid=0",
                   range = "Shelters", 
-                  col_types = "dddccddcddcccccdddcccccdddccddcccdc")
+                  col_types = "dddccddcddcccccdddcccccdddccddccccc")
 
 # Load saved rds based on wide data above
 BDGw <- readRDS("output_data/BDG_andreas.rds")
-glimpse(BDGwide)
+glimpse(BDGw)
 
 BDGw <- BDGw %>% 
   filter(!is.na(Final_Longitude_1987) | !is.na(Final_Latitude_1987) ) %>% 

@@ -35,8 +35,7 @@ SR %>%
 
 # Public shelter data
 
-# Load verified and unverified data
-
+# Load verified and unverified data from 2023
 verified <- st_read("output_data/TF_verified23.geojson") # very liberal  (some duplicates but spatially in same spot)
 unverified <- st_read("output_data/TF_unverified.geojson") # very conservative 
 unverified <- st_read("output_data/2024_needlgv.geojson")
@@ -65,6 +64,25 @@ saveRDS(sh_merged, "output_data/sh_merged.rds") # only points and 2024 verificat
 sh_merged <- readRDS("output_data/sh_merged.rds") # only points and 2024 verification status of public shelters
 
 mapview(sh_merged, zcol = "Verified")
+
+############## ----------------  BDG  data from 2024
+# All shelters sheet with long format where temporal changes are represented
+BDG <- readRDS("output_data/BDG_long.rds")
+glimpse(BDG)
+
+# Plot BDG in space by year of construction (picking the first year)
+m <- BDG %>% 
+  group_by(BDnr) %>% 
+  summarize(Startyear = min(Location_startdate), 
+            Capacity = min(Capacity)) %>% 
+  mapview(cex = "Capacity", zcol = "Startyear")
+m
+
+
+############## ---------------- KOB data from 2024
+
+KOB <- readRDS("../output_data/KOB_sf.rds")
+mapview(KOB, cex = "Capacity", zcol = "Year")
 
 ############## ------------------------------------- Prep additional map components
 

@@ -46,7 +46,7 @@ SR %>%
   filter(year < 1950) %>%   # 72
   summarize(sum = sum(places)) #%>%  # before 1950, there were 12431 places in safe rooms
   #tally(places)
-  mapview(cex = "places", zcol = "year")
+#  mapview(cex = "places", zcol = "year")
 
 SR %>% 
   st_drop_geometry() %>% 
@@ -89,8 +89,8 @@ SK_bldcapacity_time <- ggplot() +
 # View the plot
 SK_bldcapacity_time
 
-ggsave("figures/SK_bldgcapacity_time.png", width = 7, height = 3 )
-ggsave("figures/SK_bldgcapacity_time.tiff", width = 7, height = 3)
+# ggsave("figures/SK_bldgcapacity_time.png", width = 7, height = 3 )
+# ggsave("figures/SK_bldgcapacity_time.tiff", width = 7, height = 3)
 
 ###############################################
 SR %>%
@@ -118,7 +118,7 @@ SK_year<- SR %>%
   labs(x = "Year of construction", 
        y = "Private shelter containing buildings")
 SK_year
-ggsave("figures/SK_post1950.png", width = 7, height = 3)
+#ggsave("figures/SK_post1950.png", width = 7, height = 3)
 
 
 ######################################### TIMESERIES: SIKRINGSRUM BLDG and CAPACITY BY YEAR and BBR CONSTRUCTIONS
@@ -155,7 +155,7 @@ res_bbr <- bbr_aarhus_data_flat %>%  # 30,000 entries
     ))
 
 
-# statistics
+# statistics (new constructions of houses over 2 stories by decade)
 res_bbr %>% 
   st_drop_geometry() %>% 
   filter(byg054AntalEtager>2) %>% 
@@ -226,5 +226,5 @@ SR %>%
     legend.title = element_blank() # Bold legend title    # Color for the secondary y-axis line
   )
 
-ggsave(filename = "figures/all_construction_trend1935_2005.png", width = 7, height = 4)
-ggsave(filename = "figures/all_construction_trend1935_2005.tiff", width = 7, height = 4, dpi = 300)
+# ggsave(filename = "figures/all_construction_trend1935_2005.png", width = 7, height = 4)
+# ggsave(filename = "figures/all_construction_trend1935_2005.tiff", width = 7, height = 4, dpi = 300)
