@@ -35,37 +35,7 @@ SR %>%
 
 # Public shelter data
 
-# Load verified and unverified data from 2023
-verified <- st_read("output_data/TF_verified23.geojson") # very liberal  (some duplicates but spatially in same spot)
-unverified <- st_read("output_data/TF_unverified.geojson") # very conservative 
-unverified <- st_read("output_data/2024_needlgv.geojson")
-
-verified %>% 
-  select(FeatureID, Source) %>% 
-  merge(unverified$first_number) %>% 
-  mapview(Source)
-
-unverified <- unverified %>% 
-  dplyr::select(geometry) %>% 
-  mutate(Verified = "No")
-verified <- verified %>%
-  dplyr::select(geometry) %>% 
-  distinct() %>% 
-  mutate(Verified = "Yes") 
-
-# Step 2: Merge the two sf objects into a single sf object
-sh_merged <- rbind(verified, unverified)
-sh_merged <- sh_merged %>% 
-  st_transform(25832)
-sh_merged$Verified <- as.factor(sh_merged$Verified)
-
-saveRDS(sh_merged, "output_data/sh_merged.rds") # only points and 2024 verification status of public shelters
-# View the result
-sh_merged <- readRDS("output_data/sh_merged.rds") # only points and 2024 verification status of public shelters
-
-mapview(sh_merged, zcol = "Verified")
-
-############## ----------------  BDG  data from 2024
+############## ----------------  BDG  data from 2024 and 2023 from Andreas wide
 # All shelters sheet with long format where temporal changes are represented
 BDG <- readRDS("output_data/BDG_long.rds")
 glimpse(BDG)
@@ -78,6 +48,25 @@ m <- BDG %>%
   mapview(cex = "Capacity", zcol = "Startyear")
 m
 
+BDG <- BDG %>% 
+  mutate(decade = case_when(
+    Location_startdate < 1940 ~ '1930s',
+    Location_startdate < 1950 ~ '1940s',
+    Location_startdate < 1960 ~ '1950s',
+    Location_startdate < 1970 ~ '1960s',
+    Location_startdate < 1980 ~ '1970s',
+    Location_startdate < 1990 ~ '1980s',
+    Location_startdate < 2000 ~ '1990s',
+   # Location_startdate < 2010 ~ '2000s'
+  )) 
+
+BDG %>% 
+  group_by(decade) %>% tally()
+
+BDGw <- readRDS("output_data/BDG_wide.rds")
+
+BDGw %>% 
+  mapview(zcol = "FAIMS_verified")
 
 ############## ---------------- KOB data from 2024
 
@@ -91,15 +80,25 @@ install.packages("geodata")
 library(geodata)
 
 dk <- gadm(country = "DNK", level = 0, path = "data/")
+dk <- dk %>% 
+  st_as_sf() 
 
 # Create a bounding box for Aarhus if you don't have a shapefile
 aarhus_bbox_sm <- st_as_sfc(st_bbox(c(xmin = 10.1, ymin = 56.1, xmax = 10.25, ymax = 56.2), crs = st_crs(4326)))
 aarhus_bbox_m <- st_as_sfc(st_bbox(c(xmin = 10.05, ymin = 56.05, xmax = 10.28, ymax = 56.25), crs = st_crs(4326)))
 aarhus_bbox <- st_as_sfc(st_bbox(c(xmin = 9.99, ymin = 56.0, xmax = 10.35, ymax = 56.3), crs = st_crs(4326)))
 
-dk <- dk %>% 
-  st_as_sf() 
+# Aarhus city border  
+aarhus1935 <- read_sf("data/Topo/BordersShapes/Poly1935.shp")%>% 
+  st_make_valid()
 
+aarhus1948 <- read_sf("data/Topo/BordersShapes/Poly1948.shp")%>% 
+  st_make_valid()
+aarhus1952 <- read_sf("data/Topo/BordersShapes/Poly1952.shp")%>% 
+  st_make_valid()
+plot(aarhus1952$geometry)
+
+st_is_valid(aarhus1952)
 # Skip Bornholm
 dk_bbox <- st_as_sfc(st_bbox(c(xmin = 8.07, ymin = 54.5, xmax = 13, ymax = 58), crs = st_crs(4326)))
 mapview(dk_bbox)
@@ -135,6 +134,9 @@ tmap_mode(mode = "plot")
 main_map <- tm_shape(dk$geometry, bbox = aarhus_bbox_m) +
 #  tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
   tm_polygons(col = "white")+
+  tm_shape(aarhus1952$geometry) +
+  tm_borders(col = "grey70", 
+             lwd = 3)+
   tm_shape(SR_89) +
   tm_dots(col = "decade", 
           palette = "viridis", 
@@ -144,8 +146,9 @@ main_map <- tm_shape(dk$geometry, bbox = aarhus_bbox_m) +
           scale = 1.5,  # Increase the size of all symbols by 1.5 times
           legend.is.portrait = TRUE,
           alpha = 0.8) +  # Transparency level
-  
-  tm_shape(sh_merged) +
+
+ 
+  tm_shape(BDGw %>% rename(Verified = FAIMS_verified)) +
     tm_squares(size = 0.1, col = "Verified", palette = c("white", "grey9"))+
   
   tm_layout(title = "Shelter construction in Aarhus municipality",
@@ -186,8 +189,8 @@ print(inset_map, vp = vp_inset)
 ############## -------------------------------------  PRINT IT OUT - Figure 
 
 # Step 3: Export the combined map as a TIFF at 400 DPI
-tiff("figures/SK_BTG_decade_map.tiff", width = 7, height = 10, units = "in", res = 400)
-
+tiff("figures/Figure06.tiff", width = 7, height = 10, units = "in", res = 400)
+#png("figures/Figure06.png", width = 7, height = 10, units = "in", res = 400)
 # Draw the main map
 print(main_map)
 
@@ -200,16 +203,34 @@ dev.off()
 
 ############## -------------------------------------  TMAP FACETTED PRIVATE SHELTERS OVER DECADES
 
+BDG %>% group_by(decade) %>% tally()
 
 
 tmap_options(limits = c(facets.view = 6))  # we want to view 5 periods
 tmap_mode("plot")
 
 # Create the facetted map
-facetted_map <- tm_shape(st_as_sf(dk), bbox = aarhus_bbox_m) +
+facetted_map <-  tm_shape(st_as_sf(dk), bbox = st_bbox(aarhus1952)) +  # 
   tm_borders(lwd = 2, col = "grey") +  # Coastline of Aarhus
   tm_shape(st_as_sf(dk))+
-    tm_polygons(col = "white")+
+  tm_polygons(col = "white")+
+  
+   tm_shape(aarhus1952$geometry) + # City Boundary
+  tm_borders(col = "grey70", 
+             lwd = 3)+
+ 
+  tm_shape(BDG %>% filter(Location_startdate <1970)) +
+  tm_dots(
+    col = "grey30", 
+    # size = "Capacity",  # Use 'capacity' for size
+    palette = "viridis", 
+    #  title.size = "Capacity",  # Label for the size legend
+    legend.show = FALSE,  # Hide the Decade legend
+    #scale = 1.5,  # Increase the size of all symbols by 1.5 times
+    #legend.is.portrait = TRUE,
+    alpha = 0.8  # Transparency level
+  ) +
+  
   tm_shape(SR_89) +
   tm_dots(
     col = "decade", 
@@ -226,6 +247,8 @@ facetted_map <- tm_shape(st_as_sf(dk), bbox = aarhus_bbox_m) +
     ncol = 3,
     free.coords = FALSE  # Keep the same coordinates for all facets
   ) +
+  
+ 
   tm_layout(
      bg.color = "grey80",  # Consistent light grey background
      panel.label.size = 1.5,  # Adjust the size of facet labels
@@ -249,8 +272,8 @@ facetted_map
 
 
 # Save the facetted map as a high-resolution PNG
-#tmap_save(facetted_map, "facetted_map.png", width = 10, height = 8, dpi = 300)
+tmap_save(facetted_map, "facetted_map.png", width = 10, height = 8, dpi = 300)
 
 # Or save it as a PDF
-tmap_save(facetted_map, "figures/SK_facetted_map.tiff", width = 8, height = 8, dpi = 400)
+tmap_save(facetted_map, "figures/Figure10.png", width = 8, height = 8, dpi = 400)
 
