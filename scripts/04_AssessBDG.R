@@ -9,8 +9,10 @@ library(mapview)
 # 
 s23 <- read_sf("output_data/sh_types2023.geojson")
 s23 <- readRDS("output_data/shelters23.rds")
-mapview(s23)
-
+s24 <- readRDS("data/SheltersVerified24.rds")
+mapview(s23) + mapview(s24)
+s23 %>% 
+  filter(FeatureID == 265|FeatureID == 266) %>% mapview()
 # Load Andreas complete data from Google and create a 1987 version (Wide dataset)
 BDGw <- read_sheet("https://docs.google.com/spreadsheets/d/1H8EhFgwhDGKCsM95BTjNwifg5K-oXTv2Q4Qbx84k7ZU/edit?gid=0#gid=0",
                    range = "Shelters", 
@@ -22,12 +24,8 @@ glimpse(BDGw)
 BDGw <- BDGw %>% 
   filter(!is.na(Final_Longitude_1987) | !is.na(Final_Latitude_1987) ) %>% 
   st_as_sf(coords = c("Final_Longitude_1987", "Final_Latitude_1987"), crs = 4326) %>% 
-  dplyr::select(BDnr_1987,Year_of_Construction,  Final_type, Final_Pub_Size, FAIMS_verified,
+  dplyr::select(BDnr_1987, Final_type, Final_Pub_Size, FAIMS_verified,
                 Needs_Revisit, Final_Longitude_2024, Final_Latitude_2024, Status_1987, Status_2024)
-
-# 10 closely undefined shelters - NEED REVISIT
-BDGw %>% 
-  filter(is.na(Final_type))
 
 # Summaries of capacities
 BDGw %>% 
@@ -40,13 +38,7 @@ BDGw %>%
   group_by(FAIMS_verified) %>% 
   tally()
 
-# Which of the unvisited, do NOT NEED a visit (ie. they have not been moved acc to Google Earth)
-BDGw %>% 
-  filter(FAIMS_verified == "No") %>% # 45
-  filter(grepl("^Need", Needs_Revisit)) %>%  #42
-  mapview() + mapview(s23)
-  tally()
-  
+
 BDGw %>% 
  filter(grepl("^Need", Needs_Revisit)) 
 #7
@@ -56,13 +48,19 @@ BDGw %>%
   group_by(Status_2024) %>% 
   tally()
 
-# Typology of extant shelters
+
+BDGw %>% 
+  filter(FAIMS_verified == "Yes") %>% 
+  group_by(Status_2024) %>% 
+  tally()
+
 BDGw %>% 
   filter(FAIMS_verified == "Yes") %>% 
   filter(Status_2024 == "Moved") 
 
+# Typology of extant shelters
 BDGw %>% 
-  #filter(FAIMS_verified == "Yes") %>% 
+  filter(FAIMS_verified == "Yes") %>% 
   filter(Status_2024 == "Exists") %>% 
   group_by(Final_type) %>% 
   tally()
@@ -75,7 +73,7 @@ BDGw %>%
 # openness
 s23 %>% 
   filter(Accessible == "Open") # 5 in 2023
-s24 <- readRDS("data/SheltersVerified24.rds")
+
 s24 %>% 
   filter(`accessiblity-of-shelter-during-visit` == "Open")  # 3 in 2024 +1 reported by Sahel
 
@@ -85,3 +83,9 @@ s23 %>%
 s24 %>% 
   group_by(`landuse-around`) %>% 
   tally()
+
+# Which of the unvisited, do NOT NEED a visit (ie. they have not been moved acc to Google Earth)
+BDGw %>% 
+  filter(FAIMS_verified == "No") %>% # 45
+  filter(grepl("^Need", Needs_Revisit)) %>%  #42
+  mapview() + mapview(s23)
