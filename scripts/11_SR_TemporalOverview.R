@@ -162,6 +162,12 @@ res_bbr %>%
   group_by(decade) %>% 
   summarize(sum = sum(count))
   
+res_bbr <- res_bbr %>% 
+  st_drop_geometry() %>% 
+  #filter(byg054AntalEtager>2) %>% 
+  group_by(byg026Year) %>% 
+  summarize(sum = sum(count))
+
 
 range(SR$places)
 sort(unique(SR$places))
@@ -175,7 +181,7 @@ SR %>%
   geom_line()+
   theme_bw()+
   geom_line(data = all_bbr, aes(x = byg026Year, y = count, color = "All BBR")) +
-  geom_line(data = res_bbr, aes(x = byg026Year, y = count, color = "Residential")) +
+  geom_line(data = res_bbr, aes(x = byg026Year, y = sum, color = "Residential")) +
   labs(x = "Year", y = "Number of new constructions", title = "New constructions per year in Aarhus") +
   scale_color_manual(name = "Datasets", values = c("With private shelters" = "darkgrey",  "All BBR" = "blue", "Residential" = "red")) +
   theme_minimal()
@@ -196,11 +202,11 @@ SR %>%
   
   # Add the BBR datasets as additional geom_line
   geom_line(data = all_bbr, aes(x = byg026Year, y = count, color = "All buildings"), size = 1.5) +
-  geom_line(data = res_bbr, aes(x = byg026Year, y = count, color = "Residential"), size = 1.5) +
+  geom_line(data = res_bbr, aes(x = byg026Year, y = sum, color = "Residential"), size = 1.5) +
   
   # Set the labels for primary y-axis and title
   labs(x = "Year", y = "Number of new constructions", 
-       title = "New constructions per year in Aarhus (based on BBR)") +
+       title = "New constructions per year in Aarhus (based on DBR)") +
   
   # Custom colors for the datasets
   scale_color_manual(name = "Datasets", 
@@ -228,3 +234,5 @@ SR %>%
 
 # ggsave(filename = "figures/all_construction_trend1935_2005.png", width = 7, height = 4)
 # ggsave(filename = "figures/all_construction_trend1935_2005.tiff", width = 7, height = 4, dpi = 300)
+ ggsave(filename = "figures/Figure09.tiff", width = 7, height = 4, dpi = 300)
+ ggsave(filename = "figures/Figure09.png", width = 7, height = 4, dpi = 300)
